@@ -1,72 +1,81 @@
 <?php
 
-require_once __DIR__ . "/../../Modelo/Administrador/ModuloCategoria/CategoriaService.php";
+namespace App\Http\Controllers\Administrador;
 
-class CategoriaController {
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Services\Administrador\CategoriaService;
+use Illuminate\Support\Facades\Session;
+
+class CategoriaController extends Controller
+{
     private $categoriaService;
 
-    public function __construct() {
-        session_start();
-
-        if (!isset($_SESSION['token'])) {
-            die("Acceso denegado. Se requiere autenticación.");
+    public function __construct(CategoriaService $categoriaService)
+    {
+        // 🔥 Protección sin middleware
+        if (!session()->has('token')) {
+            redirect()->route('login')->send();
         }
 
-        $this->categoriaService = new CategoriaService($_SESSION['token']);
+        $this->categoriaService = $categoriaService;
     }
-   
-    public function manejarPeticion() {
-        $mensaje = "";
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $accion = $_POST["_action"] ?? "";
-
-            switch ($accion) {
-                case "agregar":
-                    $nombre = trim($_POST['nombre'] ?? '');
-
-                    if ($nombre) {
-                        $resultado = $this->categoriaService->agregarCategoria($nombre);
-                        $mensaje = $resultado["success"]
-                            ? "<p style='color:green;'>Categoría agregada correctamente</p>"
-                            : "<p style='color:red;'>Error: " . $resultado["error"] . "</p>";
-                    } else {
-                        $mensaje = "<p style='color:red;'>El nombre es obligatorio.</p>";
-                    }
-                    break;
-
-                case "actualizar":
-                    $id_categoria = $_POST["id_categoria"] ?? null;
-                    $nombre = trim($_POST['nombre'] ?? '');
-
-                    if ($id_categoria && $nombre) {
-                        $resultado = $this->categoriaService->actualizarCategoria($id_categoria, $nombre);
-                        $mensaje = $resultado["success"]
-                            ? "<p style='color:green;'>Categoría actualizada correctamente</p>"
-                            : "<p style='color:red;'>Error: " . $resultado["error"] . "</p>";
-                    } else {
-                        $mensaje = "<p style='color:red;'>El ID y el nombre son obligatorios.</p>";
-                    }
-                    break;
-
-                case "eliminar":
-                    $id_categoria = $_POST["id_categoria"] ?? null;
-
-                    if ($id_categoria) {
-                        $resultado = $this->categoriaService->eliminarCategoria($id_categoria);
-                        $mensaje = $resultado["success"]
-                            ? "<p style='color:green;'>Categoría eliminada correctamente</p>"
-                            : "<p style='color:red;'>Error: " . $resultado["error"] . "</p>";
-                    } else {
-                        $mensaje = "<p style='color:red;'>El ID de la categoría es obligatorio.</p>";
-                    }
-                    break;
-            }
-        }
-
-       
+    public function index()
+    {
         $categorias = $this->categoriaService->obtenerCategorias();
+        $mensaje = Session::get('mensaje', '');
 
-         return ['categorias' => $categorias, 'mensaje' => $mensaje];
+        return view('administrador.categoria', compact('categorias', 'mensaje'));
     }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255'
+        ]);
+
+        $resultado = $this->categoriaService->agregarCategoria($request->nombre);
+
+        Session::flash('mensaje', $resultado['success']
+            ? "Categoría agregada correctamente"
+            : "Error: " . $resultado['error']
+        );
+
+        return redirect()->route('categoria.index');
+    }
+
+    public function update(Request $request)
+{
+    $request->validate([
+        'nombre' => 'required|string|max:255'
+    ]);
+
+    $id = $request->id_categoria; // <- viene del formulario
+
+    $resultado = $this->categoriaService->actualizarCategoria($id, $request->nombre);
+
+    Session::flash('mensaje', $resultado['success']
+        ? "Categoría actualizada correctamente"
+        : "Error: " . $resultado['error']
+    );
+
+    return redirect()->route('categoria.index');
+}
+
+
+  public function destroy(Request $request)
+{
+    $id = $request->id_categoria;
+
+    $resultado = $this->categoriaService->eliminarCategoria($id);
+
+    Session::flash('mensaje', $resultado['success']
+        ? "Categoría eliminada correctamente"
+        : "Error: " . $resultado['error']
+    );
+
+    return redirect()->route('categoria.index');
+}
+
 }

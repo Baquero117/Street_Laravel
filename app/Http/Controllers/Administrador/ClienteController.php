@@ -1,98 +1,105 @@
 <?php
-require_once __DIR__ . "/../../Modelo/Administrador/ModuloCliente/ClienteService.php";
 
-class ClienteController {
+namespace App\Http\Controllers\Administrador;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Services\Administrador\ClienteService;
+use Illuminate\Support\Facades\Session;
+
+class ClienteController extends Controller
+{
     private $clienteService;
 
-    public function __construct() {
-        session_start();
-
-        if (!isset($_SESSION['token'])) {
-            die("Acceso denegado. Se requiere autenticación.");
+    public function __construct(ClienteService $clienteService)
+    {
+        // 🔥 Protección sin middleware
+        if (!session()->has('token')) {
+            redirect()->route('login')->send();
         }
 
-        $this->clienteService = new ClienteService($_SESSION['token']);
+        $this->clienteService = $clienteService;
     }
 
-    public function manejarPeticion() {
-        $mensaje = "";
-        $clientes = [];
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $accion = $_POST["_action"] ?? "";
-
-            switch ($accion) {
-                case "agregar":
-                    $nombre = trim($_POST['nombre'] ?? '');
-                    $apellido = trim($_POST['apellido'] ?? '');
-                    $contrasena = trim($_POST['contrasena'] ?? '');
-                    $direccion = trim($_POST['direccion'] ?? '');
-                    $telefono = trim($_POST['telefono'] ?? '');
-                    $correo_electronico = trim($_POST['correo_electronico'] ?? '');
-
-                    if ($nombre && $apellido && $contrasena && $direccion && $telefono && $correo_electronico) {
-                        $resultado = $this->clienteService->agregarCliente(
-                            $nombre, $apellido, $contrasena, $direccion, $telefono, $correo_electronico
-                        );
-
-                        if (!empty($resultado) && isset($resultado["success"]) && $resultado["success"]) {
-                            $mensaje = "<div class='alert alert-success'>Cliente agregado correctamente.</div>";
-                        } else {
-                            $err = $resultado["error"] ?? "Error desconocido";
-                            $mensaje = "<div class='alert alert-danger'>Error: {$err}</div>";
-                        }
-                    } else {
-                        $mensaje = "<div class='alert alert-danger'>Todos los campos son obligatorios.</div>";
-                    }
-                    break;
-
-                case "actualizar":
-                    $id = $_POST["id_cliente"] ?? null;
-                    $nombre = trim($_POST['nombre'] ?? '');
-                    $apellido = trim($_POST['apellido'] ?? '');
-                    $contrasena = trim($_POST['contrasena'] ?? '');
-                    $direccion = trim($_POST['direccion'] ?? '');
-                    $telefono = trim($_POST['telefono'] ?? '');
-                    $correo_electronico = trim($_POST['correo_electronico'] ?? '');
-
-                    if ($id && $nombre && $apellido && $contrasena && $direccion && $telefono && $correo_electronico) {
-                        $resultado = $this->clienteService->actualizarCliente(
-                            $id, $nombre, $apellido, $contrasena, $direccion, $telefono, $correo_electronico
-                        );
-                        if (!empty($resultado) && isset($resultado["success"]) && $resultado["success"]) {
-                            $mensaje = "<div class='alert alert-success'>Cliente actualizado correctamente.</div>";
-                        } else {
-                            $err = $resultado["error"] ?? "Error desconocido";
-                            $mensaje = "<div class='alert alert-danger'>Error: {$err}</div>";
-                        }
-                    } else {
-                        $mensaje = "<div class='alert alert-danger'>Todos los campos son obligatorios.</div>";
-                    }
-                    break;
-
-                case "eliminar":
-                    $id = $_POST["id_cliente"] ?? null;
-
-                    if ($id) {
-                        $resultado = $this->clienteService->eliminarCliente($id);
-                        if (!empty($resultado) && isset($resultado["success"]) && $resultado["success"]) {
-                            $mensaje = "<div class='alert alert-success'>Cliente eliminado correctamente.</div>";
-                        } else {
-                            $err = $resultado["error"] ?? "Error desconocido";
-                            $mensaje = "<div class='alert alert-danger'>Error: {$err}</div>";
-                        }
-                    } else {
-                        $mensaje = "<div class='alert alert-danger'>El ID del cliente es obligatorio.</div>";
-                    }
-                    break;
-            }
-        }
-
-        // Traer los clientes (si no hay filas, se espera un array vacío)
+    public function index()
+    {
         $clientes = $this->clienteService->obtenerClientes();
-        
+        $mensaje = Session::get('mensaje', '');
 
-        return ['clientes' => $clientes, 'mensaje' => $mensaje];
+        return view('Administrador.Cliente', compact('clientes', 'mensaje'));
+    }
 
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'apellido' => 'required|string|max:255',
+            'contrasena' => 'required|string|max:255',
+            'direccion' => 'required|string|max:255',
+            'telefono' => 'required|string|max:20',
+            'correo_electronico' => 'required|email|max:255',
+        ]);
+
+        $resultado = $this->clienteService->agregarCliente(
+            $request->nombre,
+            $request->apellido,
+            $request->contrasena,
+            $request->direccion,
+            $request->telefono,
+            $request->correo_electronico
+        );
+
+        Session::flash('mensaje', $resultado['success']
+            ? "Cliente agregado correctamente."
+            : "Error: " . $resultado['error']
+        );
+
+        return redirect()->route('cliente.index');
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'id_cliente' => 'required|numeric',
+            'nombre' => 'required|string|max:255',
+            'apellido' => 'required|string|max:255',
+            'contrasena' => 'required|string|max:255',
+            'direccion' => 'required|string|max:255',
+            'telefono' => 'required|string|max:20',
+            'correo_electronico' => 'required|email|max:255',
+        ]);
+
+        $id = $request->id_cliente;
+
+        $resultado = $this->clienteService->actualizarCliente(
+            $id,
+            $request->nombre,
+            $request->apellido,
+            $request->contrasena,
+            $request->direccion,
+            $request->telefono,
+            $request->correo_electronico
+        );
+
+        Session::flash('mensaje', $resultado['success']
+            ? "Cliente actualizado correctamente."
+            : "Error: " . $resultado['error']
+        );
+
+        return redirect()->route('cliente.index');
+    }
+
+    public function destroy(Request $request)
+    {
+        $id = $request->id_cliente;
+
+        $resultado = $this->clienteService->eliminarCliente($id);
+
+        Session::flash('mensaje', $resultado['success']
+            ? "Cliente eliminado correctamente."
+            : "Error: " . $resultado['error']
+        );
+
+        return redirect()->route('cliente.index');
     }
 }

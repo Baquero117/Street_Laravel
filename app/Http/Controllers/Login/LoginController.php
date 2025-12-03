@@ -1,80 +1,67 @@
 <?php
-// Controlador/Login/LoginController.php
 
-require_once __DIR__ . '/../../Modelo/Login/LoginService.php';
+namespace App\Http\Controllers\Login;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use App\Services\Login\LoginService;
 
-class LoginController {
+
+class LoginController extends Controller
+{
     private $loginService;
 
-    public function __construct() {
-        $this->loginService = new LoginService();
+    public function __construct(LoginService $loginService)
+    {
+        $this->loginService = $loginService;
     }
 
-    public function manejarPeticion() {
-        $accion = $_GET['accion'] ?? 'mostrar';
-
-        switch ($accion) {
-            case 'mostrar':
-                $this->mostrarLogin();
-                break;
-            case 'procesar':
-                $this->procesarLogin();
-                break;
-            case 'logout':
-                $this->cerrarSesion();
-                break;
-            default:
-                $this->mostrarLogin();
-                break;
-        }
+    // Mostrar formulario de login
+    public function mostrar()
+    {
+        return view('login.login'); // resources/views/login/login.blade.php
     }
 
-    private function mostrarLogin() {
-        require_once __DIR__ . '/../../Vista/Login/Login.php';
-    }
+    // Procesar formulario
+    public function procesar(Request $request)
+    {
+        // Validación
+        $request->validate([
+            'correo_electronico' => 'required|email',
+            'contrasena' => 'required'
+        ]);
 
-    private function procesarLogin() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $correo = $_POST['correo_electronico'] ?? '';
-            $contrasena = $_POST['contrasena'] ?? '';
+        $correo = $request->input('correo_electronico');
+        $contrasena = $request->input('contrasena');
 
-            if (empty($correo) || empty($contrasena)) {
-                header('Location: index.php?opcion=login&error=campos_vacios');
-                exit();
+        // Llamar al servicio
+        $resultado = $this->loginService->autenticar($correo, $contrasena);
+
+        if ($resultado) {
+            // Guardar sesión
+            Session::put('token', $resultado['token']);
+            Session::put('usuario_id', $resultado['datos']['id_' . ($resultado['tipo'] === 'cliente' ? 'cliente' : 'vendedor')]);
+            Session::put('usuario_nombre', $resultado['datos']['nombre']);
+            Session::put('usuario_tipo', $resultado['tipo']);
+            Session::put('usuario_correo', $resultado['datos']['correo_electronico']);
+
+            // Redirecciones según tipo
+            if ($resultado['tipo'] === 'administrador') {
+                return redirect()->route('admin.inicio'); 
             }
 
-            $resultado = $this->loginService->autenticar($correo, $contrasena);
-
-            if ($resultado) {
-                session_start();
-                $_SESSION['token'] = $resultado['token'];
-                $_SESSION['usuario_id'] = $resultado['datos']['id_' . ($resultado['tipo'] === 'cliente' ? 'cliente' : 'vendedor')];
-                $_SESSION['usuario_nombre'] = $resultado['datos']['nombre'];
-                $_SESSION['usuario_tipo'] = $resultado['tipo'];
-                $_SESSION['usuario_correo'] = $resultado['datos']['correo_electronico'];
-
-                if ($resultado['tipo'] === 'administrador') {
-                    header('Location: Vista/Administrador/index.php');
-                } 
-                
-                else {
-                    header('Location: index.php');
-                }
-                exit();
-            } 
-            
-            else {
-                header('Location: index.php?opcion=login&error=credenciales_invalidas');
-                exit();
-            }
+            return redirect()->route('home');
         }
+
+        // Credenciales incorrectas
+        return redirect()->route('login')
+            ->with('error', 'Credenciales inválidas');
     }
 
-    private function cerrarSesion() {
-        session_start();
-        session_destroy();
-        header('Location: index.php?opcion=login');
-        exit();
+    // Cerrar sesión
+    public function logout()
+    {
+        Session::flush();
+        return redirect()->route('login');
     }
 }
-?>
