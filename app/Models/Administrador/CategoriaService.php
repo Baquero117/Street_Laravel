@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Administrador;
+namespace App\Models\Administrador;
 
 use Illuminate\Support\Facades\Http;
 
