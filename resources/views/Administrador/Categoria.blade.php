@@ -29,8 +29,10 @@
     </div>
 
     <div class="card-body p-0">
+      <form method="GET" action="{{ route('admin.Categoria') }}">
         <table class="table table-striped mb-0">
             <thead class="table-dark">
+              @csrf
                 <tr>
                     <th>ID Categoría</th>
                     <th>Nombre</th>
@@ -51,6 +53,7 @@
                 @endif
             </tbody>
         </table>
+      </form>
     </div>
 </div>
 

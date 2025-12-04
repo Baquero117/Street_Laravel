@@ -27,6 +27,7 @@ class CategoriaController extends Controller
         $mensaje = Session::get('mensaje', '');
 
         return view('administrador.categoria', compact('categorias', 'mensaje'));
+         
     }
 
     public function store(Request $request)
