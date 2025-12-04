@@ -7,6 +7,7 @@ use App\Http\Controllers\Administrador\ClienteController;
 use App\Http\Controllers\Administrador\DetalleProductoController;
 use App\Http\Controllers\Administrador\ProductoController;
 use App\Http\Controllers\Administrador\PedidoController;
+use App\Http\Controllers\Administrador\VendedorController;
 
 Route::get('/login', [LoginController::class, 'mostrar'])->name('login');
 Route::post('/login', [LoginController::class, 'procesar'])->name('login.procesar');
@@ -17,13 +18,6 @@ Route::get('/admin', function () {
     return view('Administrador.InicioAdmin.InicioAdmin');
 })->name('admin.inicio');
 
-
-// Secciones del admin
-
-Route::get('/admin/vendedores', fn() => view('Administrador.Vendedores.index'))->name('admin.vendedores');
-
-Route::get('/admin/promociones', fn() => view('Administrador.Promociones.index'))->name('admin.promociones');
-Route::get('/admin/valoraciones', fn() => view('Administrador.Valoraciones.index'))->name('admin.valoraciones');
 
 // Logout
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -81,3 +75,15 @@ Route::get('/pedido', [PedidoController::class, 'index'])->name('pedido.index');
 Route::post('/pedido/agregar', [PedidoController::class, 'store'])->name('pedido.agregar');
 Route::post('/pedido/actualizar', [PedidoController::class, 'update'])->name('pedido.actualizar');
 Route::post('/pedido/eliminar', [PedidoController::class, 'destroy'])->name('pedido.eliminar');
+
+
+
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/admin/Vendedor', fn() => view('Administrador.Vendedor'))->name('admin.Vendedor');
+Route::get('/admin/Vendedor', [VendedorController::class, 'index'])->name('admin.Vendedor');
+
+
+Route::get('/vendedor', [VendedorController::class, 'index'])->name('vendedor.index');
+Route::post('/vendedor/agregar', [VendedorController::class, 'store'])->name('vendedor.agregar');
+Route::post('/vendedor/actualizar', [VendedorController::class, 'update'])->name('vendedor.actualizar');
+Route::post('/vendedor/eliminar', [VendedorController::class, 'destroy'])->name('vendedor.eliminar');

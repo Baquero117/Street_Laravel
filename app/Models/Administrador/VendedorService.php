@@ -4,14 +4,14 @@ namespace App\Models\Administrador;
 
 use Illuminate\Support\Facades\Http;
 
-class DetalleProductoService
+class VendedorService
 {
-    private $baseUrl = "http://localhost:8080/detalle_producto";
+    private $baseUrl = "http://localhost:8080/vendedor";
     private $token;
 
     public function __construct()
     {
-        // Token guardado en session
+        // Obtiene el token de sesión
         $this->token = session('token');
     }
 
@@ -23,7 +23,7 @@ class DetalleProductoService
         ];
     }
 
-    public function obtenerDetalles()
+    public function obtenerVendedores()
     {
         $response = Http::withHeaders($this->headers())
             ->get($this->baseUrl);
@@ -35,21 +35,20 @@ class DetalleProductoService
         return [];
     }
 
-    public function agregarDetalle($talla, $color, $rutaImagen, $id_producto, $id_categoria, $precio)
+    public function agregarVendedor($nombre, $apellido, $correo_electronico, $contrasena, $telefono)
     {
         $response = Http::withHeaders($this->headers())
             ->post($this->baseUrl, [
-                "talla" => $talla,
-                "color" => $color,
-                "imagen" => $rutaImagen,   // <= nombre del archivo ya guardado en storage
-                "id_producto" => $id_producto,
-                "id_categoria" => $id_categoria,
-                "precio" => $precio
+                "nombre" => $nombre,
+                "apellido" => $apellido,
+                "correo_electronico" => $correo_electronico,
+                "contrasena" => $contrasena,
+                "telefono" => $telefono
             ]);
 
         if ($response->successful()) {
             return [
-                "success" => true,
+                "success" => true, 
                 "data" => $response->json()
             ];
         }
@@ -60,27 +59,20 @@ class DetalleProductoService
         ];
     }
 
-    public function actualizarDetalle($id, $talla, $color, $rutaImagen = null, $id_producto, $id_categoria, $precio)
+    public function actualizarVendedor($id_vendedor, $nombre, $apellido, $correo_electronico, $contrasena, $telefono)
     {
-        $payload = [
-            "talla" => $talla,
-            "color" => $color,
-            "id_producto" => $id_producto,
-            "id_categoria" => $id_categoria,
-            "precio" => $precio
-        ];
-
-        // 🔥 Solo enviar imagen si existe una nueva
-        if ($rutaImagen !== null) {
-            $payload["imagen"] = $rutaImagen;
-        }
-
         $response = Http::withHeaders($this->headers())
-            ->put($this->baseUrl . "/" . $id, $payload);
+            ->put($this->baseUrl . "/" . $id_vendedor, [
+                "nombre" => $nombre,
+                "apellido" => $apellido,
+                "correo_electronico" => $correo_electronico,
+                "contrasena" => $contrasena,
+                "telefono" => $telefono
+            ]);
 
         if ($response->successful()) {
             return [
-                "success" => true,
+                "success" => true, 
                 "data" => $response->json()
             ];
         }
@@ -91,10 +83,10 @@ class DetalleProductoService
         ];
     }
 
-    public function eliminarDetalle($id)
+    public function eliminarVendedor($id_vendedor)
     {
         $response = Http::withHeaders($this->headers())
-            ->delete($this->baseUrl . "/" . $id);
+            ->delete($this->baseUrl . "/" . $id_vendedor);
 
         if ($response->successful()) {
             return ["success" => true];

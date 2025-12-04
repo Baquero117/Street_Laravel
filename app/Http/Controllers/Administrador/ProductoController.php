@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Administrador;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Services\Administrador\ProductoService;
+use App\Models\Administrador\ProductoService;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Storage; 
 
 class ProductoController extends Controller
 {

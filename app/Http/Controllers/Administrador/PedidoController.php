@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Administrador;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Services\Administrador\PedidoService;
+use App\Models\Administrador\PedidoService;
 use Illuminate\Support\Facades\Session;
 
 class PedidoController extends Controller

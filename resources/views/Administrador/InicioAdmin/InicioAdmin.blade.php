@@ -29,14 +29,11 @@
         <ul class="menu">
             <li><a href="{{ route('admin.inicio') }}"><i class="fas fa-home"></i><span> Inicio</span></a></li>
             <li><a href="{{ route('admin.Cliente') }}"><i class="fas fa-user"></i><span> Cliente</span></a></li>
-            <li><a href="{{ route('admin.vendedores') }}"><i class="fas fa-user-tie"></i><span> Vendedor</span></a></li>
+            <li><a href="{{ route('admin.Vendedor') }}"><i class="fas fa-user-tie"></i><span> Vendedor</span></a></li>
             <li><a href="{{ route('admin.Pedido') }}"><i class="fas fa-shopping-cart"></i><span> Pedido</span></a></li>
             <li><a href="{{ route('admin.Producto') }}"><i class="fas fa-box"></i><span> Producto</span></a></li>
             <li><a href="{{ route('admin.DetalleProducto') }}"><i class="fas fa-tags"></i><span> Detalle Producto</span></a></li>
-            <li><a href="{{ route('admin.Categoria') }}"><i class="fas fa-layer-group"></i><span> Categoría</span></a></li>
-            <li><a href="{{ route('admin.promociones') }}"><i class="fas fa-percent"></i><span> Promoción</span></a></li>
-            <li><a href="{{ route('admin.valoraciones') }}"><i class="fas fa-star"></i><span> Valoración</span></a></li>
-        </ul>
+            <li><a href="{{ route('admin.Categoria') }}"><i class="fas fa-layer-group"></i><span> Categoría</span></a></li>        </ul>
 
         <div class="footer">
             

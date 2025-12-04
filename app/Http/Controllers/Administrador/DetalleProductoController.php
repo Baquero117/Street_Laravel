@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Administrador;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Services\Administrador\DetalleProductoService;
+use App\Models\Administrador\DetalleProductoService;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
