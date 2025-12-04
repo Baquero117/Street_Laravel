@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Administrador;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Services\Administrador\ClienteService;
+use App\Models\Administrador\ClienteService;
 use Illuminate\Support\Facades\Session;
 
 class ClienteController extends Controller

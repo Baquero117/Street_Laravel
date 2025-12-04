@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Administrador;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Services\Administrador\CategoriaService;
+use App\Models\Administrador\CategoriaService;
 use Illuminate\Support\Facades\Session;
 
 class CategoriaController extends Controller
