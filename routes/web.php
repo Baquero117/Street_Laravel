@@ -13,10 +13,20 @@ Route::get('/login', [LoginController::class, 'mostrar'])->name('login');
 Route::post('/login', [LoginController::class, 'procesar'])->name('login.procesar');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
+// Inicio de la aplicación
+Route::get('/inicio', function () {
+    return view('PuntoInicio.Inicio');
+})->name('inicio');
+
 // Inicio del administrador
 Route::get('/admin', function () {
     return view('Administrador.InicioAdmin.InicioAdmin');
 })->name('admin.inicio');
+
+// Carrito de compras
+Route::get('/carrito', function () {
+    return view('CarritoCompras.Carrito');
+})->name('carrito');
 
 
 // Logout

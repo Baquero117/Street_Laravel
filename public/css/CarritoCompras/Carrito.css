@@ -1,0 +1,251 @@
+
+.logo img  {
+  height: 75px;   
+  transition: transform 0.5s ease; 
+}
+
+.logo img :hover {
+  transform: scale(1.1); 
+}
+
+
+/* ==== BARRA SUPERIOR ==== */
+
+.container-barra {
+  background: rgb(0, 0, 0);
+  border-bottom: 1px solid #ddd;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.container-barra .form-control {
+  max-width: 250px;
+}
+
+.container-barra i {
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.container-barra i:hover {
+  color: #007bff;
+  transform: scale(1.1);
+}
+
+
+
+/* estilos visualizacion de prodcuto */
+
+.card {
+  border: 1px solid #e3e6e9;
+}
+.card-title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+.btn-link {
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+.btn-warning {
+  background-color: #ffd814;
+  border-color: #fcd200;
+  font-weight: bold;
+}
+
+
+
+.btn-outline-danger,
+.btn-outline-secondary {
+  border-radius: 20px;       /* redondeados */
+  font-size: 0.85rem;        /* más pequeños */
+  padding: 4px 10px;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  color: white;
+}
+
+
+/* Íconos */
+.social-icon-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #222;
+  color: white;
+  transition: background 0.3s, transform 0.3s;
+}
+
+.social-icon-circle:hover {
+  background: #007bff;
+  transform: scale(1.1);
+}
+
+/* menu sidebar */
+.modal {
+  display: none; 
+  position: fixed;
+  z-index: 1050;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.6);
+}
+
+.modal-contenido {
+  background: white;
+  width: 300px;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: -300px;
+  padding: 20px;
+  transition: left 0.4s ease;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+}
+
+.modal-contenido h2 {
+  margin-top: 0;
+}
+
+.modal-links {
+  list-style: none;
+  padding: 0;
+}
+
+.modal-links li {
+  margin: 15px 0;
+}
+
+.modal-links a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
+
+.modal-links a:hover {
+  color: #007bff;
+}
+
+
+
+.offcanvas-body a {
+  color: black; 
+  font-weight: 500; 
+}
+
+.offcanvas-body a:hover {
+  color: #2e2e2e; 
+  text-decoration: underline; 
+}
+
+/* Botón cerrar */
+.cerrar {
+  font-size: 24px;
+  cursor: pointer;
+  float: right;
+  color: #aaa;
+}
+
+.cerrar:hover {
+  color: black;
+}
+
+
+.modal.show .modal-contenido {
+  left: 0;
+}
+
+
+
+.btn-boton-pago {
+  background-color: rgb(221, 214, 120);   
+  color: rgb(0, 0, 0);             
+  border: none;              
+}
+
+
+
+.btn-agregar-carrusel {
+  background-color: rgb(221, 214, 120);   
+  color: rgb(0, 0, 0);             
+  border: none;              
+}
+
+.btn-agregar-carrusel:hover {
+  background-color: #000000;    
+  color: #ffffff;            
+}
+
+
+
+
+
+/* Estilos específicos para el Carrusel de Sugerencias */
+
+
+.carousel-indicators button {
+    background-color: #333; /* Color indicadores */
+}
+
+/* Estilo para las flechas de navegación */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: #333; 
+    padding: 15px;
+    border-radius: 50%;
+    opacity: 0.8;
+}
+
+.carousel-control-prev, 
+.carousel-control-next {
+    width: 5%; 
+}
+
+
+.carousel-item .card-title {
+    font-size: 0.9rem; 
+}
+
+
+
+/* footer + difuminado final */
+
+.footer-section {
+  background: linear-gradient(to top, #000000 100%, #333 100%, #ffffff 100%);
+  color: white;
+}
+
+
+.footer-section {
+  font-size: 0.9rem;
+}
+
+.footer-title {
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.footer-links a {
+  color: #bbb;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover {
+  color: white;
+}
