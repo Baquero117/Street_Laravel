@@ -11,7 +11,7 @@ class ClienteService
 
     public function __construct()
     {
-        // Obtiene el token de sesión
+        
         $this->token = session('token');
     }
 

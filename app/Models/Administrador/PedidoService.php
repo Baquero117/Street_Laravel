@@ -11,7 +11,7 @@ class PedidoService
 
     public function __construct()
     {
-        // Token almacenado en la sesión
+        
         $this->token = session('token');
     }
 
@@ -32,12 +32,12 @@ class PedidoService
 
         $data = $response->json();
 
-        // Asegurar que siempre sea un array de pedidos
+        
         if (!is_array($data)) {
             $data = [];
         }
 
-        // Si es un objeto único, convertirlo a array dentro de otro array
+        
         if (isset($data["id_pedido"])) {
             $data = [$data];
         }

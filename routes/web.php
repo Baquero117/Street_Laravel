@@ -8,6 +8,8 @@ use App\Http\Controllers\Administrador\DetalleProductoController;
 use App\Http\Controllers\Administrador\ProductoController;
 use App\Http\Controllers\Administrador\PedidoController;
 use App\Http\Controllers\Administrador\VendedorController;
+use App\Http\Controllers\Administrador\PromocionController;
+use App\Http\Controllers\Administrador\ValoracionController;
 
 Route::get('/login', [LoginController::class, 'mostrar'])->name('login');
 Route::post('/login', [LoginController::class, 'procesar'])->name('login.procesar');
@@ -97,3 +99,23 @@ Route::get('/vendedor', [VendedorController::class, 'index'])->name('vendedor.in
 Route::post('/vendedor/agregar', [VendedorController::class, 'store'])->name('vendedor.agregar');
 Route::post('/vendedor/actualizar', [VendedorController::class, 'update'])->name('vendedor.actualizar');
 Route::post('/vendedor/eliminar', [VendedorController::class, 'destroy'])->name('vendedor.eliminar');
+
+
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/admin/Promocion', [PromocionController::class, 'index'])->name('admin.Promocion');
+
+// CRUD Promociones
+Route::get('/promocion', [PromocionController::class, 'index'])->name('promocion.index');
+Route::post('/promocion/agregar', [PromocionController::class, 'store'])->name('promocion.agregar');
+Route::post('/promocion/actualizar', [PromocionController::class, 'update'])->name('promocion.actualizar');
+Route::post('/promocion/eliminar', [PromocionController::class, 'destroy'])->name('promocion.eliminar');
+
+
+
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+// Vista principal del administrador
+Route::get('/admin/Valoracion', [ValoracionController::class, 'index'])->name('admin.Valoracion');
+
+// CRUD Valoraciones
+Route::get('/valoracion', [ValoracionController::class, 'index'])->name('valoracion.index');
+Route::post('/valoracion/eliminar', [ValoracionController::class, 'destroy'])->name('valoracion.eliminar');

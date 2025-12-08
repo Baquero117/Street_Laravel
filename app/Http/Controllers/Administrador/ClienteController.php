@@ -13,7 +13,7 @@ class ClienteController extends Controller
 
     public function __construct(ClienteService $clienteService)
     {
-        // 🔥 Protección sin middleware
+       
         if (!session()->has('token')) {
             redirect()->route('login')->send();
         }

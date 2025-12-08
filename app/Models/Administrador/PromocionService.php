@@ -4,14 +4,14 @@ namespace App\Models\Administrador;
 
 use Illuminate\Support\Facades\Http;
 
-class DetalleProductoService
+class PromocionService
 {
-    private $baseUrl = "http://localhost:8080/detalle_producto";
+    private $baseUrl = "http://localhost:8080/promocion";
     private $token;
 
     public function __construct()
     {
-       
+        
         $this->token = session('token');
     }
 
@@ -23,28 +23,27 @@ class DetalleProductoService
         ];
     }
 
-    public function obtenerDetalles()
+    public function obtenerPromociones()
     {
         $response = Http::withHeaders($this->headers())
             ->get($this->baseUrl);
 
         if ($response->successful()) {
-            return $response->json();
+            return $response->json(); 
         }
 
         return [];
     }
 
-    public function agregarDetalle($talla, $color, $rutaImagen, $id_producto, $id_categoria, $precio)
+    public function crearPromocion($descripcion, $descuento, $fecha_inicio, $fecha_fin, $id_producto)
     {
         $response = Http::withHeaders($this->headers())
             ->post($this->baseUrl, [
-                "talla" => $talla,
-                "color" => $color,
-                "imagen" => $rutaImagen,   
-                "id_producto" => $id_producto,
-                "id_categoria" => $id_categoria,
-                "precio" => $precio
+                "descripcion" => $descripcion,
+                "descuento" => $descuento,
+                "fecha_inicio" => $fecha_inicio,
+                "fecha_fin" => $fecha_fin,
+                "id_producto" => $id_producto
             ]);
 
         if ($response->successful()) {
@@ -60,23 +59,16 @@ class DetalleProductoService
         ];
     }
 
-    public function actualizarDetalle($id, $talla, $color, $rutaImagen = null, $id_producto, $id_categoria, $precio)
+    public function actualizarPromocion($id_promocion, $descripcion, $descuento, $fecha_inicio, $fecha_fin, $id_producto)
     {
-        $payload = [
-            "talla" => $talla,
-            "color" => $color,
-            "id_producto" => $id_producto,
-            "id_categoria" => $id_categoria,
-            "precio" => $precio
-        ];
-
-       
-        if ($rutaImagen !== null) {
-            $payload["imagen"] = $rutaImagen;
-        }
-
         $response = Http::withHeaders($this->headers())
-            ->put($this->baseUrl . "/" . $id, $payload);
+            ->put($this->baseUrl . "/" . $id_promocion, [
+                "descripcion" => $descripcion,
+                "descuento" => $descuento,
+                "fecha_inicio" => $fecha_inicio,
+                "fecha_fin" => $fecha_fin,
+                "id_producto" => $id_producto
+            ]);
 
         if ($response->successful()) {
             return [
@@ -91,10 +83,10 @@ class DetalleProductoService
         ];
     }
 
-    public function eliminarDetalle($id)
+    public function eliminarPromocion($id_promocion)
     {
         $response = Http::withHeaders($this->headers())
-            ->delete($this->baseUrl . "/" . $id);
+            ->delete($this->baseUrl . "/" . $id_promocion);
 
         if ($response->successful()) {
             return ["success" => true];

@@ -11,7 +11,7 @@ class ProductoService
 
     public function __construct()
     {
-        // Token guardado en la sesión
+        
         $this->token = session('token');
     }
 
@@ -23,9 +23,7 @@ class ProductoService
         ];
     }
 
-    // ============================
-    // 🔹 OBTENER LISTA DE PRODUCTOS
-    // ============================
+   
     public function obtenerProductos()
     {
         $response = Http::withHeaders($this->headers())
@@ -38,9 +36,7 @@ class ProductoService
         return [];
     }
 
-    // ============================
-    // 🔹 AGREGAR PRODUCTO
-    // ============================
+   
     public function agregarProducto($nombre, $descripcion, $cantidad, $rutaImagen, $id_vendedor, $estado)
     {
         $payload = [
@@ -68,9 +64,7 @@ class ProductoService
         ];
     }
 
-    // ============================
-    // 🔹 ACTUALIZAR PRODUCTO
-    // ============================
+    
     public function actualizarProducto($id, $nombre, $descripcion, $cantidad, $rutaImagen = null, $id_vendedor, $estado)
     {
         $payload = [
@@ -81,7 +75,7 @@ class ProductoService
             "estado" => $estado
         ];
 
-        // Solo enviar imagen si se envió una nueva
+       
         if ($rutaImagen !== null) {
             $payload["imagen"] = $rutaImagen;
         }
@@ -102,9 +96,7 @@ class ProductoService
         ];
     }
 
-    // ============================
-    // 🔹 ELIMINAR PRODUCTO
-    // ============================
+  
     public function eliminarProducto($id)
     {
         $response = Http::withHeaders($this->headers())
