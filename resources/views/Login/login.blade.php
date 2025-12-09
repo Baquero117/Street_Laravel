@@ -78,7 +78,7 @@
                 <i class="bi bi-key"></i> ¿Olvidaste tu contraseña?
             </a>
 
-            <a href="#" class="text-decoration-none fw-bold text-primary">
+            <a href="{{ route('registro') }}" class="text-decoration-none fw-bold text-primary">
                 <i class="bi bi-person-plus"></i> Crea tu cuenta aquí
             </a>
         </div>

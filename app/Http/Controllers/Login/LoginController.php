@@ -50,7 +50,7 @@ class LoginController extends Controller
                 return redirect()->route('admin.inicio'); 
             }
 
-            return redirect()->route('home');
+            return redirect()->route('inicio');
         }
 
         // Credenciales incorrectas

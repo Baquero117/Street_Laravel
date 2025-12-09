@@ -8,6 +8,7 @@ use App\Http\Controllers\Administrador\DetalleProductoController;
 use App\Http\Controllers\Administrador\ProductoController;
 use App\Http\Controllers\Administrador\PedidoController;
 use App\Http\Controllers\Administrador\VendedorController;
+use App\Http\Controllers\Registro\RegistroController;
 
 Route::get('/login', [LoginController::class, 'mostrar'])->name('login');
 Route::post('/login', [LoginController::class, 'procesar'])->name('login.procesar');
@@ -17,6 +18,10 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/inicio', function () {
     return view('PuntoInicio.Inicio');
 })->name('inicio');
+
+// Registro de usuarios
+Route::get('/registro', [RegistroController::class, 'mostrar'])->name('registro');
+Route::post('/registro', [RegistroController::class, 'procesar'])->name('registro.procesar');
 
 // Inicio del administrador
 Route::get('/admin', function () {
