@@ -14,19 +14,36 @@ Route::get('/login', [LoginController::class, 'mostrar'])->name('login');
 Route::post('/login', [LoginController::class, 'procesar'])->name('login.procesar');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
+
+// Fachada
+route:: get('/fachada', function () {
+    return view('Fachada.Fachada');
+})->name('fachada');
+
+
 // Inicio de la aplicación
 Route::get('/inicio', function () {
     return view('PuntoInicio.Inicio');
 })->name('inicio');
 
+
 // Registro de usuarios
 Route::get('/registro', [RegistroController::class, 'mostrar'])->name('registro');
 Route::post('/registro', [RegistroController::class, 'procesar'])->name('registro.procesar');
+
 
 // Inicio del administrador
 Route::get('/admin', function () {
     return view('Administrador.InicioAdmin.InicioAdmin');
 })->name('admin.inicio');
+
+
+// Perfil de usuario
+Route::get('/Perfil', function () {
+    return view('PuntoInicio.Perfil');
+});
+
+
 
 // Carrito de compras
 Route::get('/carrito', function () {
@@ -102,3 +119,6 @@ Route::get('/vendedor', [VendedorController::class, 'index'])->name('vendedor.in
 Route::post('/vendedor/agregar', [VendedorController::class, 'store'])->name('vendedor.agregar');
 Route::post('/vendedor/actualizar', [VendedorController::class, 'update'])->name('vendedor.actualizar');
 Route::post('/vendedor/eliminar', [VendedorController::class, 'destroy'])->name('vendedor.eliminar');
+
+
+

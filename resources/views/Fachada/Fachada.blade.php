@@ -10,7 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     {{-- CSS --}}
-    <link rel="stylesheet" href="{{ asset('css/PuntoInicio/Inicio.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/Fachada/Fachada.css') }}">
 </head>
 
 <body>
@@ -20,7 +20,7 @@
         <div class="container-fluid bg-white shadow-sm fixed-top py-2">
 
             <a class="navbar-brand fw-bold">
-                <i class="bi bi-bag-check-fill me-2"></i> Urban Street
+                <i class="bi bi-bag-check-fill me-2"></i> ¿Todo bien?
             </a>
 
             <div class="collapse navbar-collapse justify-content-center">
@@ -54,9 +54,8 @@
                         <i class="bi bi-person-circle"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="{{ url('Perfil') }}">Ver Perfil</a></li>
-                        <li><a class="dropdown-item" href="{{ url('fachada') }}">Cerrar Sesión</a></li>
-                        
+                        <li><a class="dropdown-item" href="{{ url('login') }}">Sign In</a></li>
+                        <li><a class="dropdown-item" href="#">Sign Up</a></li>
                     </ul>
                 </div>
 
@@ -285,20 +284,17 @@
         </div>
 
         <!-- MODAL -->
-        <div class="modal fade" id="detalleModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+        <div class="modal fade" id="detalleModal" tabindex="-1">
+            <div class="modal-dialog">
                 <div class="modal-content">
 
-                    <div class="modal-header bg-dark text-white">
-                        <h5 class="modal-title" id="modalNombre"></h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Atención</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
-                    <div class="modal-body">
-                        <p id="modalDescripcion"></p>
-                        <p><strong>Categoría:</strong> <span id="modalCategoria"></span></p>
-                        <p><strong>Color:</strong> <span id="modalColor"></span></p>
-                        <p><strong>Talla:</strong> <span id="modalTalla"></span></p>
+                    <div class="modal-body text-center">
+                        <p id="modalMensaje" class="fs-5"></p>
                     </div>
 
                     <div class="modal-footer">
@@ -308,6 +304,7 @@
                 </div>
             </div>
         </div>
+
 
     </div>
 
@@ -359,7 +356,7 @@
 
     {{-- JS --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset('js/PuntoInicio/Inicio.js') }}"></script>
+    <script src="{{ asset('js/Fachada/Fachada.js') }}"></script>
 
 </body>
 </html>

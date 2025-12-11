@@ -50,7 +50,9 @@ class LoginController extends Controller
                 return redirect()->route('admin.inicio'); 
             }
 
-            return redirect()->route('inicio');
+            if ($resultado['tipo'] === 'cliente') {
+                return redirect()->route('inicio');
+            }
         }
 
         // Credenciales incorrectas
