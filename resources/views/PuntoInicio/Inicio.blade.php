@@ -26,13 +26,13 @@
             <div class="collapse navbar-collapse justify-content-center">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">Hombre</a>
+                        <a class="nav-link active" href="{{ url('/hombre') }}" >Hombre</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Mujer</a>
+                        <a class="nav-link" href="{{ url('/mujer') }}">Mujer</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Lo mejor de la moda</a>
+                        <a class="nav-link" href="{{ url('/moda') }}">Lo mejor de la moda</a>
                     </li>
                 </ul>
             </div>

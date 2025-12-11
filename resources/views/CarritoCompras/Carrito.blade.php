@@ -77,7 +77,8 @@
                         <div class="row g-0 align-items-center">
 
                             <div class="col-md-2 text-center">
-                                <img src="{{ asset('img/productos/' . $item->imagen) }}" 
+                                <img src="{{ asset('img/CarritoCompras/Chaqueta-azul.jpg') }}" alt="Chaqueta azul"
+ 
                                      class="img-fluid rounded" alt="Producto">
                             </div>
 
@@ -180,9 +181,10 @@
 
                             <div class="col">
                                 <div class="card h-100 text-center p-2">
-                                    <img src="{{ asset('img/productos/' . $producto->imagen) }}"
-                                         class="card-img-top mx-auto mt-2"
-                                         style="height: 150px; object-fit: contain">
+                                    <img src="{{ asset('img/CarritoCompras/Chaqueta-azul.jpg') }}" alt="Chaqueta Azul"
+                                       class="card-img-top mx-auto mt-2"
+                                       style="height: 150px; object-fit: contain">
+
 
                                     <div class="card-body">
                                         <h6 class="card-title text-truncate">{{ $producto->nombre }}</h6>

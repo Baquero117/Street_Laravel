@@ -8,6 +8,10 @@ use App\Http\Controllers\Administrador\DetalleProductoController;
 use App\Http\Controllers\Administrador\ProductoController;
 use App\Http\Controllers\Administrador\PedidoController;
 use App\Http\Controllers\Administrador\VendedorController;
+use App\Http\Controllers\Carrito\CarritoController;
+use App\Http\Controllers\MasVistas\HombreController;
+use App\Http\Controllers\MasVistas\MujerController;
+use App\Http\Controllers\MasVistas\ModaController;
 
 Route::get('/login', [LoginController::class, 'mostrar'])->name('login');
 Route::post('/login', [LoginController::class, 'procesar'])->name('login.procesar');
@@ -18,15 +22,27 @@ Route::get('/inicio', function () {
     return view('PuntoInicio.Inicio');
 })->name('inicio');
 
+// Vista ropa hombre
+Route::get('/hombre', [HombreController::class, 'index'])->name('hombre');
+
+// Vista ropa Mujer
+Route::get('/mujer', [MujerController::class, 'index'])->name('mujer');
+
+// Vista ropa de moda
+Route::get('/moda', [ModaController::class, 'index'])->name('moda');
+
+
+
+// Carrito de compras
+Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito');
+
 // Inicio del administrador
 Route::get('/admin', function () {
     return view('Administrador.InicioAdmin.InicioAdmin');
 })->name('admin.inicio');
 
-// Carrito de compras
-Route::get('/carrito', function () {
-    return view('CarritoCompras.Carrito');
-})->name('carrito');
+
+
 
 
 // Logout
