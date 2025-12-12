@@ -33,9 +33,9 @@
             <div class="offcanvas-body">
                 <ul class="list-unstyled">
                     <li><a href="{{ route('inicio') }}" class="text-decoration-none">Inicio</a></li>
-                    <li><a href="#" class="text-decoration-none">Catálogo</a></li>
-                    <li><a href="#" class="text-decoration-none">Ofertas</a></li>
-                    <li><a href="#" class="text-decoration-none">Contacto</a></li>
+                    <li><a href="{{ route('inicio') }}" class="text-decoration-none">Catálogo</a></li>
+                    <li><a href="{{ route('moda') }}" class="text-decoration-none">Ofertas</a></li>
+                    <li><a href="{{ route('inicio') }}" class="text-decoration-none">Contacto</a></li>
                 </ul>
             </div>
         </div>
