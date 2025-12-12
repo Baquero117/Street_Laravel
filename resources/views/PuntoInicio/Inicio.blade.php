@@ -20,7 +20,9 @@
         <div class="container-fluid bg-white shadow-sm fixed-top py-2">
 
             <a class="navbar-brand fw-bold">
-                <i class="bi bi-bag-check-fill me-2"></i> ¿Todo bien?
+                <a href="{{ route('inicio') }}" class="mx-auto logo">
+            <img src="{{ asset('img/OtrasVistas/Logo.png') }}" alt="Logo">
+        </a>
             </a>
 
             <div class="collapse navbar-collapse justify-content-center">
