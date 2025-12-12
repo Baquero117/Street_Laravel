@@ -223,10 +223,10 @@
             <div class="col-md-4 mb-3">
                 <h5 class="footer-title">Síguenos en</h5>
                 <div class="d-flex justify-content-center gap-2">
-                    <a class="social-icon-circle"><i class="bi bi-facebook"></i></a>
-                    <a class="social-icon-circle"><i class="bi bi-instagram"></i></a>
-                    <a class="social-icon-circle"><i class="bi bi-youtube"></i></a>
-                    <a class="social-icon-circle"><i class="bi bi-tiktok"></i></a>
+                    <a class="social-icon-circleF"><i class="bi bi-facebook"></i></a>
+                    <a class="social-icon-circleI"><i class="bi bi-instagram"></i></a>
+                    <a class="social-icon-circleY"><i class="bi bi-youtube"></i></a>
+                    <a class="social-icon-circleT"><i class="bi bi-tiktok"></i></a>
                 </div>
             </div>
 
