@@ -376,13 +376,13 @@
                         <div id="carouselCard7" class="carousel slide">
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/camisa-lila.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Mujer/camisa-blanca.jpg') }}" class="d-block w-100">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/camisa-lila3.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Mujer/camisa-blanca2.jpg') }}" class="d-block w-100">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/camisa-lila2.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Mujer/camisa-blanca3.jpg') }}" class="d-block w-100">
                                 </div>
                             </div>
 
@@ -416,13 +416,10 @@
                         <div id="carouselCard8" class="carousel slide">
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/oversize-cafe.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Mujer/medias-tobillera.jpg') }}" class="d-block w-100">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/oversize-cafe3.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/oversize-cafe2.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Mujer/medias-tobilleras.jpg') }}" class="d-block w-100">
                                 </div>
                             </div>
 
@@ -456,13 +453,13 @@
                         <div id="carouselCard9" class="carousel slide">
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/baggy-azul.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Mujer/short-azul.jpg') }}" class="d-block w-100">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/baggy-azul2.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Mujer/short-azul2.jpg') }}" class="d-block w-100">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/baggy-azul3.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Mujer/short-azul3.jpg') }}" class="d-block w-100">
                                 </div>
                             </div>
 
