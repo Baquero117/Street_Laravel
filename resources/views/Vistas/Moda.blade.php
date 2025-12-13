@@ -127,13 +127,13 @@
                         <div id="carouselCard1" class="carousel slide">
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/jean-negro.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/jean-azul.jpg') }}" class="d-block w-100">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/jean-negro2.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/jean-azul2.jpg') }}" class="d-block w-100">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/jean-negro3.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/jean-azul3.jpg') }}" class="d-block w-100">
                                 </div>
                             </div>
 
@@ -171,13 +171,13 @@
                         <div id="carouselCard2" class="carousel slide">
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/manga-larga.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/gorro-rojo.jpg') }}" class="d-block w-100">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/manga-larga2.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/gorro-rojo2.jpg') }}" class="d-block w-100">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/manga-larga3.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/gorro-rojo3.jpg') }}" class="d-block w-100">
                                 </div>
                             </div>
 
@@ -212,13 +212,13 @@
                         <div id="carouselCard3" class="carousel slide">
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/manga-rosa2.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/camiseta-verde.jpg') }}" class="d-block w-100">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/manga-rosa3.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/camiseta-verde2.jpg') }}" class="d-block w-100">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/manga-rosa.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/camiseta-verde3.jpg') }}" class="d-block w-100">
                                 </div>
                             </div>
 
@@ -254,13 +254,13 @@
                         <div id="carouselCard4" class="carousel slide">
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/vestido-negro.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/chaqueta-jean.jpg') }}" class="d-block w-100">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/vestido-negro2.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/chaqueta-jean2.jpg') }}" class="d-block w-100">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/vestido-negro3.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/chaqueta-jean3.jpg') }}" class="d-block w-100">
                                 </div>
                             </div>
 

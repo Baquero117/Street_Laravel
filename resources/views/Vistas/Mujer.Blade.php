@@ -148,13 +148,13 @@
                         </div>
 
                         <div class="card-body text-center">
-                            <h5 class="card-title">Camiseta gris</h5>
+                            <h5 class="card-title">Jean negro</h5>
                             <button class="btn btn-dark ver-detalle"
-                                data-nombre="Camiseta gris"
-                                data-descripcion="Camisa edición rick and morty de algodon."
+                                data-nombre="Jean negro"
+                                data-descripcion="Jean ancho de color negro."
                                 data-categoria="Casual"
-                                data-color="Gris"
-                                data-talla="M">
+                                data-color="Negro"
+                                data-talla="28 E.E.U.U">
                                 Ver más
                             </button>
                         </div>
@@ -192,10 +192,10 @@
                         </div>
 
                         <div class="card-body text-center">
-                            <h5 class="card-title">Camiseta negra</h5>
+                            <h5 class="card-title">Camiseta manga larga</h5>
                             <button class="btn btn-dark ver-detalle"
-                                data-nombre="Camiseta negra"
-                                data-descripcion="Camiseta negra estilo oversize de algodon."
+                                data-nombre="Camiseta manga larga"
+                                data-descripcion="Camiseta manga larga de color negro, en algodon."
                                 data-categoria="Casual"
                                 data-color="Negro"
                                 data-talla="M">
@@ -233,13 +233,13 @@
                         </div>
 
                         <div class="card-body text-center">
-                            <h5 class="card-title">Jean azul</h5>
+                            <h5 class="card-title">Camiseta manga larga</h5>
                             <button class="btn btn-dark ver-detalle"
-                                data-nombre="Jean azul"
-                                data-descripcion="Jean azul estilizado."
+                                data-nombre="Camiseta manga larga"
+                                data-descripcion="Camiseta manga larga color rosa."
                                 data-categoria="Casual"
-                                data-color="azul"
-                                data-talla="32">
+                                data-color="Rosado"
+                                data-talla="M">
                                 Ver más
                             </button>
                         </div>
@@ -275,11 +275,11 @@
                         </div>
 
                         <div class="card-body text-center">
-                            <h5 class="card-title">Buzo negro</h5>
+                            <h5 class="card-title">Vestido negro</h5>
                             <button class="btn btn-dark ver-detalle"
-                                data-nombre="Buzo negro"
-                                data-descripcion="Buzo negro de algodon."
-                                data-categoria="Casual"
+                                data-nombre="Vestido negro"
+                                data-descripcion="Vestido negro largo."
+                                data-categoria="Formal"
                                 data-color="Negro"
                                 data-talla="M">
                                 Ver más
@@ -315,13 +315,13 @@
                         </div>
 
                         <div class="card-body text-center">
-                            <h5 class="card-title">Pantalon negro</h5>
+                            <h5 class="card-title">Jean camuflado</h5>
                             <button class="btn btn-dark ver-detalle"
-                                data-nombre="Pantalon cargo negro"
-                                data-descripcion="Pantalon cargo negro en drill ."
+                                data-nombre="Jean camuflado"
+                                data-descripcion="Jean azul con diseño camuflado."
                                 data-categoria="Casual"
-                                data-color="Negro"
-                                data-talla="M">
+                                data-color="Azul"
+                                data-talla="28">
                                 Ver más
                             </button>
                         </div>
@@ -356,13 +356,13 @@
                         </div>
 
                         <div class="card-body text-center">
-                            <h5 class="card-title">Camiseta estilizada</h5>
+                            <h5 class="card-title">Baggy negro</h5>
                             <button class="btn btn-dark ver-detalle"
-                                data-nombre="Camiseta estilizada"
-                                data-descripcion="Camiseta de algodon con estilo en las mangas."
+                                data-nombre="Baggy negro"
+                                data-descripcion="Pantalon estilo baggy color negro."
                                 data-categoria="Casual"
-                                data-color="Gris"
-                                data-talla="M">
+                                data-color="Negro"
+                                data-talla="28">
                                 Ver más
                             </button>
                         </div>
@@ -396,12 +396,12 @@
                         </div>
 
                         <div class="card-body text-center">
-                            <h5 class="card-title">Camiseta lila</h5>
+                            <h5 class="card-title">Camiseta blanca</h5>
                             <button class="btn btn-dark ver-detalle"
-                                data-nombre="Camiseta lila"
-                                data-descripcion="Camiseta color lila de algodon."
+                                data-nombre="Camiseta blanca"
+                                data-descripcion="Camiseta blanca estamapda, en algodon."
                                 data-categoria="Casual"
-                                data-color="Lila"
+                                data-color="Blanco"
                                 data-talla="M">
                                 Ver más
                             </button>
@@ -433,12 +433,12 @@
                         </div>
 
                         <div class="card-body text-center">
-                            <h5 class="card-title">Camiseta café</h5>
+                            <h5 class="card-title">Medias blancas</h5>
                             <button class="btn btn-dark ver-detalle"
-                                data-nombre="Camiseta café"
-                                data-descripcion="Camiseta café estilo oversize de algodon."
+                                data-nombre="Medias blancas"
+                                data-descripcion="Medias blancas con diseño en color negro."
                                 data-categoria="Casual"
-                                data-color="Café"
+                                data-color="Blanco"
                                 data-talla="M">
                                 Ver más
                             </button>
@@ -473,10 +473,10 @@
                         </div>
 
                         <div class="card-body text-center">
-                            <h5 class="card-title">Baggy azul</h5>
+                            <h5 class="card-title">Short azul</h5>
                             <button class="btn btn-dark ver-detalle"
-                                data-nombre="Baggy azul"
-                                data-descripcion="Pantalon Jean azul estilo baggy."
+                                data-nombre="Short azul"
+                                data-descripcion="Short en jean color azul y con diseño."
                                 data-categoria="Casual"
                                 data-color="Azul"
                                 data-talla="M">
