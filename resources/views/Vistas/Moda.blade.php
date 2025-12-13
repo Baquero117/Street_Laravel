@@ -147,13 +147,13 @@
                         </div>
 
                         <div class="card-body text-center">
-                            <h5 class="card-title">Camiseta gris</h5>
+                            <h5 class="card-title">Jean azul</h5>
                             <button class="btn btn-dark ver-detalle"
-                                data-nombre="Camiseta gris"
-                                data-descripcion="Camisa edición rick and morty de algodon."
+                                data-nombre="Jean azul"
+                                data-descripcion="Jean azul estilo baggy con dos tonos de azul."
                                 data-categoria="Casual"
-                                data-color="Gris"
-                                data-talla="M">
+                                data-color="Azul"
+                                data-talla="28">
                                 Ver más
                             </button>
                         </div>
@@ -191,12 +191,12 @@
                         </div>
 
                         <div class="card-body text-center">
-                            <h5 class="card-title">Camiseta negra</h5>
+                            <h5 class="card-title">Gorro rojo</h5>
                             <button class="btn btn-dark ver-detalle"
-                                data-nombre="Camiseta negra"
-                                data-descripcion="Camiseta negra estilo oversize de algodon."
+                                data-nombre="Gorro rojo"
+                                data-descripcion="Gorro de algodon en color rojo."
                                 data-categoria="Casual"
-                                data-color="Negro"
+                                data-color="rojo"
                                 data-talla="M">
                                 Ver más
                             </button>
@@ -232,13 +232,13 @@
                         </div>
 
                         <div class="card-body text-center">
-                            <h5 class="card-title">Jean azul</h5>
+                            <h5 class="card-title">Camiseta verde</h5>
                             <button class="btn btn-dark ver-detalle"
-                                data-nombre="Jean azul"
-                                data-descripcion="Jean azul estilizado."
+                                data-nombre="Camiseta verde"
+                                data-descripcion="Camiseta oversize color verde."
                                 data-categoria="Casual"
-                                data-color="azul"
-                                data-talla="32">
+                                data-color="verde"
+                                data-talla="XL">
                                 Ver más
                             </button>
                         </div>
@@ -274,13 +274,13 @@
                         </div>
 
                         <div class="card-body text-center">
-                            <h5 class="card-title">Buzo negro</h5>
+                            <h5 class="card-title">Chaqueta jean</h5>
                             <button class="btn btn-dark ver-detalle"
-                                data-nombre="Buzo negro"
-                                data-descripcion="Buzo negro de algodon."
+                                data-nombre="Chaqueta jean"
+                                data-descripcion="Chaqueta en jean de color negro."
                                 data-categoria="Casual"
                                 data-color="Negro"
-                                data-talla="M">
+                                data-talla="L">
                                 Ver más
                             </button>
                         </div>
@@ -294,13 +294,13 @@
                         <div id="carouselCard5" class="carousel slide">
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/jean-camuflado.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/vestido-gris.jpg') }}" class="d-block w-100">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/jean-camuflado2.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/vestido-gris2.jpg') }}" class="d-block w-100">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/jean-camuflado3.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/vestido-gris3.jpg') }}" class="d-block w-100">
                                 </div>
                             </div>
 
@@ -314,12 +314,12 @@
                         </div>
 
                         <div class="card-body text-center">
-                            <h5 class="card-title">Pantalon negro</h5>
+                            <h5 class="card-title">Vestido gris</h5>
                             <button class="btn btn-dark ver-detalle"
-                                data-nombre="Pantalon cargo negro"
-                                data-descripcion="Pantalon cargo negro en drill ."
+                                data-nombre="Vestido gris"
+                                data-descripcion="Vestido largo en color gris ."
                                 data-categoria="Casual"
-                                data-color="Negro"
+                                data-color="Gris"
                                 data-talla="M">
                                 Ver más
                             </button>
@@ -335,14 +335,12 @@
                         <div id="carouselCard6" class="carousel slide">
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/baggy-negro.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/medias.jpg') }}" class="d-block w-100">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/baggy-negro3.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/medias2.jpg') }}" class="d-block w-100">
                                 </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/baggy-negro2.jpg') }}" class="d-block w-100">
-                                </div>
+                                
                             </div>
 
                             <button class="carousel-control-prev" type="button" data-bs-target="#carouselCard6" data-bs-slide="prev">
@@ -355,12 +353,12 @@
                         </div>
 
                         <div class="card-body text-center">
-                            <h5 class="card-title">Camiseta estilizada</h5>
+                            <h5 class="card-title">Medias blancas</h5>
                             <button class="btn btn-dark ver-detalle"
-                                data-nombre="Camiseta estilizada"
-                                data-descripcion="Camiseta de algodon con estilo en las mangas."
+                                data-nombre="Medias blancas"
+                                data-descripcion="Medias blancas con detalles en morado."
                                 data-categoria="Casual"
-                                data-color="Gris"
+                                data-color="Blanco"
                                 data-talla="M">
                                 Ver más
                             </button>
@@ -375,13 +373,13 @@
                         <div id="carouselCard7" class="carousel slide">
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/camisa-blanca.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/pantalon-cargo.jpg') }}" class="d-block w-100">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/camisa-blanca2.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/pantalon-cargo2.jpg') }}" class="d-block w-100">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/camisa-blanca3.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/pantalon-cargo3.jpg') }}" class="d-block w-100">
                                 </div>
                             </div>
 
@@ -395,12 +393,12 @@
                         </div>
 
                         <div class="card-body text-center">
-                            <h5 class="card-title">Camiseta lila</h5>
+                            <h5 class="card-title">Pantalon cargo</h5>
                             <button class="btn btn-dark ver-detalle"
-                                data-nombre="Camiseta lila"
-                                data-descripcion="Camiseta color lila de algodon."
+                                data-nombre="Pantalon cargo"
+                                data-descripcion="Pantalon cargo en color kaki."
                                 data-categoria="Casual"
-                                data-color="Lila"
+                                data-color="kaki"
                                 data-talla="M">
                                 Ver más
                             </button>
@@ -415,10 +413,13 @@
                         <div id="carouselCard8" class="carousel slide">
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/medias-tobillera.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/gorra.jpg') }}" class="d-block w-100">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/medias-tobilleras.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/gorra2.jpg') }}" class="d-block w-100">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/gorra3.jpg') }}" class="d-block w-100">
                                 </div>
                             </div>
 
@@ -432,12 +433,12 @@
                         </div>
 
                         <div class="card-body text-center">
-                            <h5 class="card-title">Camiseta café</h5>
+                            <h5 class="card-title">Gorra negra</h5>
                             <button class="btn btn-dark ver-detalle"
-                                data-nombre="Camiseta café"
-                                data-descripcion="Camiseta café estilo oversize de algodon."
+                                data-nombre="Gorra negra"
+                                data-descripcion="Gorra en color negro y bordado."
                                 data-categoria="Casual"
-                                data-color="Café"
+                                data-color="Negro"
                                 data-talla="M">
                                 Ver más
                             </button>
@@ -452,13 +453,13 @@
                         <div id="carouselCard9" class="carousel slide">
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/short-azul.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/baggy-azul.jpg') }}" class="d-block w-100">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/short-azul2.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/baggy-azul2.jpg') }}" class="d-block w-100">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Mujer/short-azul3.jpg') }}" class="d-block w-100">
+                                    <img src="{{ asset('img/OtrasVistas/Moda/baggy-azul3.jpg') }}" class="d-block w-100">
                                 </div>
                             </div>
 
@@ -478,7 +479,7 @@
                                 data-descripcion="Pantalon Jean azul estilo baggy."
                                 data-categoria="Casual"
                                 data-color="Azul"
-                                data-talla="M">
+                                data-talla="28">
                                 Ver más
                             </button>
                         </div>
