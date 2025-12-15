@@ -16,13 +16,11 @@ class LoginController extends Controller
         $this->loginService = $loginService;
     }
 
-    // Mostrar formulario de login
     public function mostrar()
     {
-        return view('login.login'); // resources/views/login/login.blade.php
+        return view('login.login');
     }
 
-    // Procesar formulario
     public function procesar(Request $request)
     {
         // Validación
@@ -64,6 +62,6 @@ class LoginController extends Controller
     public function logout()
     {
         Session::flush();
-        return redirect()->route('PuntoInicio.Inicio');
+        return redirect()->route('Fachada.Fachada');
     }
 }

@@ -10,7 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="{{ asset('css/PuntoInicio/Perfil.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/PuntoInicio/Cliente/Perfil.css') }}">
 </head>
 
 <body>
@@ -29,7 +29,7 @@
                         <i class="bi bi-person-circle"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="{{ url('Perfil') }}">Ver Perfil</a></li>
+                        <li><a class="dropdown-item" href="{{ url('perfil') }}">Ver Perfil</a></li>
                         <li><a class="dropdown-item" href="{{ url('fachada') }}">Cerrar Sesión</a></li>
                     </ul>
                 </div>
@@ -66,17 +66,17 @@
                     </div>
                 </a>
 
-                <a href="#" class="text-decoration-none text-dark">
+                <a href="{{ url('perfil') }}" class="text-decoration-none text-dark">
                     <div class="perfil-card">
                         <div class="perfil-card-title">Cuenta</div>
                         <div class="perfil-card-sub">Mi información personal</div>
                     </div>
                 </a>
 
-                <a href="#" class="text-decoration-none text-dark">
+                <a href="{{ url('inicio') }}" class="text-decoration-none text-dark">
                     <div class="perfil-card">
-                        <div class="perfil-card-title">Cupones</div>
-                        <div class="perfil-card-sub">Mis cupones disponibles</div>
+                        <div class="perfil-card-title">Inicio</div>
+                        <div class="perfil-card-sub">Volver a la pagina principal</div>
                     </div>
                 </a>
 

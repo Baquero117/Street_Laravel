@@ -2,51 +2,83 @@
 
 namespace App\Models\PuntoInicio;
 
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 
 class PerfilService
 {
-    private $apiUrl;
+    private string $apiUrl;
 
     public function __construct()
     {
-        $this->apiUrl = "http://localhost:8080/cliente/";
+        $this->apiUrl = "http://localhost:8080/cliente";
     }
 
     public function obtenerPerfil()
     {
-        // Obtener datos guardados al iniciar sesión
         $token = Session::get('token');
-        $idCliente = Session::get('usuario_id');
 
-        if (!$token || !$idCliente) {
-            return null; // No está logeado
+        if (!$token) {
+            return null;
         }
 
-        // Construcción del endpoint
-        $url = $this->apiUrl . $idCliente;
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json'
+        ])->get($this->apiUrl . "/perfil");
 
-        // Inicializar CURL
-        $curl = curl_init($url);
-
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HTTPGET, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, [
-            "Authorization: Bearer $token",
-            "Content-Type: application/json"
-        ]);
-
-        $respuesta = curl_exec($curl);
-        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
-        curl_close($curl);
-
-        // Verificar respuesta correcta
-        if ($httpCode === 200) {
-            return json_decode($respuesta, true);
+        if ($response->successful()) {
+            return $response->json();
         }
 
         return null;
     }
-}
 
+    public function actualizarPerfil(
+        string $nombre,
+        string $apellido,
+        ?string $contrasena,
+        string $direccion,
+        string $telefono,
+        string $correo_electronico
+    ) {
+        $token = Session::get('token');
+
+        if (!$token) {
+            return [
+                "success" => false,
+                "error" => "Token no encontrado"
+            ];
+        }
+
+        $data = [
+            "nombre" => $nombre,
+            "apellido" => $apellido,
+            "direccion" => $direccion,
+            "telefono" => $telefono,
+            "correo_electronico" => $correo_electronico
+        ];
+
+        if (!empty($contrasena)) {
+            $data["contrasena"] = $contrasena;
+        }
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json'
+        ])->put($this->apiUrl . "/perfil", $data);
+
+        if ($response->successful()) {
+            return [
+                "success" => true,
+                "data" => $response->json()
+            ];
+        }
+
+        return [
+            "success" => false,
+            "error" => "HTTP " . $response->status(),
+            "response" => $response->body()
+        ];
+    }
+}
