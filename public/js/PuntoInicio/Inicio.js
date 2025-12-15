@@ -1,46 +1,25 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
+  const botones = document.querySelectorAll(".ver-detalle");
 
-    const modalImagen = document.getElementById('modalImagen');
-    const modalTalla = document.getElementById('modalTalla');
-    const modalColor = document.getElementById('modalColor');
-    const modalPrecio = document.getElementById('modalPrecio');
-    const btnAgregarCarrito = document.getElementById('btnAgregarCarrito');
+  botones.forEach(boton => {
+    boton.addEventListener("click", function () {
+      // Extraer la info de los atributos data
+      const nombre = this.getAttribute("data-nombre");
+      const descripcion = this.getAttribute("data-descripcion");
+      const categoria = this.getAttribute("data-categoria");
+      const color = this.getAttribute("data-color");
+      const talla = this.getAttribute("data-talla");
 
-    let idDetalleProducto = null;
+      // Pasar la info al modal
+      document.getElementById("modalNombre").textContent = nombre;
+      document.getElementById("modalDescripcion").textContent = descripcion;
+      document.getElementById("modalCategoria").textContent = categoria;
+      document.getElementById("modalColor").textContent = color;
+      document.getElementById("modalTalla").textContent = talla;
 
-    document.querySelectorAll('.ver-detalle').forEach(boton => {
-
-        boton.addEventListener('click', () => {
-
-            const imagen = boton.dataset.imagen;
-            const talla = boton.dataset.talla;
-            const color = boton.dataset.color;
-            const precio = boton.dataset.precio;
-            idDetalleProducto = boton.dataset.id;
-
-            modalImagen.src = imagen;
-            modalTalla.textContent = talla;
-            modalColor.textContent = color;
-            modalPrecio.textContent = precio;
-
-        });
-
+      // Mostrar modal
+      const modal = new bootstrap.Modal(document.getElementById("detalleModal"));
+      modal.show();
     });
-
-    btnAgregarCarrito.addEventListener('click', () => {
-
-        if (!idDetalleProducto) {
-            alert('Error al agregar el producto');
-            return;
-        }
-
-        console.log('Producto agregado al carrito:', idDetalleProducto);
-
-        // AQUÍ más adelante hacemos el fetch al backend 🚀
-        // fetch('/carrito/agregar', {...})
-
-        alert('Producto agregado al carrito 🛒');
-
-    });
-
+  });
 });
