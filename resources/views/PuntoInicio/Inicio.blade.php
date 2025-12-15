@@ -20,19 +20,21 @@
         <div class="container-fluid bg-white shadow-sm fixed-top py-2">
 
             <a class="navbar-brand fw-bold">
-                <i class="bi bi-bag-check-fill me-2"></i> Urban Street
+                <a href="{{ route('inicio') }}" class="mx-auto logo">
+            <img src="{{ asset('img/OtrasVistas/Logo.png') }}" alt="Logo">
+        </a>
             </a>
 
             <div class="collapse navbar-collapse justify-content-center">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">Hombre</a>
+                        <a class="nav-link active" href="{{ url('/hombre') }}" >Hombre</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Mujer</a>
+                        <a class="nav-link" href="{{ url('/mujer') }}">Mujer</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Lo mejor de la moda</a>
+                        <a class="nav-link" href="{{ url('/moda') }}">Lo mejor de la moda</a>
                     </li>
                 </ul>
             </div>

@@ -3,6 +3,8 @@
   transition: transform 0.5s ease; 
 }
 
+
+
 body {
   background-image: url('/img/PuntoInicio/Urban.jpg') !important;
   background-size: cover !important;

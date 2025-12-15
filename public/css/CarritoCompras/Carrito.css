@@ -75,7 +75,8 @@
 
 
 /* Íconos */
-.social-icon-circle {
+
+.social-icon-circleF {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -87,10 +88,62 @@
   transition: background 0.3s, transform 0.3s;
 }
 
-.social-icon-circle:hover {
+.social-icon-circleI {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #222;
+  color: white;
+  transition: background 0.3s, transform 0.3s;
+}
+.social-icon-circleY {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #222;
+  color: white;
+  transition: background 0.3s, transform 0.3s;
+}
+
+.social-icon-circleT {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #222;
+  color: white;
+  transition: background 0.3s, transform 0.3s;
+}
+
+.social-icon-circleF:hover {
   background: #007bff;
   transform: scale(1.1);
 }
+
+.social-icon-circleI:hover {
+  background: #ff0062;
+  transform: scale(1.1);
+}
+
+.social-icon-circleY:hover {
+  background: #ff0000;
+  transform: scale(1.1);
+}
+
+.social-icon-circleT:hover {
+  background: #000000;
+  transform: scale(1.1);
+}
+
+
 
 /* menu sidebar */
 .modal {
