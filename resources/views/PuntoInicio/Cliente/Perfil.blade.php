@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Cuenta - Urban Street</title>
-
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rubik:wght@300;400;500;700&family=Permanent+Marker&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/PuntoInicio/Cliente/Cuenta.css') }}">
 </head>
 
@@ -18,18 +16,35 @@
     <nav class="navbar navbar-expand-lg navbar-light fixed-top my-0">
         <div class="container-fluid bg-white shadow-sm fixed-top py-2 d-flex align-items-center">
 
-           <div class="mx-auto text-center">
-                <a class="navbar-brand fw-bold">Urban Street</a>
-            </div>
+           <a href="{{ url('/inicio') }}" class="navbar-brand fw-bold logo-urbano px-5">
+                Urban Street
+            </a>
 
             <div class="d-flex align-items-center gap-3 position-absolute end-0 me-3">
+                
                 <div class="dropdown">
+
                     <a href="#" class="text-dark fs-5 dropdown-toggle" data-bs-toggle="dropdown">
                         <i class="bi bi-person-circle"></i>
                     </a>
+
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="{{ url('Perfil') }}">Ver Perfil</a></li>
-                        <li><a class="dropdown-item" href="{{ url('fachada') }}">Cerrar Sesión</a></li>
+
+                        <li>
+                            <a class="dropdown-item" href="{{ url('cuenta') }}">
+                                Ver Perfil
+                            </a>
+                        </li>
+
+                        <li>
+                            <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                @csrf
+                                <button type="submit" class="dropdown-item">
+                                    Cerrar sesión
+                                </button>
+                            </form>
+                        </li>
+
                     </ul>
                 </div>
 
@@ -58,13 +73,6 @@
                     </div>
                 </a>
 
-                <a href="#" class="text-decoration-none text-dark">
-                    <div class="cuenta-card">
-                        <div class="cuenta-card-title">Direcciones</div>
-                        <div class="cuenta-card-sub">Mis direcciones</div>
-                    </div>
-                </a>
-
                 <a href="{{ url('cuenta') }}" class="text-decoration-none text-dark">
                     <div class="cuenta-card active">
                         <div class="cuenta-card-title">Cuenta</div>
@@ -78,6 +86,17 @@
                         <div class="cuenta-card-sub">Volver a la pagina principal</div>
                     </div>
                 </a>
+
+                <form action="{{ route('logout') }}" method="POST" class="m-0 p-0">
+                @csrf
+                <button type="submit" class="border-0 bg-transparent p-0 w-100 text-start">
+                    <div class="cuenta-card">
+                        <div class="cuenta-card-title">Sesión</div>
+                        <div class="cuenta-card-sub">Cierre de sesión</div>
+                    </div>
+                </button>
+                </form>
+
 
             </div>
 

@@ -24,22 +24,14 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/registro', [RegistroController::class, 'mostrar'])->name('registro');
 Route::post('/registro', [RegistroController::class, 'procesar'])->name('registro.procesar');
 
-//Fachada y Inicio
-Route::get('/fachada', function () {
-    return view('Fachada.Fachada');
-})->name('fachada');
-
 Route::get('/inicio', function () {
     return view('PuntoInicio.Inicio');
 })->name('inicio');
 
-
-
 // Perfil de usuario
 Route::get('/cuenta', [PerfilController::class, 'mostrarCuenta'])->name('cuenta');
 Route::get('/perfil', [PerfilController::class, 'mostrar'])->name('perfil');
-
-
+Route::post('/perfil/actualizar', [PerfilController::class, 'actualizar'])->name('perfil.actualizar');
 
 // Vista ropa hombre
 Route::get('/hombre', [HombreController::class, 'index'])->name('hombre');

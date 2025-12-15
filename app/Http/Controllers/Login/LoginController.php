@@ -62,6 +62,6 @@ class LoginController extends Controller
     public function logout()
     {
         Session::flush();
-        return redirect()->route('Fachada.Fachada');
+        return redirect()->route('inicio');
     }
 }

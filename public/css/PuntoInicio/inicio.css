@@ -1,6 +1,20 @@
-.logo img  {
-  height: 75px;   
-  transition: transform 0.5s ease; 
+.logo-urbano {
+    font-family: 'Anton', sans-serif;
+    font-size: 1rem;
+    text-transform: uppercase;
+    color: #000;
+}
+
+.nav-logo-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.nav-logo-link:hover,
+.nav-logo-link:focus,
+.nav-logo-link:active {
+    text-decoration: none;
+    color: inherit;
 }
 
 body {

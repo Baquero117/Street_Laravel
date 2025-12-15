@@ -4,26 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tienda Online</title>
-
-    {{-- Bootstrap --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-
-    {{-- CSS --}}
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rubik:wght@300;400;500;700&family=Permanent+Marker&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/PuntoInicio/Inicio.css') }}">
-</head>
 
+</head>
 <body>
 
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top my-0">
         <div class="container-fluid bg-white shadow-sm fixed-top py-2">
 
-            <a class="navbar-brand fw-bold">
-                <a href="{{ route('inicio') }}" class="mx-auto logo">
-            <img src="{{ asset('img/OtrasVistas/Logo.png') }}" alt="Logo">
-        </a>
+            <a href="{{ url('/inicio') }}" class="navbar-brand fw-bold logo-urbano px-5">
+                Urban Street
             </a>
+
 
             <div class="collapse navbar-collapse justify-content-center">
                 <ul class="navbar-nav">
@@ -50,17 +46,30 @@
                     </div>
                 </form>
 
-                {{-- PERFIL --}}
                 <div class="dropdown">
+
                     <a href="#" class="text-dark fs-5 dropdown-toggle" data-bs-toggle="dropdown">
                         <i class="bi bi-person-circle"></i>
                     </a>
+
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="{{ url('cuenta') }}">Ver Perfil</a></li>
-                        <li><a class="dropdown-item" href="{{ url('fachada') }}">Cerrar Sesión</a></li>
-                        
+
+                        <li>
+                            <a class="dropdown-item" href="{{ url('cuenta') }}">
+                                Perfil
+                            </a>
+                        </li>
+
+                        <li>
+                        <a href="{{ route('registro') }}" class="dropdown-item">
+                            Registro
+                        </a>
+                        </li>
+
+
                     </ul>
                 </div>
+
 
                 {{-- CARRITO --}}
                 <a href="{{ url('/carrito') }}" class="text-dark fs-5">

@@ -49,6 +49,11 @@ class PerfilController extends Controller
         return redirect()->route('inicio');
     }
 
+    if (!Session::has('token')) {
+    return redirect()->route('login');
+    }
+
+
     return view('PuntoInicio.Cliente.Cuenta', [
         'perfil' => $perfil
     ]);
@@ -62,13 +67,15 @@ class PerfilController extends Controller
     }
 
     $request->validate([
-        'nombre' => 'required|string|max:100',
-        'apellido' => 'required|string|max:100',
-        'correo_electronico' => 'required|email|max:150',
-        'telefono' => 'required|string|max:20',
-        'direccion' => 'required|string|max:255',
-        'contrasena' => 'nullable|string|min:6|confirmed'
+    'nombre' => 'required|string|max:255',
+    'apellido' => 'required|string|max:255',
+    'direccion' => 'required|string|max:255',
+    'telefono' => 'required|string|max:20',
+    'correo_electronico' => 'required|email|max:255',
+
+    'contrasena' => 'nullable|min:6|same:contrasena_confirmacion',
     ]);
+
 
     $resultado = $this->perfilService->actualizarPerfil(
         $request->nombre,
