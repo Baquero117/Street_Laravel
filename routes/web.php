@@ -13,10 +13,16 @@ use App\Http\Controllers\Carrito\CarritoController;
 use App\Http\Controllers\MasVistas\HombreController;
 use App\Http\Controllers\MasVistas\MujerController;
 use App\Http\Controllers\MasVistas\ModaController;
+use App\Http\Controllers\PuntoInicio\PerfilController;
 
 Route::get('/login', [LoginController::class, 'mostrar'])->name('login');
 Route::post('/login', [LoginController::class, 'procesar'])->name('login.procesar');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+
+// Registro de usuario
+Route::get('/registro', [RegistroController::class, 'mostrar'])->name('registro');
+Route::post('/registro', [RegistroController::class, 'procesar'])->name('registro.procesar');
 
 //Fachada y Inicio
 Route::get('/fachada', function () {
@@ -27,6 +33,14 @@ Route::get('/inicio', function () {
     return view('PuntoInicio.Inicio');
 })->name('inicio');
 
+
+
+// Perfil de usuario
+Route::get('/cuenta', [PerfilController::class, 'mostrarCuenta'])->name('cuenta');
+Route::get('/perfil', [PerfilController::class, 'mostrar'])->name('perfil');
+
+
+
 // Vista ropa hombre
 Route::get('/hombre', [HombreController::class, 'index'])->name('hombre');
 
@@ -36,18 +50,16 @@ Route::get('/mujer', [MujerController::class, 'index'])->name('mujer');
 // Vista ropa de moda
 Route::get('/moda', [ModaController::class, 'index'])->name('moda');
 
-
-
 // Carrito de compras
 Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito');
+
+
+
 
 // Inicio del administrador
 Route::get('/admin', function () {
     return view('Administrador.InicioAdmin.InicioAdmin');
 })->name('admin.inicio');
-
-
-
 
 Route::get('/admin/Categoria', [CategoriaController::class, 'index'])->name('admin.Categoria');
 Route::get('/categoria', [CategoriaController::class, 'index'])->name('categoria.index');
