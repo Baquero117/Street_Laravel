@@ -13,7 +13,7 @@ class CategoriaController extends Controller
 
     public function __construct(CategoriaService $categoriaService)
     {
-        // 🔥 Protección sin middleware
+        
         if (!session()->has('token')) {
             redirect()->route('login')->send();
         }
@@ -52,7 +52,7 @@ class CategoriaController extends Controller
         'nombre' => 'required|string|max:255'
     ]);
 
-    $id = $request->id_categoria; // <- viene del formulario
+    $id = $request->id_categoria; 
 
     $resultado = $this->categoriaService->actualizarCategoria($id, $request->nombre);
 

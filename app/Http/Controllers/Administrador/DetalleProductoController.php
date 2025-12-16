@@ -14,7 +14,7 @@ class DetalleProductoController extends Controller
 
     public function __construct(DetalleProductoService $detalleProductoService)
     {
-        // 🔥 Protección sin middleware
+        
         if (!session()->has('token')) {
             redirect()->route('login')->send();
         }
@@ -41,7 +41,7 @@ class DetalleProductoController extends Controller
             'imagen' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        // 🔥 Guardar imagen en storage/app/public/detalles
+       
         $rutaImagen = $request->file('imagen')->store('detalles', 'public');
 
         $resultado = $this->detalleProductoService->agregarDetalle(
@@ -75,7 +75,6 @@ class DetalleProductoController extends Controller
 
         $id = $request->id_detalle_producto;
 
-        // 🔥 Si viene nueva imagen, se guarda
         $rutaImagen = null;
         if ($request->hasFile('imagen')) {
             $rutaImagen = $request->file('imagen')->store('detalles', 'public');

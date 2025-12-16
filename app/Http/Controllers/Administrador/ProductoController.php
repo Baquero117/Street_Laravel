@@ -14,7 +14,7 @@ class ProductoController extends Controller
 
     public function __construct(ProductoService $productoService)
     {
-        // 🔥 Protección simple, igual que en DetalleProductoController
+        
         if (!session()->has('token')) {
             redirect()->route('login')->send();
         }
@@ -43,7 +43,7 @@ class ProductoController extends Controller
             'imagen' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        // 🔥 Guardar imagen en storage/app/public/productos/
+       
         $rutaImagen = $request->file('imagen')->store('productos', 'public');
 
         $resultado = $this->productoService->agregarProducto(

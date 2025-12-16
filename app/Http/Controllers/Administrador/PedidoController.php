@@ -13,7 +13,7 @@ class PedidoController extends Controller
 
     public function __construct(PedidoService $pedidoService)
     {
-        // 🔥 Protección sin middleware
+       
         if (!session()->has('token')) {
             redirect()->route('login')->send();
         }

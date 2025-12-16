@@ -11,7 +11,7 @@ class CategoriaService
 
     public function __construct()
     {
-        // Aquí obtienes el token de sesión o autenticación
+        
         $this->token = session('token');   
     }
 
