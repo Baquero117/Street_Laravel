@@ -9,11 +9,9 @@ use App\Http\Controllers\Administrador\DetalleProductoController;
 use App\Http\Controllers\Administrador\ProductoController;
 use App\Http\Controllers\Administrador\PedidoController;
 use App\Http\Controllers\Administrador\VendedorController;
-use App\Http\Controllers\PuntoInicio\PerfilController;
-use App\Http\Controllers\MasVistas\HombreController;
-use App\Http\Controllers\MasVistas\MujerController;
-use App\Http\Controllers\MasVistas\ModaController;
-use App\Http\Controllers\Carrito\CarritoController;
+use App\Http\Controllers\Perfil\PerfilController;
+use App\Http\Controllers\Ropa\HombreController;
+use App\Http\Controllers\Ropa\MujerController;
 
 Route::get('/login', [LoginController::class, 'mostrar'])->name('login');
 Route::post('/login', [LoginController::class, 'procesar'])->name('login.procesar');
@@ -44,6 +42,8 @@ Route::get('/moda', [ModaController::class, 'index'])->name('moda');
 
 // Carrito de compras
 Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito');
+
+
 
 
 // Inicio del administrador
