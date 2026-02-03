@@ -171,7 +171,7 @@
                         </div>
 
                         <div class="d-flex gap-2 justify-content-end">
-                            <a href="{{ url('Perfil') }}" class="btn btn-cancelar">Cancelar</a>
+                            <a href="{{ url('cuenta') }}" class="btn btn-cancelar">Cancelar</a>
                             <button type="submit" class="btn btn-guardar">Guardar Cambios</button>
                         </div>
 
