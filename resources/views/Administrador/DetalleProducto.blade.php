@@ -34,11 +34,10 @@
                 <tr>
                     <th>ID Detalle</th>
                     <th>Talla</th>
-                    <th>Color</th>
                     <th>Imagen</th>
                     <th>ID Producto</th>
                     <th>ID Categoría</th>
-                    <th>Precio</th>
+                    <th>Cantidad</th>
                 </tr>
             </thead>
             <tbody>
@@ -48,7 +47,6 @@
                         <tr>
                             <td>{{ $deta['id_detalle_producto'] }}</td>
                             <td>{{ $deta['talla'] }}</td>
-                            <td>{{ $deta['color'] }}</td>
 
                             <td>
                                 @if (!empty($deta['imagen']))
@@ -65,7 +63,7 @@
 
                             <td>{{ $deta['id_producto'] }}</td>
                             <td>{{ $deta['id_categoria'] }}</td>
-                            <td>${{ number_format($deta['precio'], 2) }}</td>
+                            <td>{{ $deta['cantidad'] }}</td>
                         </tr>
                     @endforeach
                 @else
@@ -103,11 +101,6 @@
           </div>
 
           <div class="mb-2">
-            <label class="form-label">Color</label>
-            <input class="form-control" type="text" name="color" required>
-          </div>
-
-          <div class="mb-2">
             <label class="form-label">Imagen</label>
             <input class="form-control" type="file" name="imagen" accept="image/*" required>
           </div>
@@ -122,9 +115,10 @@
             <input class="form-control" type="number" name="id_categoria" required>
           </div>
 
+          
           <div class="mb-2">
-            <label class="form-label">Precio</label>
-            <input class="form-control" type="number" step="0.01" name="precio" required>
+            <label class="form-label">Cantidad</label>
+            <input class="form-control" type="number" step="0.01" name="cantidad" required>
           </div>
 
         </div>
@@ -168,11 +162,6 @@
           </div>
 
           <div class="mb-2">
-            <label class="form-label">Color</label>
-            <input class="form-control" type="text" name="color" required>
-          </div>
-
-          <div class="mb-2">
             <label class="form-label">Imagen</label>
             <input class="form-control" type="file" name="imagen" accept="image/*">
             <small class="text-muted">Si no selecciona una nueva imagen, se mantiene la actual.</small>
@@ -189,8 +178,8 @@
           </div>
 
           <div class="mb-2">
-            <label class="form-label">Precio</label>
-            <input class="form-control" type="number" step="0.01" name="precio" required>
+            <label class="form-label">Cantidad</label>
+            <input class="form-control" type="number" step="0.01" name="cantidad" required>
           </div>
 
         </div>

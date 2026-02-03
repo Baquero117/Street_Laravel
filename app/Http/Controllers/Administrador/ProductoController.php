@@ -41,6 +41,8 @@ class ProductoController extends Controller
             'id_vendedor' => 'required|numeric',
             'estado' => 'required|string|max:30',
             'imagen' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'precio' => 'required|numeric|min:0',
+            'color' => 'nullable|string|max:50',
         ]);
 
         // 🔥 Guardar imagen en storage/app/public/productos/
@@ -52,7 +54,9 @@ class ProductoController extends Controller
             $request->cantidad,
             $rutaImagen,
             $request->id_vendedor,
-            $request->estado
+            $request->estado,
+            $request->precio,
+            $request->color
         );
 
         Session::flash('mensaje', $resultado['success']
@@ -71,9 +75,11 @@ class ProductoController extends Controller
             'nombre' => 'required|string|max:150',
             'descripcion' => 'required|string',
             'cantidad' => 'required|numeric',
+            'imagen' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'id_vendedor' => 'required|numeric',
             'estado' => 'required|string|max:30',
-            'imagen' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'precio' => 'required|numeric|min:0',
+            'color' => 'nullable|string|max:50',
         ]);
 
         $id = $request->id_producto;
@@ -90,7 +96,9 @@ class ProductoController extends Controller
             $request->cantidad,
             $rutaImagen,
             $request->id_vendedor,
-            $request->estado
+            $request->estado,
+            $request->precio,
+            $request->color
         );
 
         Session::flash('mensaje', $resultado['success']

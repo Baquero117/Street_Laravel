@@ -35,16 +35,15 @@ class DetalleProductoService
         return [];
     }
 
-    public function agregarDetalle($talla, $color, $rutaImagen, $id_producto, $id_categoria, $precio)
+    public function agregarDetalle($talla, $rutaImagen, $id_producto, $id_categoria, $cantidad)
     {
         $response = Http::withHeaders($this->headers())
             ->post($this->baseUrl, [
                 "talla" => $talla,
-                "color" => $color,
                 "imagen" => $rutaImagen,   // <= nombre del archivo ya guardado en storage
                 "id_producto" => $id_producto,
                 "id_categoria" => $id_categoria,
-                "precio" => $precio
+                "cantidad" => $cantidad
             ]);
 
         if ($response->successful()) {
@@ -60,14 +59,13 @@ class DetalleProductoService
         ];
     }
 
-    public function actualizarDetalle($id, $talla, $color, $rutaImagen = null, $id_producto, $id_categoria, $precio)
+    public function actualizarDetalle($id, $talla, $rutaImagen = null, $id_producto, $id_categoria, $cantidad)
     {
         $payload = [
             "talla" => $talla,
-            "color" => $color,
             "id_producto" => $id_producto,
             "id_categoria" => $id_categoria,
-            "precio" => $precio
+            "cantidad" => $cantidad
         ];
 
         // 🔥 Solo enviar imagen si existe una nueva
