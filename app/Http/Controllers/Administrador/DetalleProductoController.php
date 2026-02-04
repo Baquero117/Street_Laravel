@@ -34,11 +34,10 @@ class DetalleProductoController extends Controller
     {
         $request->validate([
             'talla' => 'required|string|max:50',
-            'color' => 'required|string|max:50',
             'id_producto' => 'required|numeric',
             'id_categoria' => 'required|numeric',
-            'precio' => 'required|numeric',
             'imagen' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'cantidad' => 'required|numeric|min:1',
         ]);
 
        
@@ -46,11 +45,10 @@ class DetalleProductoController extends Controller
 
         $resultado = $this->detalleProductoService->agregarDetalle(
             $request->talla,
-            $request->color,
             $rutaImagen,
             $request->id_producto,
             $request->id_categoria,
-            $request->precio
+            $request->cantidad,
         );
 
         Session::flash('mensaje', $resultado['success']
@@ -66,11 +64,10 @@ class DetalleProductoController extends Controller
         $request->validate([
             'id_detalle_producto' => 'required|numeric',
             'talla' => 'required|string|max:50',
-            'color' => 'required|string|max:50',
             'id_producto' => 'required|numeric',
             'id_categoria' => 'required|numeric',
-            'precio' => 'required|numeric',
             'imagen' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'cantidad' => 'required|numeric|min:1',
         ]);
 
         $id = $request->id_detalle_producto;
@@ -83,11 +80,10 @@ class DetalleProductoController extends Controller
         $resultado = $this->detalleProductoService->actualizarDetalle(
             $id,
             $request->talla,
-            $request->color,
             $rutaImagen,
             $request->id_producto,
             $request->id_categoria,
-            $request->precio
+            $request->cantidad
         );
 
         Session::flash('mensaje', $resultado['success']

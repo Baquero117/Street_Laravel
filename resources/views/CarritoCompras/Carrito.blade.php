@@ -33,9 +33,9 @@
             <div class="offcanvas-body">
                 <ul class="list-unstyled">
                     <li><a href="{{ route('inicio') }}" class="text-decoration-none">Inicio</a></li>
-                    <li><a href="#" class="text-decoration-none">Catálogo</a></li>
-                    <li><a href="#" class="text-decoration-none">Ofertas</a></li>
-                    <li><a href="#" class="text-decoration-none">Contacto</a></li>
+                    <li><a href="{{ route('inicio') }}" class="text-decoration-none">Catálogo</a></li>
+                    <li><a href="{{ route('moda') }}" class="text-decoration-none">Ofertas</a></li>
+                    <li><a href="{{ route('inicio') }}" class="text-decoration-none">Contacto</a></li>
                 </ul>
             </div>
         </div>
@@ -77,7 +77,8 @@
                         <div class="row g-0 align-items-center">
 
                             <div class="col-md-2 text-center">
-                                <img src="{{ asset('img/productos/' . $item->imagen) }}" 
+                                <img src="{{ asset('img/CarritoCompras/Chaqueta-azul.jpg') }}" alt="Chaqueta azul"
+ 
                                      class="img-fluid rounded" alt="Producto">
                             </div>
 
@@ -180,9 +181,10 @@
 
                             <div class="col">
                                 <div class="card h-100 text-center p-2">
-                                    <img src="{{ asset('img/productos/' . $producto->imagen) }}"
-                                         class="card-img-top mx-auto mt-2"
-                                         style="height: 150px; object-fit: contain">
+                                    <img src="{{ asset('img/CarritoCompras/Chaqueta-azul.jpg') }}" alt="Chaqueta Azul"
+                                       class="card-img-top mx-auto mt-2"
+                                       style="height: 150px; object-fit: contain">
+
 
                                     <div class="card-body">
                                         <h6 class="card-title text-truncate">{{ $producto->nombre }}</h6>
@@ -221,10 +223,10 @@
             <div class="col-md-4 mb-3">
                 <h5 class="footer-title">Síguenos en</h5>
                 <div class="d-flex justify-content-center gap-2">
-                    <a class="social-icon-circle"><i class="bi bi-facebook"></i></a>
-                    <a class="social-icon-circle"><i class="bi bi-instagram"></i></a>
-                    <a class="social-icon-circle"><i class="bi bi-youtube"></i></a>
-                    <a class="social-icon-circle"><i class="bi bi-tiktok"></i></a>
+                    <a class="social-icon-circleF"><i class="bi bi-facebook"></i></a>
+                    <a class="social-icon-circleI"><i class="bi bi-instagram"></i></a>
+                    <a class="social-icon-circleY"><i class="bi bi-youtube"></i></a>
+                    <a class="social-icon-circleT"><i class="bi bi-tiktok"></i></a>
                 </div>
             </div>
 

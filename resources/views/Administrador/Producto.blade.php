@@ -41,6 +41,8 @@
                     <th>Imagen</th>
                     <th>ID Vendedor</th>
                     <th>Estado</th>
+                    <th>Precio</th>
+                    <th>Color</th>
                 </tr>
             </thead>
 
@@ -69,6 +71,8 @@
 
                             <td>{{ $pro['id_vendedor'] }}</td>
                             <td>{{ $pro['estado'] }}</td>
+                            <td>{{ $pro['precio'] }}</td>
+                            <td>{{ $pro['color'] }}</td>
                         </tr>
                     @endforeach
                 @else
@@ -128,6 +132,11 @@
           </div>
 
           <div class="mb-2">
+            <label class="form-label">Precio</label>
+            <input class="form-control" type="number" name="precio" step="0.01" required>
+          </div>
+
+          <div class="mb-2">
             <label class="form-label">Estado</label>
             <select class="form-select" name="estado" required>
                 <option value="">Seleccione</option>
@@ -135,6 +144,12 @@
                 <option value="inactivo">Inactivo</option>
             </select>
           </div>
+          
+          <div class="mb-2">
+            <label class="form-label">Color</label>
+            <input class="form-control" type="text" name="color" required>
+          </div>
+          
 
         </div>
 
@@ -199,12 +214,22 @@
           </div>
 
           <div class="mb-2">
+            <label class="form-label">Precio</label>
+            <input class="form-control" type="number" name="precio" step="0.01" required>
+          </div>
+
+          <div class="mb-2">
             <label class="form-label">Estado</label>
             <select class="form-select" name="estado" required>
                 <option value="">Seleccione</option>
                 <option value="activo">Activo</option>
                 <option value="inactivo">Inactivo</option>
             </select>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Color</label>
+            <input class="form-control" type="text" name="color" required>
           </div>
 
         </div>

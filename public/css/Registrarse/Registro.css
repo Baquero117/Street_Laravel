@@ -1,0 +1,35 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #0c1218 0%, #0c1218 100%);
+}
+
+.card {
+  border: none;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+.btn-primary {
+  background: #0c1218;
+  border: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-primary:hover {
+  background: #0c1218;
+  transform: translateY(-2px);
+}
+
+.input-group-text {
+  background: #f8f9fa;
+  border-right: 0;
+}
+
+input.form-control:focus {
+  box-shadow: none;
+  border-color: #0c1218;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
