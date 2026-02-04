@@ -36,8 +36,10 @@ class ProductoService
         return [];
     }
 
-   
-    public function agregarProducto($nombre, $descripcion, $cantidad, $rutaImagen, $id_vendedor, $estado)
+    // ============================
+    // 🔹 AGREGAR PRODUCTO
+    // ============================
+    public function agregarProducto($nombre, $descripcion, $cantidad, $rutaImagen, $id_vendedor, $estado, $precio, $color)
     {
         $payload = [
             "nombre" => $nombre,
@@ -45,7 +47,9 @@ class ProductoService
             "cantidad" => $cantidad,
             "imagen" => $rutaImagen,
             "id_vendedor" => $id_vendedor,
-            "estado" => $estado
+            "estado" => $estado,
+            "precio" => $precio,
+            "color" => $color
         ];
 
         $response = Http::withHeaders($this->headers())
@@ -64,15 +68,19 @@ class ProductoService
         ];
     }
 
-    
-    public function actualizarProducto($id, $nombre, $descripcion, $cantidad, $rutaImagen = null, $id_vendedor, $estado)
+    // ============================
+    // 🔹 ACTUALIZAR PRODUCTO
+    // ============================
+    public function actualizarProducto($id, $nombre, $descripcion, $cantidad, $rutaImagen = null, $id_vendedor, $estado, $precio, $color)
     {
         $payload = [
             "nombre" => $nombre,
             "descripcion" => $descripcion,
             "cantidad" => $cantidad,
             "id_vendedor" => $id_vendedor,
-            "estado" => $estado
+            "estado" => $estado,
+            "precio" => $precio,
+            "color" => $color
         ];
 
        
