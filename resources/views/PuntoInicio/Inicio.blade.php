@@ -130,195 +130,72 @@
 
             <div class="row g-4">
 
-                {{-- CARD 1 --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <img src="{{ asset('img/PuntoInicio/1.chaquetaCafe.jpg') }}" class="card-img-top" alt="Chaqueta Café">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Chaqueta Café</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Chaqueta Café"
-                                data-descripcion="Chaqueta de algodón suave y cálida."
-                                data-categoria="Casual"
-                                data-color="Café"
-                                data-talla="M">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
+    @forelse($productos as $producto)
+        <div class="col-md-4">
+            <div class="card h-100">
+                <img src="{{ asset('storage/' . $producto['imagen']) }}" 
+                     class="card-img-top" 
+                     alt="{{ $producto['nombre'] }}"
+                     onerror="this.src='https://via.placeholder.com/400x400?text=Sin+Imagen'">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ $producto['nombre'] }}</h5>
+                    <p class="text-muted mb-2">{{ $producto['color'] ?? 'Varios colores' }}</p>
+                    <p class="fw-bold text-success fs-5">${{ number_format($producto['precio'], 0, ',', '.') }}</p>
+                    
+                    <button class="btn btn-dark ver-detalle-dinamico" data-id="{{ $producto['id_producto'] }}">
+                        Ver más
+                    </button>
 
-                {{-- CARD 2 --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <img src="{{ asset('img/PuntoInicio/2.chaquetaCafe.jpg') }}" class="card-img-top" alt="Chaqueta Café 2">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Chaqueta Café Hombre</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Chaqueta Café Hombre"
-                                data-descripcion="Ideal para clima frío, cómoda y elegante."
-                                data-categoria="Casual"
-                                data-color="Café Oscuro"
-                                data-talla="L">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
                 </div>
-
-                {{-- CARD 3 --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <img src="{{ asset('img/PuntoInicio/3.chaquetaCafe.jpg') }}" class="card-img-top" alt="Chaqueta Café 3">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Chaqueta Coffee</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Chaqueta Coffee"
-                                data-descripcion="Material premium, perfecta para looks urbanos."
-                                data-categoria="Urbano"
-                                data-color="Coffee"
-                                data-talla="S">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- CARD 4 --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <img src="{{ asset('img/PuntoInicio/1.chaquetaGris.jpg') }}" class="card-img-top" alt="Chaqueta Gris">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Chaqueta Gris</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Chaqueta Gris"
-                                data-descripcion="Chaqueta versátil para cualquier ocasión."
-                                data-categoria="Casual"
-                                data-color="Gris"
-                                data-talla="M">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- CARD 5 --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <img src="{{ asset('img/PuntoInicio/2.chaquetaGris.jpg') }}" class="card-img-top" alt="Chaqueta Gris 2">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Chaqueta Frost Gray</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Chaqueta Frost Gray"
-                                data-descripcion="Suave y ligera, ideal para looks urbanos."
-                                data-categoria="Urbano"
-                                data-color="Gris Hielo"
-                                data-talla="L">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- CARD 6 --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <img src="{{ asset('img/PuntoInicio/3.chaquetaGris.jpg') }}" class="card-img-top" alt="Chaqueta Gris 3">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Chaqueta Steel</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Chaqueta Steel"
-                                data-descripcion="Perfecta para clima frío y estilo urbano."
-                                data-categoria="Invierno"
-                                data-color="Gris Acero"
-                                data-talla="XL">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- CARD 7 --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <img src="{{ asset('img/PuntoInicio/1.chaquetaNegra.jpg') }}" class="card-img-top" alt="Chaqueta Negra">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Chaqueta Negra</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Chaqueta Negra"
-                                data-descripcion="Clásica chaqueta negra estilo urbano."
-                                data-categoria="Urbano"
-                                data-color="Negro"
-                                data-talla="M">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- CARD 8 --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <img src="{{ asset('img/PuntoInicio/2.chaquetaNegra.jpg') }}" class="card-img-top" alt="Chaqueta Negra 2">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Chaqueta Black Urban</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Chaqueta Black Urban"
-                                data-descripcion="Material resistente y diseño urbano moderno."
-                                data-categoria="Urbano"
-                                data-color="Negro"
-                                data-talla="L">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- CARD 9 --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <img src="{{ asset('img/PuntoInicio/3.chaquetaNegra.jpg') }}" class="card-img-top" alt="Chaqueta Negra 3">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Chaqueta Midnight</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Chaqueta Midnight"
-                                data-descripcion="Look sofisticado con acabado premium."
-                                data-categoria="Elegante"
-                                data-color="Negro Midnight"
-                                data-talla="S">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
             </div>
+        </div>
+    @empty
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                No hay productos disponibles en este momento
+            </div>
+        </div>
+    @endforelse
+</div>
         </div>
 
         <!-- MODAL -->
-        <div class="modal fade" id="detalleModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
+<div class="modal fade" id="detalleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
 
-                    <div class="modal-header bg-dark text-white">
-                        <h5 class="modal-title" id="modalNombre"></h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="modalNombre"></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <img id="modalImagen" src="" class="img-fluid rounded" alt="">
                     </div>
-
-                    <div class="modal-body">
+                    <div class="col-md-6">
                         <p id="modalDescripcion"></p>
-                        <p><strong>Categoría:</strong> <span id="modalCategoria"></span></p>
                         <p><strong>Color:</strong> <span id="modalColor"></span></p>
-                        <p><strong>Talla:</strong> <span id="modalTalla"></span></p>
+                        <p><strong>Precio:</strong> <span class="text-success fw-bold fs-4">$<span id="modalPrecio"></span></span></p>
+                        <div class="mb-3">
+                            <strong>Tallas disponibles:</strong>
+                            <div id="modalTallas" class="mt-2"></div>
+                        </div>
+                        <button class="btn btn-success w-100" onclick="agregarAlCarrito()">
+                            <i class="bi bi-cart-plus"></i> Agregar al Carrito
+                        </button>
                     </div>
-
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    </div>
-
                 </div>
             </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+
         </div>
+    </div>
+</div>
 
     </div>
 

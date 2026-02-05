@@ -12,7 +12,7 @@ class CarritoService
     }
 
     // Obtener carrito según el cliente autenticado
-    public function obtenerCarritoPorCliente($idCliente)
+    public function obtenerCarrito($idCliente)
     {
         $curl = curl_init("{$this->baseUrl}/{$idCliente}");
 

@@ -9,9 +9,13 @@ use App\Http\Controllers\Administrador\DetalleProductoController;
 use App\Http\Controllers\Administrador\ProductoController;
 use App\Http\Controllers\Administrador\PedidoController;
 use App\Http\Controllers\Administrador\VendedorController;
-use App\Http\Controllers\Perfil\PerfilController;
-use App\Http\Controllers\Ropa\HombreController;
-use App\Http\Controllers\Ropa\MujerController;
+use App\Http\Controllers\Administrador\PromocionController;
+use App\Http\Controllers\PuntoInicio\PerfilController;
+use app\Http\Controllers\PuntoInicio\CarritoController;
+use App\Http\Controllers\MasVistas\HombreController;
+use App\Http\Controllers\MasVistas\MujerController;
+use App\Http\Controllers\MasVistas\ModaController;
+use App\Http\Controllers\PublicoController;
 
 Route::get('/login', [LoginController::class, 'mostrar'])->name('login');
 Route::post('/login', [LoginController::class, 'procesar'])->name('login.procesar');
@@ -22,9 +26,9 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/registro', [RegistroController::class, 'mostrar'])->name('registro');
 Route::post('/registro', [RegistroController::class, 'procesar'])->name('registro.procesar');
 
-Route::get('/inicio', function () {
-    return view('PuntoInicio.Inicio');
-})->name('inicio');
+Route::get('/inicio', [PublicoController::class, 'index'])->name('inicio');
+Route::get('/productos/{id}/detalle', [PublicoController::class, 'detalle'])->name('productos.detalle');
+
 
 // Perfil de usuario
 Route::get('/cuenta', [PerfilController::class, 'mostrarCuenta'])->name('cuenta');
@@ -39,12 +43,6 @@ Route::get('/mujer', [MujerController::class, 'index'])->name('mujer');
 
 // Vista ropa de moda
 Route::get('/moda', [ModaController::class, 'index'])->name('moda');
-
-// Carrito de compras
-Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito');
-
-
-
 
 // Inicio del administrador
 Route::get('/admin', function () {
@@ -74,6 +72,12 @@ Route::get('/producto', [ProductoController::class, 'index'])->name('producto.in
 Route::post('/producto/agregar', [ProductoController::class, 'store'])->name('producto.agregar');
 Route::post('/producto/actualizar', [ProductoController::class, 'update'])->name('producto.actualizar');
 Route::post('/producto/eliminar', [ProductoController::class, 'destroy'])->name('producto.eliminar');
+
+Route::get('/admin/Promocion', [PromocionController::class, 'index'])->name('admin.Promocion');
+Route::get('/promocion', [PromocionController::class, 'index'])->name('promocion.index');
+Route::post('/promocion/agregar', [PromocionController::class, 'store'])->name('promocion.agregar');
+Route::post('/promocion/actualizar', [PromocionController::class, 'update'])->name('promocion.actualizar');
+Route::post('/promocion/eliminar', [PromocionController::class, 'destroy'])->name('promocion.eliminar');
 
 Route::get('/admin/Pedido', [PedidoController::class, 'index'])->name('admin.Pedido');
 Route::get('/pedido', [PedidoController::class, 'index'])->name('pedido.index');
