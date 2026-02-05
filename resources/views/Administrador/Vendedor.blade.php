@@ -15,29 +15,19 @@
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarVendedor">
                 <i class="fas fa-plus"></i> Agregar
             </button>
-
-            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalActualizarVendedor">
-                <i class="fas fa-edit"></i> Actualizar
-            </button>
-
-            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminarVendedor">
-                <i class="fas fa-trash"></i> Eliminar
-            </button>
         </div>
     </div>
 
     <div class="card-body p-0">
-       <form method="GET" action="{{ route('admin.Vendedor') }}">
         <table class="table table-striped mb-0">
             <thead class="table-dark">
-               @csrf
                 <tr>
                     <th>ID Vendedor</th>
                     <th>Nombre</th>
                     <th>Apellido</th>
                     <th>Correo</th>
-                    <th>contraseña</th>
                     <th>Teléfono</th>
+                    <th class="text-center">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -48,8 +38,29 @@
                             <td>{{ $vendedor['nombre'] }}</td>
                             <td>{{ $vendedor['apellido'] }}</td>
                             <td>{{ $vendedor['correo_electronico'] }}</td>
-                            <td>{{ $vendedor['contrasena'] }}</td>
                             <td>{{ $vendedor['telefono'] }}</td>
+                            <td class="text-center">
+                                <button type="button" 
+                                        class="btn btn-warning btn-sm btn-editar" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#modalActualizarVendedor"
+                                        data-id="{{ $vendedor['id_vendedor'] }}"
+                                        data-nombre="{{ $vendedor['nombre'] }}"
+                                        data-apellido="{{ $vendedor['apellido'] }}"
+                                        data-correo="{{ rawurlencode($vendedor['correo_electronico']) }}"
+                                        data-telefono="{{ $vendedor['telefono'] }}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                
+                                <button type="button" 
+                                        class="btn btn-danger btn-sm btn-eliminar" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#modalEliminarVendedor"
+                                        data-id="{{ $vendedor['id_vendedor'] }}"
+                                        data-nombre="{{ $vendedor['nombre'] }} {{ $vendedor['apellido'] }}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
                         </tr>
                     @endforeach
                 @else
@@ -59,7 +70,6 @@
                 @endif
             </tbody>
         </table>
-       </form>
     </div>
 </div>
 
@@ -95,7 +105,12 @@
 
           <div class="mb-2">
             <label class="form-label">Contraseña</label>
-            <input class="form-control" type="password" name="contrasena" required>
+            <div class="input-group">
+              <input class="form-control" type="password" name="contrasena" id="contrasena_agregar" required>
+              <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('contrasena_agregar', this)">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
           </div>
 
           <div class="mb-2">
@@ -133,32 +148,38 @@
 
           <div class="mb-2">
             <label class="form-label">ID Vendedor</label>
-            <input type="number" name="id_vendedor" class="form-control" required>
+            <input type="number" name="id_vendedor" id="update_id_vendedor" class="form-control" readonly>
           </div>
 
           <div class="mb-2">
             <label class="form-label">Nombre</label>
-            <input class="form-control" type="text" name="nombre" required>
+            <input class="form-control" type="text" name="nombre" id="update_nombre" required>
           </div>
 
           <div class="mb-2">
             <label class="form-label">Apellido</label>
-            <input class="form-control" type="text" name="apellido" required>
+            <input class="form-control" type="text" name="apellido" id="update_apellido" required>
           </div>
 
           <div class="mb-2">
             <label class="form-label">Correo Electrónico</label>
-            <input class="form-control" type="email" name="correo_electronico" required>
+            <input class="form-control" type="email" name="correo_electronico" id="update_correo" required>
           </div>
 
           <div class="mb-2">
-            <label class="form-label">Contraseña</label>
-            <input class="form-control" type="password" name="contrasena" required>
+            <label class="form-label">Nueva Contraseña (opcional)</label>
+            <div class="input-group">
+              <input class="form-control" type="password" name="contrasena" id="update_contrasena">
+              <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('update_contrasena', this)">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <small class="text-muted">Dejar vacío para mantener la contraseña actual</small>
           </div>
 
           <div class="mb-2">
             <label class="form-label">Teléfono</label>
-            <input class="form-control" type="text" name="telefono" required>
+            <input class="form-control" type="text" name="telefono" id="update_telefono" required>
           </div>
 
         </div>
@@ -191,10 +212,11 @@
 
           <div class="mb-2">
             <label class="form-label">ID Vendedor</label>
-            <input type="number" name="id_vendedor" class="form-control" required>
+            <input type="number" name="id_vendedor" id="delete_id_vendedor" class="form-control" readonly>
           </div>
 
-          <p class="text-danger">⚠ Esta acción no se puede deshacer.</p>
+          <p class="text-danger"><strong>⚠ ¿Está seguro de eliminar al vendedor <span id="delete_nombre_vendedor"></span>?</strong></p>
+          <p class="text-danger">Esta acción no se puede deshacer.</p>
 
         </div>
 
@@ -209,7 +231,60 @@
   </div>
 </div>
 
-
+{{-- ======================== SCRIPTS ======================== --}}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// Función para mostrar/ocultar contraseña
+function togglePassword(inputId, button) {
+    const input = document.getElementById(inputId);
+    const icon = button.querySelector('i');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+
+// Cargar datos cuando se abre el modal de actualización
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // Event listener para botones de editar
+    const botonesEditar = document.querySelectorAll('.btn-editar');
+    botonesEditar.forEach(function(boton) {
+        boton.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            const nombre = this.getAttribute('data-nombre');
+            const apellido = this.getAttribute('data-apellido');
+            const correo = decodeURIComponent(this.getAttribute('data-correo')); // Decodificar el email
+            const telefono = this.getAttribute('data-telefono');
+            
+            document.getElementById('update_id_vendedor').value = id;
+            document.getElementById('update_nombre').value = nombre;
+            document.getElementById('update_apellido').value = apellido;
+            document.getElementById('update_correo').value = correo;
+            document.getElementById('update_telefono').value = telefono;
+            document.getElementById('update_contrasena').value = ''; // Limpiar contraseña
+        });
+    });
+    
+    // Event listener para botones de eliminar
+    const botonesEliminar = document.querySelectorAll('.btn-eliminar');
+    botonesEliminar.forEach(function(boton) {
+        boton.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            const nombre = this.getAttribute('data-nombre');
+            
+            document.getElementById('delete_id_vendedor').value = id;
+            document.getElementById('delete_nombre_vendedor').textContent = nombre;
+        });
+    });
+});
+</script>
 
 @endsection

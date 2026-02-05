@@ -62,15 +62,17 @@ class ClienteService
 
     public function actualizarCliente($id, $nombre, $apellido, $contrasena, $direccion, $telefono, $correo_electronico)
     {
+        $data = [
+            "nombre" => $nombre,
+            "apellido" => $apellido,
+            "contrasena" => $contrasena, // Siempre viene con valor (actual o nueva)
+            "direccion" => $direccion,
+            "telefono" => $telefono,
+            "correo_electronico" => $correo_electronico
+        ];
+
         $response = Http::withHeaders($this->headers())
-            ->put($this->baseUrl . "/" . $id, [
-                "nombre" => $nombre,
-                "apellido" => $apellido,
-                "contrasena" => $contrasena,
-                "direccion" => $direccion,
-                "telefono" => $telefono,
-                "correo_electronico" => $correo_electronico
-            ]);
+            ->put($this->baseUrl . "/" . $id, $data);
 
         if ($response->successful()) {
             return [
@@ -81,7 +83,7 @@ class ClienteService
 
         return [
             "success" => false,
-            "error" => "HTTP " . $response->status()
+            "error" => "HTTP " . $response->status() . " - " . $response->body()
         ];
     }
 
@@ -99,4 +101,24 @@ class ClienteService
             "error" => "HTTP " . $response->status()
         ];
     }
+
+    public function obtenerClientePorId($id)
+    {
+        $response = Http::withHeaders($this->headers())
+            ->get($this->baseUrl . '/' . $id);
+
+        if ($response->successful()) {
+            return [
+                "success" => true,
+                "data" => $response->json()
+            ];
+        }
+
+        return [
+            "success" => false,
+            "data" => null,
+            "error" => "HTTP " . $response->status()
+        ];
+    }
+
 }

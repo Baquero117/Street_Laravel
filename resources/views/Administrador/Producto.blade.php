@@ -12,25 +12,12 @@
     <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Gestión de Productos</h5>
 
-        <div>
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarProducto">
-                <i class="fas fa-plus"></i> Agregar
-            </button>
-
-            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalActualizarProducto">
-                <i class="fas fa-edit"></i> Actualizar
-            </button>
-
-            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminarProducto">
-                <i class="fas fa-trash"></i> Eliminar
-            </button>
-        </div>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarProducto">
+            <i class="fas fa-plus"></i> Agregar
+        </button>
     </div>
 
     <div class="card-body p-0">
-
-        <form method="GET" action="{{ route('admin.Producto') }}">
-
         <table class="table table-striped mb-0">
             <thead class="table-dark">
                 <tr>
@@ -43,246 +30,141 @@
                     <th>Estado</th>
                     <th>Precio</th>
                     <th>Color</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
 
             <tbody>
+            @forelse ($productos as $pro)
+                <tr>
+                    <td>{{ $pro['id_producto'] }}</td>
+                    <td>{{ $pro['nombre'] }}</td>
+                    <td>{{ $pro['descripcion'] }}</td>
+                    <td>{{ $pro['cantidad'] }}</td>
 
-                @if (!empty($productos))
-                    @foreach ($productos as $pro)
-                        <tr>
-                            <td>{{ $pro['id_producto'] }}</td>
-                            <td>{{ $pro['nombre'] }}</td>
-                            <td>{{ $pro['descripcion'] }}</td>
-                            <td>{{ $pro['cantidad'] }}</td>
+                    <td>
+                        @if (!empty($pro['imagen']))
+                            <img src="{{ asset('storage/' . $pro['imagen']) }}" width="70" class="rounded border">
+                        @else
+                            <span>Sin imagen</span>
+                        @endif
+                    </td>
 
-                            <td>
-                                @if (!empty($pro['imagen']))
-                                   <a href="{{ asset('storage/' . $pro['imagen']) }}" target="_blank">
-                                    <img src="{{ asset('storage/' . $pro['imagen']) }}"
-                              width="80" height="80" 
-                          class="rounded border">
-                          </a>
+                    <td>{{ $pro['id_vendedor'] }}</td>
+                    <td>{{ $pro['estado'] }}</td>
+                    <td>{{ $pro['precio'] }}</td>
+                    <td>{{ $pro['color'] }}</td>
 
-                                @else
-                                    <span>Sin imagen</span>
-                                @endif
-                            </td>
+                    <td>
+                        <button class="btn btn-sm btn-warning"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalActualizarProducto"
+                            onclick="cargarProducto(
+                                '{{ $pro['id_producto'] }}',
+                                '{{ $pro['nombre'] }}',
+                                '{{ $pro['descripcion'] }}',
+                                '{{ $pro['cantidad'] }}',
+                                '{{ $pro['id_vendedor'] }}',
+                                '{{ $pro['precio'] }}',
+                                '{{ $pro['estado'] }}',
+                                '{{ $pro['color'] }}',
+                                '{{ $pro['imagen'] }}'
+                            )">
+                            <i class="fas fa-edit"></i>
+                        </button>
 
-                            <td>{{ $pro['id_vendedor'] }}</td>
-                            <td>{{ $pro['estado'] }}</td>
-                            <td>{{ $pro['precio'] }}</td>
-                            <td>{{ $pro['color'] }}</td>
-                        </tr>
-                    @endforeach
-                @else
-                    <tr>
-                        <td colspan="7" class="text-center">No hay productos registrados.</td>
-                    </tr>
-                @endif
-
+                        <button class="btn btn-sm btn-danger"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalEliminarProducto"
+                            onclick="setEliminarId('{{ $pro['id_producto'] }}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="10" class="text-center">No hay productos registrados.</td>
+                </tr>
+            @endforelse
             </tbody>
         </table>
-
-        </form>
-
     </div>
 </div>
-
-
-
-{{-- ======================== MODAL AGREGAR ======================== --}}
-<div class="modal fade" id="modalAgregarProducto" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-      <form method="POST" enctype="multipart/form-data" action="{{ route('producto.agregar') }}">
-        @csrf
-
-        <div class="modal-header">
-          <h5 class="modal-title">Agregar Producto</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-
-        <div class="modal-body">
-
-          <div class="mb-2">
-            <label class="form-label">Nombre</label>
-            <input class="form-control" type="text" name="nombre" required>
-          </div>
-
-          <div class="mb-2">
-            <label class="form-label">Descripción</label>
-            <textarea class="form-control" name="descripcion" required></textarea>
-          </div>
-
-          <div class="mb-2">
-            <label class="form-label">Cantidad</label>
-            <input class="form-control" type="number" name="cantidad" required>
-          </div>
-
-          <div class="mb-2">
-            <label class="form-label">Imagen</label>
-            <input class="form-control" type="file" name="imagen" accept="image/*" required>
-          </div>
-
-          <div class="mb-2">
-            <label class="form-label">ID Vendedor</label>
-            <input class="form-control" type="number" name="id_vendedor" required>
-          </div>
-
-          <div class="mb-2">
-            <label class="form-label">Precio</label>
-            <input class="form-control" type="number" name="precio" step="0.01" required>
-          </div>
-
-          <div class="mb-2">
-            <label class="form-label">Estado</label>
-            <select class="form-select" name="estado" required>
-                <option value="">Seleccione</option>
-                <option value="activo">Activo</option>
-                <option value="inactivo">Inactivo</option>
-            </select>
-          </div>
-          
-          <div class="mb-2">
-            <label class="form-label">Color</label>
-            <input class="form-control" type="text" name="color" required>
-          </div>
-          
-
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-success">Agregar</button>
-        </div>
-
-      </form>
-
-    </div>
-  </div>
-</div>
-
-
-
 
 {{-- ======================== MODAL ACTUALIZAR ======================== --}}
-<div class="modal fade" id="modalActualizarProducto" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modalActualizarProducto" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
-
       <form method="POST" enctype="multipart/form-data" action="{{ route('producto.actualizar') }}">
         @csrf
 
         <div class="modal-header">
           <h5 class="modal-title">Actualizar Producto</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 
         <div class="modal-body">
+          <input class="form-control mb-2" name="id_producto" readonly>
+          <input class="form-control mb-2" name="nombre">
+          <textarea class="form-control mb-2" name="descripcion"></textarea>
+          <input class="form-control mb-2" type="number" name="cantidad">
 
+          {{-- NUEVA IMAGEN (OPCIONAL) --}}
+          <input class="form-control mb-2" type="file" name="imagen">
+
+          {{-- IMAGEN ACTUAL --}}
           <div class="mb-2">
-            <label class="form-label">ID Producto</label>
-            <input class="form-control" type="number" name="id_producto" required>
+            <label class="form-label">Imagen actual</label><br>
+            <img id="imagenActual" src="" width="120" class="rounded border">
           </div>
 
-          <div class="mb-2">
-            <label class="form-label">Nombre</label>
-            <input class="form-control" type="text" name="nombre" required>
-          </div>
+          {{-- 🔑 CLAVE PARA NO BORRAR LA IMAGEN --}}
+          <input type="hidden" name="imagen_actual">
 
-          <div class="mb-2">
-            <label class="form-label">Descripción</label>
-            <textarea class="form-control" name="descripcion" required></textarea>
-          </div>
+          <input class="form-control mb-2" type="number" name="id_vendedor">
+          <input class="form-control mb-2" type="number" name="precio" step="0.01">
 
-          <div class="mb-2">
-            <label class="form-label">Cantidad</label>
-            <input class="form-control" type="number" name="cantidad" required>
-          </div>
+          <select class="form-select mb-2" name="estado">
+            <option value="activo">Activo</option>
+            <option value="inactivo">Inactivo</option>
+          </select>
 
-          <div class="mb-2">
-            <label class="form-label">Imagen</label>
-            <input class="form-control" type="file" name="imagen" accept="image/*">
-            <small class="text-muted">Si no selecciona una nueva imagen, la actual se mantiene.</small>
-          </div>
-
-          <div class="mb-2">
-            <label class="form-label">ID Vendedor</label>
-            <input class="form-control" type="number" name="id_vendedor" required>
-          </div>
-
-          <div class="mb-2">
-            <label class="form-label">Precio</label>
-            <input class="form-control" type="number" name="precio" step="0.01" required>
-          </div>
-
-          <div class="mb-2">
-            <label class="form-label">Estado</label>
-            <select class="form-select" name="estado" required>
-                <option value="">Seleccione</option>
-                <option value="activo">Activo</option>
-                <option value="inactivo">Inactivo</option>
-            </select>
-          </div>
-
-          <div class="mb-2">
-            <label class="form-label">Color</label>
-            <input class="form-control" type="text" name="color" required>
-          </div>
-
+          <input class="form-control" name="color">
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-warning">Actualizar</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button class="btn btn-warning">Actualizar</button>
         </div>
-
       </form>
-
     </div>
   </div>
 </div>
 
+{{-- ======================== JS ======================== --}}
+<script>
+function cargarProducto(id, nombre, descripcion, cantidad, id_vendedor, precio, estado, color, imagen) {
+    const modal = document.getElementById('modalActualizarProducto');
 
+    modal.querySelector('[name="id_producto"]').value = id;
+    modal.querySelector('[name="nombre"]').value = nombre;
+    modal.querySelector('[name="descripcion"]').value = descripcion;
+    modal.querySelector('[name="cantidad"]').value = cantidad;
+    modal.querySelector('[name="id_vendedor"]').value = id_vendedor;
+    modal.querySelector('[name="precio"]').value = precio;
+    modal.querySelector('[name="estado"]').value = estado;
+    modal.querySelector('[name="color"]').value = color;
 
+    // ✅ MOSTRAR Y GUARDAR IMAGEN ACTUAL
+    modal.querySelector('[name="imagen_actual"]').value = imagen;
+    document.getElementById('imagenActual').src = imagen 
+        ? '/storage/' + imagen 
+        : '';
+}
 
-{{-- ======================== MODAL ELIMINAR ======================== --}}
-<div class="modal fade" id="modalEliminarProducto" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-      <form method="POST" action="{{ route('producto.eliminar') }}">
-        @csrf
-
-        <div class="modal-header">
-          <h5 class="modal-title">Eliminar Producto</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-
-        <div class="modal-body">
-
-          <div class="mb-2">
-            <label class="form-label">ID Producto</label>
-            <input class="form-control" type="number" name="id_producto" required>
-          </div>
-
-          <p class="text-danger">⚠ Esta acción no se puede deshacer.</p>
-
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-danger">Eliminar</button>
-        </div>
-
-      </form>
-
-    </div>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+function setEliminarId(id) {
+    document.querySelector('#modalEliminarProducto [name="id_producto"]').value = id;
+}
+</script>
 
 @endsection

@@ -11,7 +11,7 @@ class DetalleProductoService
 
     public function __construct()
     {
-       
+        // Token guardado en session
         $this->token = session('token');
     }
 
@@ -68,7 +68,7 @@ class DetalleProductoService
             "cantidad" => $cantidad
         ];
 
-       
+        // 🔥 Solo enviar imagen si existe una nueva
         if ($rutaImagen !== null) {
             $payload["imagen"] = $rutaImagen;
         }

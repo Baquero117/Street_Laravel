@@ -11,7 +11,7 @@ class ProductoService
 
     public function __construct()
     {
-        
+        // Token guardado en la sesión
         $this->token = session('token');
     }
 
@@ -23,7 +23,9 @@ class ProductoService
         ];
     }
 
-   
+    // ============================
+    // 🔹 OBTENER LISTA DE PRODUCTOS
+    // ============================
     public function obtenerProductos()
     {
         $response = Http::withHeaders($this->headers())
@@ -83,28 +85,36 @@ class ProductoService
             "color" => $color
         ];
 
-       
-        if ($rutaImagen !== null) {
-            $payload["imagen"] = $rutaImagen;
-        }
+    // 🔹 SOLO enviar imagen si viene una nueva
+    // Si viene imagen nueva
+if (!empty($rutaImagen)) {
+    $payload["imagen"] = $rutaImagen;
+} 
+// Si NO viene imagen nueva → conservar la actual
+else if (!empty($data['imagen_actual'])) {
+    $payload["imagen"] = $data['imagen_actual'];
+}
 
-        $response = Http::withHeaders($this->headers())
-            ->put($this->baseUrl . "/" . $id, $payload);
 
-        if ($response->successful()) {
-            return [
-                "success" => true,
-                "data" => $response->json()
-            ];
-        }
+    $response = Http::withHeaders($this->headers())
+        ->put($this->baseUrl . "/" . $id, $payload);
 
+    if ($response->successful()) {
         return [
-            "success" => false,
-            "error" => "HTTP " . $response->status()
+            "success" => true,
+            "data" => $response->json()
         ];
     }
 
-  
+    return [
+        "success" => false,
+        "error" => $response->body()
+    ];
+}
+
+    // ============================
+    // 🔹 ELIMINAR PRODUCTO
+    // ============================
     public function eliminarProducto($id)
     {
         $response = Http::withHeaders($this->headers())
