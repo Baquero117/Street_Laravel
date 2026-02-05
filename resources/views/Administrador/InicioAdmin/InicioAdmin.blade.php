@@ -35,8 +35,7 @@
             <li><a href="{{ route('admin.DetalleProducto') }}"><i class="fas fa-tags"></i><span> Detalle Producto</span></a></li>
             <li><a href="{{ route('admin.Categoria') }}"><i class="fas fa-layer-group"></i><span> Categoría</span></a></li>
             <li><a href="{{ route('admin.Promocion') }}"><i class="fas fa-percent"></i><span> Promocion</span></a></li>
-            <li><a href="{{ route('admin.Valoracion') }}"><i class="fas fa-star"></i><span> Valoracion</span></a></li>
-                </ul>
+            
 
         <div class="footer">
             

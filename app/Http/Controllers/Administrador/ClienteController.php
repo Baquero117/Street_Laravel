@@ -54,7 +54,7 @@ class ClienteController extends Controller
             : "Error: " . $resultado['error']
         );
 
-        return redirect()->route('cliente.index');
+        return redirect()->route('admin.Cliente');
     }
 
     public function update(Request $request)
@@ -75,7 +75,7 @@ class ClienteController extends Controller
             $id,
             $request->nombre,
             $request->apellido,
-            $request->contrasena,
+            $request->contrasena, // Siempre viene el placeholder
             $request->direccion,
             $request->telefono,
             $request->correo_electronico
@@ -86,7 +86,7 @@ class ClienteController extends Controller
             : "Error: " . $resultado['error']
         );
 
-        return redirect()->route('cliente.index');
+        return redirect()->route('admin.Cliente');
     }
 
     public function destroy(Request $request)
@@ -100,6 +100,6 @@ class ClienteController extends Controller
             : "Error: " . $resultado['error']
         );
 
-        return redirect()->route('cliente.index');
+        return redirect()->route('admin.Cliente');
     }
 }

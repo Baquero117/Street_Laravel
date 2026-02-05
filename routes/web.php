@@ -8,6 +8,7 @@ use App\Http\Controllers\Administrador\ClienteController;
 use App\Http\Controllers\Administrador\DetalleProductoController;
 use App\Http\Controllers\Administrador\ProductoController;
 use App\Http\Controllers\Administrador\PedidoController;
+use App\Http\Controllers\Administrador\PromocionController;
 use App\Http\Controllers\Administrador\VendedorController;
 use App\Http\Controllers\Carrito\CarritoController;
 use App\Http\Controllers\MasVistas\HombreController;
@@ -77,14 +78,34 @@ Route::post('/producto/agregar', [ProductoController::class, 'store'])->name('pr
 Route::post('/producto/actualizar', [ProductoController::class, 'update'])->name('producto.actualizar');
 Route::post('/producto/eliminar', [ProductoController::class, 'destroy'])->name('producto.eliminar');
 
+
+
 Route::get('/admin/Pedido', [PedidoController::class, 'index'])->name('admin.Pedido');
 Route::get('/pedido', [PedidoController::class, 'index'])->name('pedido.index');
+
 Route::post('/pedido/agregar', [PedidoController::class, 'store'])->name('pedido.agregar');
 Route::post('/pedido/actualizar', [PedidoController::class, 'update'])->name('pedido.actualizar');
 Route::post('/pedido/eliminar', [PedidoController::class, 'destroy'])->name('pedido.eliminar');
+// Cambiar estado desde el select
+Route::post('/pedido/cambiar-estado', 
+    [PedidoController::class, 'cambiarEstado']
+)->name('pedido.cambiarEstado');
+
+// Cancelar pedido (estado = Cancelado)
+Route::post('/pedido/cancelar', 
+    [PedidoController::class, 'cancelar']
+)->name('pedido.cancelar');
+
 
 Route::get('/admin/Vendedor', [VendedorController::class, 'index'])->name('admin.Vendedor');
 Route::get('/vendedor', [VendedorController::class, 'index'])->name('vendedor.index');
 Route::post('/vendedor/agregar', [VendedorController::class, 'store'])->name('vendedor.agregar');
 Route::post('/vendedor/actualizar', [VendedorController::class, 'update'])->name('vendedor.actualizar');
 Route::post('/vendedor/eliminar', [VendedorController::class, 'destroy'])->name('vendedor.eliminar');
+
+
+Route::get('/admin/Promocion', [PromocionController::class, 'index'])->name('admin.Promocion');
+Route::get('/promocion', [PromocionController::class, 'index'])->name('promocion.index');
+Route::post('/promocion/agregar', [PromocionController::class, 'store'])->name('promocion.agregar');
+Route::post('/promocion/actualizar', [PromocionController::class, 'update'])->name('promocion.actualizar');
+Route::post('/promocion/eliminar', [PromocionController::class, 'destroy'])->name('promocion.eliminar');

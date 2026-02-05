@@ -11,7 +11,6 @@ class PedidoService
 
     public function __construct()
     {
-        
         $this->token = session('token');
     }
 
@@ -23,97 +22,95 @@ class PedidoService
         ];
     }
 
+ 
+/* ===================== OBTENER PEDIDOS ===================== */
     public function obtenerPedidos()
-{
-    $response = Http::withHeaders($this->headers())
-        ->get($this->baseUrl);
+    {
+        $response = Http::withHeaders($this->headers())
+            ->get($this->baseUrl);
 
-    if ($response->successful()) {
+        if ($response->successful()) {
+            $data = $response->json();
 
-        $data = $response->json();
+            if (!is_array($data)) {
+                $data = [];
+            }
 
-        
-        if (!is_array($data)) {
-            $data = [];
-        }
+            if (isset($data['id_pedido'])) {
+                $data = [$data];
+            }
 
-        
-        if (isset($data["id_pedido"])) {
-            $data = [$data];
+            return [
+                'success' => true,
+                'data' => $data
+            ];
         }
 
         return [
-            "success" => true,
-            "data" => $data
+            'success' => false,
+            'data' => [],
+            'error' => 'HTTP ' . $response->status()
         ];
     }
 
-    return [
-        "success" => false,
-        "data" => [],
-        "error" => "HTTP " . $response->status()
-    ];
-}
-
-
+    /* ===================== CREAR PEDIDO ===================== */
     public function crearPedido($id_cliente, $fecha_pedido, $total, $estado)
     {
         $response = Http::withHeaders($this->headers())
             ->post($this->baseUrl, [
-                "id_cliente"    => $id_cliente,
-                "fecha_pedido"  => $fecha_pedido,
-                "total"         => $total,
-                "estado"        => $estado
+                'id_cliente'   => $id_cliente,
+                'fecha_pedido' => $fecha_pedido,
+                'total'        => $total,
+                'estado'       => $estado
             ]);
 
         if ($response->successful()) {
-            return [
-                "success" => true,
-                "data" => $response->json()
-            ];
+            return ['success' => true];
         }
 
         return [
-            "success" => false,
-            "error" => "HTTP " . $response->status()
+            'success' => false,
+            'error' => 'HTTP ' . $response->status()
         ];
     }
 
-    public function actualizarPedido($id, $id_cliente, $fecha_pedido, $total, $estado)
+    /* ===================== ACTUALIZAR PEDIDO (PARCIAL) ===================== */
+    public function actualizarPedidoParcial($id, $fecha_pedido, $total)
     {
         $response = Http::withHeaders($this->headers())
-            ->put($this->baseUrl . "/" . $id, [
-                "id_cliente"    => $id_cliente,
-                "fecha_pedido"  => $fecha_pedido,
-                "total"         => $total,
-                "estado"        => $estado
+            ->put($this->baseUrl . '/' . $id, [
+                'fecha_pedido' => $fecha_pedido,
+                'total'        => $total
             ]);
 
         if ($response->successful()) {
-            return [
-                "success" => true,
-                "data" => $response->json()
-            ];
+            return ['success' => true];
         }
 
         return [
-            "success" => false,
-            "error" => "HTTP " . $response->status()
+            'success' => false,
+            'error' => 'HTTP ' . $response->status()
         ];
     }
 
-    public function eliminarPedido($id)
+    /* ===================== CAMBIAR ESTADO ===================== */
+    public function actualizarPedidoEstado($id, $estado)
     {
         $response = Http::withHeaders($this->headers())
-            ->delete($this->baseUrl . "/" . $id);
+            ->put($this->baseUrl . '/' . $id, [
+                'estado' => $estado
+            ]);
 
         if ($response->successful()) {
-            return ["success" => true];
+            return ['success' => true];
         }
 
         return [
-            "success" => false,
-            "error" => "HTTP " . $response->status()
+            'success' => false,
+            'error' => 'HTTP ' . $response->status()
         ];
     }
+
+    /* ===================== ELIMINAR (YA NO SE USA) ===================== */
+    // ❌ Eliminado intencionalmente
 }

@@ -73,38 +73,53 @@ class ProductoService
     // ============================
     // 🔹 ACTUALIZAR PRODUCTO
     // ============================
-    public function actualizarProducto($id, $nombre, $descripcion, $cantidad, $rutaImagen = null, $id_vendedor, $estado, $precio, $color)
-    {
-        $payload = [
-            "nombre" => $nombre,
-            "descripcion" => $descripcion,
-            "cantidad" => $cantidad,
-            "id_vendedor" => $id_vendedor,
-            "estado" => $estado,
-            "precio" => $precio,
-            "color" => $color
-        ];
+    public function actualizarProducto(
+    $id,
+    $nombre,
+    $descripcion,
+    $cantidad,
+    $rutaImagen = null,
+    $id_vendedor,
+    $estado,
+    $precio,
+    $color
+) {
+    $payload = [
+        "nombre" => $nombre,
+        "descripcion" => $descripcion,
+        "cantidad" => $cantidad,
+        "id_vendedor" => $id_vendedor,
+        "estado" => $estado,
+        "precio" => $precio,
+        "color" => $color
+    ];
 
-        // Solo enviar imagen si se envió una nueva
-        if ($rutaImagen !== null) {
-            $payload["imagen"] = $rutaImagen;
-        }
+    // 🔹 SOLO enviar imagen si viene una nueva
+    // Si viene imagen nueva
+if (!empty($rutaImagen)) {
+    $payload["imagen"] = $rutaImagen;
+} 
+// Si NO viene imagen nueva → conservar la actual
+else if (!empty($data['imagen_actual'])) {
+    $payload["imagen"] = $data['imagen_actual'];
+}
 
-        $response = Http::withHeaders($this->headers())
-            ->put($this->baseUrl . "/" . $id, $payload);
 
-        if ($response->successful()) {
-            return [
-                "success" => true,
-                "data" => $response->json()
-            ];
-        }
+    $response = Http::withHeaders($this->headers())
+        ->put($this->baseUrl . "/" . $id, $payload);
 
+    if ($response->successful()) {
         return [
-            "success" => false,
-            "error" => "HTTP " . $response->status()
+            "success" => true,
+            "data" => $response->json()
         ];
     }
+
+    return [
+        "success" => false,
+        "error" => $response->body()
+    ];
+}
 
     // ============================
     // 🔹 ELIMINAR PRODUCTO

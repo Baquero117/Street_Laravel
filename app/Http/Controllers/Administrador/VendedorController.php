@@ -69,14 +69,15 @@ class VendedorController extends Controller
 
         $id = $request->id_vendedor;
 
-        $resultado = $this->vendedorService->actualizarVendedor(
-            $id,
-            $request->nombre,
-            $request->apellido,
-            $request->contrasena,
-            $request->correo_electronico,
-            $request->telefono
-        );
+       $resultado = $this->vendedorService->actualizarVendedor(
+    $id,
+    $request->nombre,
+    $request->apellido,
+    $request->correo_electronico, // ✅ CORRECTO
+    $request->contrasena,
+    $request->telefono
+);
+
 
         Session::flash('mensaje', $resultado['success']
             ? "Vendedor actualizado correctamente."
