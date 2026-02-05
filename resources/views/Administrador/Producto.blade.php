@@ -30,6 +30,7 @@
                     <th>Estado</th>
                     <th>Precio</th>
                     <th>Color</th>
+                    <th>ID Categoría</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -54,6 +55,7 @@
                     <td>{{ $pro['estado'] }}</td>
                     <td>{{ $pro['precio'] }}</td>
                     <td>{{ $pro['color'] }}</td>
+                    <td>{{ $pro['id_categoria'] }}</td>
 
                     <td>
                         <button class="btn btn-sm btn-warning"
@@ -68,6 +70,7 @@
                                 '{{ $pro['precio'] }}',
                                 '{{ $pro['estado'] }}',
                                 '{{ $pro['color'] }}',
+                                '{{ $pro['id_categoria'] }}'
                                 '{{ $pro['imagen'] }}'
                             )">
                             <i class="fas fa-edit"></i>
@@ -130,6 +133,9 @@
           </select>
 
           <input class="form-control" name="color">
+
+          <input class="form-control mb-2" type="number" name="id_categoria">
+    
         </div>
 
         <div class="modal-footer">
@@ -143,7 +149,7 @@
 
 {{-- ======================== JS ======================== --}}
 <script>
-function cargarProducto(id, nombre, descripcion, cantidad, id_vendedor, precio, estado, color, imagen) {
+function cargarProducto(id, nombre, descripcion, cantidad, id_vendedor, precio, estado, color, id_categoria, imagen) {
     const modal = document.getElementById('modalActualizarProducto');
 
     modal.querySelector('[name="id_producto"]').value = id;
@@ -154,6 +160,8 @@ function cargarProducto(id, nombre, descripcion, cantidad, id_vendedor, precio, 
     modal.querySelector('[name="precio"]').value = precio;
     modal.querySelector('[name="estado"]').value = estado;
     modal.querySelector('[name="color"]').value = color;
+    modal.querySelector('[name="id_categoria"]').value = id_categoria;
+
 
     // ✅ MOSTRAR Y GUARDAR IMAGEN ACTUAL
     modal.querySelector('[name="imagen_actual"]').value = imagen;

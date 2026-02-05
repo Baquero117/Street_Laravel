@@ -41,7 +41,7 @@ class ProductoService
     // ============================
     // 🔹 AGREGAR PRODUCTO
     // ============================
-    public function agregarProducto($nombre, $descripcion, $cantidad, $rutaImagen, $id_vendedor, $estado, $precio, $color)
+    public function agregarProducto($nombre, $descripcion, $cantidad, $rutaImagen, $id_vendedor, $estado, $precio, $color, $id_categoria)
     {
         $payload = [
             "nombre" => $nombre,
@@ -51,7 +51,8 @@ class ProductoService
             "id_vendedor" => $id_vendedor,
             "estado" => $estado,
             "precio" => $precio,
-            "color" => $color
+            "color" => $color,
+            "id_categoria" => $id_categoria
         ];
 
         $response = Http::withHeaders($this->headers())
@@ -73,17 +74,28 @@ class ProductoService
     // ============================
     // 🔹 ACTUALIZAR PRODUCTO
     // ============================
-    public function actualizarProducto($id, $nombre, $descripcion, $cantidad, $rutaImagen = null, $id_vendedor, $estado, $precio, $color)
-    {
-        $payload = [
-            "nombre" => $nombre,
-            "descripcion" => $descripcion,
-            "cantidad" => $cantidad,
-            "id_vendedor" => $id_vendedor,
-            "estado" => $estado,
-            "precio" => $precio,
-            "color" => $color
-        ];
+    public function actualizarProducto(
+    $id,
+    $nombre,
+    $descripcion,
+    $cantidad,
+    $rutaImagen = null,
+    $id_vendedor,
+    $estado,
+    $precio,
+    $color,
+    $id_categoria
+) {
+    $payload = [
+        "nombre" => $nombre,
+        "descripcion" => $descripcion,
+        "cantidad" => $cantidad,
+        "id_vendedor" => $id_vendedor,
+        "estado" => $estado,
+        "precio" => $precio,
+        "color" => $color,
+        "id_categoria" => $id_categoria
+    ];
 
     // 🔹 SOLO enviar imagen si viene una nueva
     // Si viene imagen nueva

@@ -35,7 +35,6 @@ class DetalleProductoController extends Controller
         $request->validate([
             'talla' => 'required|string|max:50',
             'id_producto' => 'required|numeric',
-            'id_categoria' => 'required|numeric',
             'imagen' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
             'cantidad' => 'required|numeric|min:1',
         ]);
@@ -47,7 +46,6 @@ class DetalleProductoController extends Controller
             $request->talla,
             $rutaImagen,
             $request->id_producto,
-            $request->id_categoria,
             $request->cantidad,
         );
 
@@ -65,7 +63,6 @@ class DetalleProductoController extends Controller
             'id_detalle_producto' => 'required|numeric',
             'talla' => 'required|string|max:50',
             'id_producto' => 'required|numeric',
-            'id_categoria' => 'required|numeric',
             'imagen' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'cantidad' => 'required|numeric|min:1',
         ]);
@@ -82,7 +79,6 @@ class DetalleProductoController extends Controller
             $request->talla,
             $rutaImagen,
             $request->id_producto,
-            $request->id_categoria,
             $request->cantidad
         );
 

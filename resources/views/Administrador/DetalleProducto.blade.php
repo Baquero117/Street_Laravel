@@ -36,7 +36,6 @@
                     <th>Talla</th>
                     <th>Imagen</th>
                     <th>ID Producto</th>
-                    <th>ID Categoría</th>
                     <th>Cantidad</th>
                 </tr>
             </thead>
@@ -62,7 +61,6 @@
                             </td>
 
                             <td>{{ $deta['id_producto'] }}</td>
-                            <td>{{ $deta['id_categoria'] }}</td>
                             <td>{{ $deta['cantidad'] }}</td>
                         </tr>
                     @endforeach
@@ -109,12 +107,6 @@
             <label class="form-label">ID Producto</label>
             <input class="form-control" type="number" name="id_producto" required>
           </div>
-
-          <div class="mb-2">
-            <label class="form-label">ID Categoría</label>
-            <input class="form-control" type="number" name="id_categoria" required>
-          </div>
-
           
           <div class="mb-2">
             <label class="form-label">Cantidad</label>
@@ -170,11 +162,6 @@
           <div class="mb-2">
             <label class="form-label">ID Producto</label>
             <input class="form-control" type="number" name="id_producto" required>
-          </div>
-
-          <div class="mb-2">
-            <label class="form-label">ID Categoría</label>
-            <input class="form-control" type="number" name="id_categoria" required>
           </div>
 
           <div class="mb-2">

@@ -35,14 +35,13 @@ class DetalleProductoService
         return [];
     }
 
-    public function agregarDetalle($talla, $rutaImagen, $id_producto, $id_categoria, $cantidad)
+    public function agregarDetalle($talla, $rutaImagen, $id_producto, $cantidad)
     {
         $response = Http::withHeaders($this->headers())
             ->post($this->baseUrl, [
                 "talla" => $talla,
                 "imagen" => $rutaImagen,   // <= nombre del archivo ya guardado en storage
                 "id_producto" => $id_producto,
-                "id_categoria" => $id_categoria,
                 "cantidad" => $cantidad
             ]);
 
@@ -59,12 +58,11 @@ class DetalleProductoService
         ];
     }
 
-    public function actualizarDetalle($id, $talla, $rutaImagen = null, $id_producto, $id_categoria, $cantidad)
+    public function actualizarDetalle($id, $talla, $rutaImagen = null, $id_producto, $cantidad)
     {
         $payload = [
             "talla" => $talla,
             "id_producto" => $id_producto,
-            "id_categoria" => $id_categoria,
             "cantidad" => $cantidad
         ];
 

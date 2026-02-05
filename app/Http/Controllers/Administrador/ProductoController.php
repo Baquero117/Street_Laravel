@@ -46,6 +46,7 @@ class ProductoController extends Controller
             'imagen' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
             'precio' => 'required|numeric|min:0',
             'color' => 'nullable|string|max:50',
+            'id_categoria' => 'nullable|numeric',
         ]);
 
         // Guardar imagen
@@ -59,7 +60,8 @@ class ProductoController extends Controller
             $request->id_vendedor,
             $request->estado,
             $request->precio,
-            $request->color
+            $request->color,
+            $request->id_categoria
         );
 
         Session::flash('mensaje', $resultado['success']
@@ -86,6 +88,7 @@ class ProductoController extends Controller
         'estado' => 'required|string|max:30',
         'precio' => 'required|numeric|min:0',
         'color' => 'nullable|string|max:50',
+        'id_categoria' => 'nullable|numeric',
     ]);
 
     $id = $request->id_producto;
@@ -117,7 +120,8 @@ class ProductoController extends Controller
         $request->id_vendedor,
         $request->estado,
         $request->precio,
-        $request->color
+        $request->color,
+        $request->id_categoria
     );
 
     Session::flash('mensaje', $resultado['success']
