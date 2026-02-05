@@ -15,6 +15,7 @@ use App\Http\Controllers\MasVistas\HombreController;
 use App\Http\Controllers\MasVistas\MujerController;
 use App\Http\Controllers\MasVistas\ModaController;
 use App\Http\Controllers\PuntoInicio\PerfilController;
+use App\Http\Controllers\PublicoController;
 
 Route::get('/login', [LoginController::class, 'mostrar'])->name('login');
 Route::post('/login', [LoginController::class, 'procesar'])->name('login.procesar');
