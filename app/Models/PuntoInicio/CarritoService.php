@@ -1,64 +1,149 @@
 <?php
 
-namespace App\Models\PuntoInicio;
+namespace App\Models\Carrito;
+
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Session;
 
 class CarritoService
 {
-    private $baseUrl;
+    private string $apiUrl;
 
     public function __construct()
     {
-        $this->baseUrl = "http://localhost:8080/carrito";
+        $this->apiUrl = "http://localhost:8080/carrito";
     }
 
-    // Obtener carrito según el cliente autenticado
-    public function obtenerCarrito($idCliente)
+    private function obtenerToken()
     {
-        $curl = curl_init("{$this->baseUrl}/{$idCliente}");
-
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-        $respuesta = curl_exec($curl);
-        $http = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
-        curl_close($curl);
-
-        return $http === 200 ? json_decode($respuesta, true) : [];
+        return Session::get('token');
     }
 
-    // (Opcional) Agregar producto
-    public function agregarItem($datos)
+    public function obtenerCarrito()
     {
-        $curl = curl_init($this->baseUrl);
+        $token = $this->obtenerToken();
 
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($datos));
-        curl_setopt($curl, CURLOPT_HTTPHEADER, [
-            "Content-Type: application/json"
+        if (!$token) {
+            return ['items' => [], 'total' => 0, 'cantidad_items' => 0];
+        }
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json'
+        ])->get($this->apiUrl . "/mis-productos");
+
+        if ($response->successful()) {
+            return $response->json();
+        }
+
+        return ['items' => [], 'total' => 0, 'cantidad_items' => 0];
+    }
+
+    public function agregarProducto(int $idProducto, string $talla, int $cantidad, float $precio)
+    {
+        $token = $this->obtenerToken();
+
+        if (!$token) {
+            return ['success' => false, 'mensaje' => 'No autenticado'];
+        }
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json'
+        ])->post($this->apiUrl . "/agregar", [
+            'id_producto' => $idProducto,
+            'talla' => $talla,
+            'cantidad' => $cantidad,
+            'precio' => $precio
         ]);
 
-        $respuesta = curl_exec($curl);
-        $http = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        if ($response->successful()) {
+            return $response->json();
+        }
 
-        curl_close($curl);
-
-        return $http === 201;
+        return ['success' => false, 'mensaje' => 'Error al agregar al carrito'];
     }
 
-    // (Opcional) Eliminar item
-    public function eliminarItem($idItem)
+    public function actualizarCantidad(int $idCarrito, int $cantidad)
     {
-        $curl = curl_init("{$this->baseUrl}/{$idItem}");
+        $token = $this->obtenerToken();
 
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+        if (!$token) {
+            return ['success' => false];
+        }
 
-        curl_exec($curl);
-        $http = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json'
+        ])->put($this->apiUrl . "/actualizar", [
+            'id_carrito' => $idCarrito,
+            'cantidad' => $cantidad
+        ]);
 
-        curl_close($curl);
+        if ($response->successful()) {
+            return $response->json();
+        }
 
-        return $http === 200;
+        return ['success' => false];
+    }
+
+    public function eliminarItem(int $idCarrito)
+    {
+        $token = $this->obtenerToken();
+
+        if (!$token) {
+            return ['success' => false];
+        }
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json'
+        ])->delete($this->apiUrl . "/eliminar/{$idCarrito}");
+
+        if ($response->successful()) {
+            return $response->json();
+        }
+
+        return ['success' => false];
+    }
+
+    public function obtenerContador()
+    {
+        $token = $this->obtenerToken();
+
+        if (!$token) {
+            return ['cantidad' => 0];
+        }
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json'
+        ])->get($this->apiUrl . "/contador");
+
+        if ($response->successful()) {
+            return $response->json();
+        }
+
+        return ['cantidad' => 0];
+    }
+
+    public function vaciarCarrito()
+    {
+        $token = $this->obtenerToken();
+
+        if (!$token) {
+            return ['success' => false];
+        }
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json'
+        ])->delete($this->apiUrl . "/vaciar");
+
+        if ($response->successful()) {
+            return $response->json();
+        }
+
+        return ['success' => false];
     }
 }

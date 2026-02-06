@@ -17,6 +17,7 @@ use App\Http\Controllers\MasVistas\ModaController;
 use App\Http\Controllers\PuntoInicio\PerfilController;
 use App\Http\Controllers\PublicoController;
 
+
 Route::get('/login', [LoginController::class, 'mostrar'])->name('login');
 Route::post('/login', [LoginController::class, 'procesar'])->name('login.procesar');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -35,22 +36,35 @@ Route::get('/cuenta', [PerfilController::class, 'mostrarCuenta'])->name('cuenta'
 Route::get('/perfil', [PerfilController::class, 'mostrar'])->name('perfil');
 Route::post('/perfil/actualizar', [PerfilController::class, 'actualizar'])->name('perfil.actualizar');
 
+
 // Vista ropa hombre
 Route::get('/hombre', [HombreController::class, 'index'])->name('hombre');
 Route::get('/hombre/productos/{id}/detalle', [HombreController::class, 'detalle'])->name('hombre.productos.detalle');
+
 
 // Vista ropa Mujer
 Route::get('/mujer', [MujerController::class, 'index'])->name('mujer');
 Route::get('/mujer/productos/{id}/detalle', [MujerController::class, 'detalle'])->name('mujer.productos.detalle');
 
+
 // Vista ropa de moda
 Route::get('/moda', [ModaController::class, 'index'])->name('moda');
 Route::get('/moda/productos/{id}/detalle', [ModaController::class, 'detalle'])->name('moda.productos.detalle');
+
 
 // Inicio del administrador
 Route::get('/admin', function () {
     return view('Administrador.InicioAdmin.InicioAdmin');
 })->name('admin.inicio');
+
+
+// Carrito
+Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito');
+Route::post('/carrito/agregar', [CarritoController::class, 'agregar'])->name('carrito.agregar');
+Route::delete('/carrito/eliminar/{id}', [CarritoController::class, 'eliminar'])->name('carrito.eliminar');
+Route::put('/carrito/actualizar', [CarritoController::class, 'actualizar'])->name('carrito.actualizar');
+Route::get('/carrito/contador', [CarritoController::class, 'contador'])->name('carrito.contador');
+Route::delete('/carrito/vaciar', [CarritoController::class, 'vaciar'])->name('carrito.vaciar');
 
 Route::get('/admin/Categoria', [CategoriaController::class, 'index'])->name('admin.Categoria');
 Route::get('/categoria', [CategoriaController::class, 'index'])->name('categoria.index');

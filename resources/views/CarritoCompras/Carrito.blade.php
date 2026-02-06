@@ -3,136 +3,157 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Carrito de Compras - Siro</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Carrito de Compras - Urban Street</title>
 
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
-
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
-    <!-- CSS personalizado -->
     <link href="{{ asset('css/CarritoCompras/Carrito.css') }}" rel="stylesheet">
 </head>
 
-<body class="bg-light">
+    <body class="bg-light">
 
-    <!-- HEADER -->
-    <header class="container-barra d-flex px-3 py-1 text-dark align-items-center">
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top my-0">
+            <div class="container-fluid bg-white shadow-sm fixed-top py-2 d-flex align-items-center">
 
-        <!-- Menú lateral -->
-        <div id="logoScroll" class="logo font-weight-bold text-uppercase">
-            <i class="bi bi-list fs-2" style="cursor:pointer;" data-bs-toggle="offcanvas" data-bs-target="#menuLateral"></i>
-        </div>
+                <a href="{{ url('/inicio') }}" class="navbar-brand fw-bold logo-urbano px-5">
+                        Urban Street
+                    </a>
 
-        <div class="offcanvas offcanvas-start" tabindex="-1" id="menuLateral">
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title">Menú</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+                    <div class="d-flex align-items-center gap-3 position-absolute end-0 me-3">
+                        
+                        <div class="dropdown">
+
+                            <a href="#" class="text-dark fs-5 dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="bi bi-person-circle"></i>
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-menu-end">
+
+                                <li>
+                                    <a class="dropdown-item" href="{{ url('cuenta') }}">
+                                        Ver Perfil
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item">
+                                            Cerrar sesión
+                                        </button>
+                                    </form>
+                                </li>
+
+                            </ul>
+                        </div>
+
+                        <a href="{{ url('/carrito') }}" class="text-dark fs-5">
+                            <i class="bi bi-cart3"></i>
+                        </a>
+                    </div>
+
             </div>
-            <div class="offcanvas-body">
-                <ul class="list-unstyled">
-                    <li><a href="{{ route('inicio') }}" class="text-decoration-none">Inicio</a></li>
-                    <li><a href="{{ route('inicio') }}" class="text-decoration-none">Catálogo</a></li>
-                    <li><a href="{{ route('moda') }}" class="text-decoration-none">Ofertas</a></li>
-                    <li><a href="{{ route('inicio') }}" class="text-decoration-none">Contacto</a></li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Logo -->
-        <a href="{{ route('inicio') }}" class="mx-auto logo">
-            <img src="{{ asset('img/CarritoCompras/Logo-blanco.png') }}" alt="Logo">
-        </a>
-
-        <!-- Iconos -->
-        <div class="botones d-flex align-items-center">
-            <i class="bi bi-search" style="font-size: 20px; color: white; margin-right:8px;"></i>
-
-            <input type="text" class="form-control form-control-sm rounded-pill mx-2" 
-                   placeholder="Buscar..." aria-label="Buscar">
-
-            <a href="#">
-                <i class="bi bi-person" style="font-size: 24px; margin-left: 15px; color: white;"></i>
-            </a>
-
-            <a href="#">
-                <i class="bi bi-cart" style="font-size: 24px; margin-left: 15px; color: white;"></i>
-            </a>
-        </div>
-    </header>
+        </nav>
 
     <!-- MAIN -->
     <main>
-        <div class="container my-4">
+        <div class="container mt-4 mb-0">
             <div class="row">
 
                 <!-- Columna productos -->
                 <div class="col-lg-8">
-                    <h3 class="mb-4">Carrito</h3>
+                    <h3 class="mb-4">Mi Carrito</h3>
 
-                    <!-- Aquí irán productos dinámicos -->
-                    @foreach($carrito as $item)
-                    <div class="card mb-3">
-                        <div class="row g-0 align-items-center">
+                    @if(isset($carrito['items']) && count($carrito['items']) > 0)
+                        <div id="items-carrito">
+                        @foreach($carrito['items'] as $item)
+                        <div class="card mb-3 item-carrito" data-id-carrito="{{ $item['id_carrito'] }}">
+                            <div class="row g-0 align-items-center">
 
-                            <div class="col-md-2 text-center">
-                                <img src="{{ asset('img/CarritoCompras/Chaqueta-azul.jpg') }}" alt="Chaqueta azul"
- 
-                                     class="img-fluid rounded" alt="Producto">
-                            </div>
+                                <div class="col-md-2 text-center">
+                                    <img src="{{ asset('storage/' . $item['imagen']) }}" 
+                                         class="img-fluid rounded p-2" 
+                                         alt="{{ $item['nombre'] }}"
+                                         onerror="this.src='https://via.placeholder.com/150x150?text=Sin+Imagen'"
+                                         style="max-height: 150px; object-fit: contain;">
+                                </div>
 
-                            <div class="col-md-7">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ $item->nombre }}</h5>
-                                    <p class="card-text text-muted">{{ $item->descripcion }}</p>
-                                    <p class="card-text text-muted">Talla: {{ $item->talla }}</p>
-                                    <p class="card-text text-muted">Material: {{ $item->material }}</p>
+                                <div class="col-md-7">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ $item['nombre'] }}</h5>
+                                        <p class="card-text text-muted mb-1">Color: {{ $item['color'] ?? 'No especificado' }}</p>
+                                        <p class="card-text text-muted mb-1">Talla: {{ $item['talla'] }}</p>
+                                        <p class="card-text text-muted mb-2">Precio unitario: ${{ number_format($item['precio_unitario'], 0, ',', '.') }}</p>
 
-                                    <p class="text-success">
-                                        {{ $item->stock > 0 ? 'Disponible' : 'Agotado' }}
-                                    </p>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <!-- Cantidad -->
+                                            <div class="input-group" style="width: 120px;">
+                                                <button class="btn btn-outline-secondary btn-sm btn-decrementar" 
+                                                        data-id="{{ $item['id_carrito'] }}"
+                                                        type="button">
+                                                    <i class="bi bi-dash"></i>
+                                                </button>
+                                                <input type="number" 
+                                                       class="form-control form-control-sm text-center input-cantidad" 
+                                                       data-id="{{ $item['id_carrito'] }}"
+                                                       value="{{ $item['cantidad'] }}" 
+                                                       min="1" 
+                                                       readonly>
+                                                <button class="btn btn-outline-secondary btn-sm btn-incrementar" 
+                                                        data-id="{{ $item['id_carrito'] }}"
+                                                        type="button">
+                                                    <i class="bi bi-plus"></i>
+                                                </button>
+                                            </div>
 
-                                    <div class="d-flex align-items-center gap-2">
-
-                                        <!-- Actualizar cantidad -->
-                                        <form action="{{ route('carrito.actualizar', $item->id) }}" method="POST">
-                                            @csrf
-                                            <input type="number" name="cantidad" min="1"
-                                                   value="{{ $item->cantidad }}"
-                                                   class="form-control w-auto">
-                                        </form>
-
-                                        <!-- Eliminar -->
-                                        <form action="{{ route('carrito.eliminar', $item->id) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="btn btn-sm btn-outline-danger">
+                                            <!-- Eliminar -->
+                                            <button class="btn btn-sm btn-outline-danger btn-eliminar" 
+                                                    data-id="{{ $item['id_carrito'] }}">
                                                 <i class="bi bi-trash"></i> Eliminar
                                             </button>
-                                        </form>
-
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-3 text-end pe-4">
-                                <h5 class="text-dark">${{ number_format($item->precio, 0, ',', '.') }}</h5>
-                            </div>
+                                <div class="col-md-3 text-end pe-4">
+                                    <h5 class="text-dark subtotal-item">${{ number_format($item['subtotal'], 0, ',', '.') }}</h5>
+                                </div>
 
+                            </div>
                         </div>
-                    </div>
-                    @endforeach
+                        @endforeach
+                        </div>
+
+                        <!-- Botón vaciar carrito -->
+                        <div class="text-end mb-3">
+                            <button class="btn btn-outline-danger" id="btn-vaciar-carrito">
+                                <i class="bi bi-trash"></i> Vaciar Carrito
+                            </button>
+                        </div>
+
+                    @else
+                        <div class="alert alert-info text-center">
+                            <i class="bi bi-cart-x fs-1 d-block mb-3"></i>
+                            <h5>Tu carrito está vacío</h5>
+                            <p>¡Agrega productos para empezar a comprar!</p>
+                            <a href="{{ route('inicio') }}" class="btn btn-primary mt-2">
+                                Ir a la tienda
+                            </a>
+                        </div>
+                    @endif
                 </div>
 
                 <!-- Columna resumen -->
                 <div class="col-lg-4 mt-4 mt-lg-0">
-                    <div class="card p-4 shadow-sm">
+                    <div class="card p-4 shadow-sm" id="resumen-carrito">
                         <h5 class="mb-3 border-bottom pb-2">Resumen del pedido</h5>
 
                         <p class="d-flex justify-content-between">
                             <span>Subtotal:</span>
-                            <span class="fw-bold text-dark">${{ number_format($subtotal, 0, ',', '.') }}</span>
+                            <span class="fw-bold text-dark" id="subtotal-resumen">
+                                ${{ number_format($carrito['total'] ?? 0, 0, ',', '.') }}
+                            </span>
                         </p>
 
                         <p class="d-flex justify-content-between text-success">
@@ -143,77 +164,26 @@
                         <div class="border-top pt-3 mt-2">
                             <p class="d-flex justify-content-between fs-5">
                                 <span class="fw-bold">Total:</span>
-                                <span class="fw-bold text-dark">${{ number_format($total, 0, ',', '.') }}</span>
+                                <span class="fw-bold text-dark" id="total-resumen">
+                                    ${{ number_format($carrito['total'] ?? 0, 0, ',', '.') }}
+                                </span>
                             </p>
                         </div>
 
+                        @if(isset($carrito['items']) && count($carrito['items']) > 0)
                         <button class="btn btn-boton-pago w-100 mt-3 py-2" id="btnProcederPago">
                             Proceder al pago
                         </button>
+                        @else
+                        <button class="btn btn-secondary w-100 mt-3 py-2" disabled>
+                            Carrito vacío
+                        </button>
+                        @endif
                     </div>
                 </div>
 
             </div>
         </div>
-
-        <!-- Separador -->
-        <div class="container my-5">
-            <hr>
-        </div>
-
-        <!-- Carrusel -->
-        <div class="container my-5">
-            <h3 class="mb-4 text-center">Artículos destacados que te pueden gustar</h3>
-
-            <div id="productosCarrusel" class="carousel slide" data-bs-ride="carousel">
-
-                <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#productosCarrusel" data-bs-slide-to="0" class="active"></button>
-                    <button type="button" data-bs-target="#productosCarrusel" data-bs-slide-to="1"></button>
-                    <button type="button" data-bs-target="#productosCarrusel" data-bs-slide-to="2"></button>
-                </div>
-
-                <div class="carousel-inner">
-
-                    @foreach($sugeridos as $i => $producto)
-                    <div class="carousel-item {{ $i == 0 ? 'active' : '' }}">
-                        <div class="row row-cols-2 row-cols-md-4 g-4 justify-content-center">
-
-                            <div class="col">
-                                <div class="card h-100 text-center p-2">
-                                    <img src="{{ asset('img/CarritoCompras/Chaqueta-azul.jpg') }}" alt="Chaqueta Azul"
-                                       class="card-img-top mx-auto mt-2"
-                                       style="height: 150px; object-fit: contain">
-
-
-                                    <div class="card-body">
-                                        <h6 class="card-title text-truncate">{{ $producto->nombre }}</h6>
-                                        <p class="text-muted small">{{ $producto->etiqueta }}</p>
-                                        <p class="card-text fw-bold">${{ $producto->precio }}</p>
-
-                                        <button class="btn-agregar-carrusel">
-                                            Agregar al carrito
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    @endforeach
-
-                </div>
-
-                <!-- Controles -->
-                <button class="carousel-control-prev" type="button" data-bs-target="#productosCarrusel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#productosCarrusel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                </button>
-            </div>
-        </div>
-
     </main>
 
     <!-- FOOTER -->
@@ -231,20 +201,17 @@
             </div>
 
             <div class="col-md-4 mb-3">
-                <h5 class="footer-title">Acerca de STREET</h5>
+                <h5 class="footer-title">Acerca de Urban Street</h5>
                 <ul class="list-unstyled footer-links">
-                    <li><a> Aviso de Privacidad</a></li>
-                    <li><a> Términos y condiciones</a></li>
-                    <li><a> Formas de pago</a></li>
-                    <li><a> Uso de Cookies</a></li>
-                    <li><a> Nuestro Catálogo</a></li>
+                    <li><a>Aviso de Privacidad</a></li>
+                    <li><a>Términos y condiciones</a></li>
+                    <li><a>Formas de pago</a></li>
                 </ul>
             </div>
 
             <div class="col-md-4 mb-3">
                 <h5 class="footer-title">Información adicional</h5>
                 <ul class="list-unstyled footer-links">
-                    <li><a>Política de Datos</a></li>
                     <li><a>Contáctanos</a></li>
                     <li><a>Registro</a></li>
                     <li><a>Soporte</a></li>
@@ -253,8 +220,7 @@
 
             <div class="col-12 mt-3">
                 <p class="mb-0 small">
-                    Sitio web creado por S.I.R.O. © 2025 <br>
-                    Imágenes educativas (Koaj® y Pull&Bear®)
+                    © 2025 Urban Street - Proyecto Educativo
                 </p>
             </div>
         </div>
