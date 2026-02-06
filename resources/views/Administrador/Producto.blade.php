@@ -117,30 +117,64 @@
         </div>
 
         <div class="modal-body">
-          <input class="form-control mb-2" name="nombre" placeholder="Nombre" required>
-          <textarea class="form-control mb-2" name="descripcion" placeholder="Descripción" required></textarea>
-          <input class="form-control mb-2" type="number" name="cantidad" placeholder="Cantidad" required>
+          <div class="mb-3">
+            <label class="form-label">Nombre *</label>
+            <input class="form-control" name="nombre" placeholder="Ej: Camiseta Nike" required>
+          </div>
 
-          {{-- IMAGEN (REQUERIDA) --}}
-          <input class="form-control mb-2" type="file" name="imagen" required>
+          <div class="mb-3">
+            <label class="form-label">Descripción *</label>
+            <textarea class="form-control" name="descripcion" rows="3" placeholder="Describe el producto..." required></textarea>
+          </div>
 
-          <input class="form-control mb-2" type="number" name="id_vendedor" placeholder="ID Vendedor" required>
-          <input class="form-control mb-2" type="number" name="precio" step="0.01" placeholder="Precio" required>
+          <div class="mb-3">
+            <label class="form-label">Cantidad *</label>
+            <input class="form-control" type="number" name="cantidad" placeholder="Ej: 10" required>
+          </div>
 
-          <select class="form-select mb-2" name="estado" required>
-            <option value="">Seleccione estado</option>
-            <option value="activo">Activo</option>
-            <option value="inactivo">Inactivo</option>
-          </select>
+          <div class="mb-3">
+            <label class="form-label">Imagen *</label>
+            <input class="form-control" type="file" name="imagen" accept="image/*" required>
+            <small class="text-muted">Formatos: JPG, JPEG, PNG, WEBP (Máx. 2MB)</small>
+          </div>
 
-          <input class="form-control mb-2" name="color" placeholder="Color">
+          <div class="mb-3">
+            <label class="form-label">ID Vendedor *</label>
+            <input class="form-control" type="number" name="id_vendedor" placeholder="Ej: 1" required>
+          </div>
 
-          <input class="form-control mb-2" type="number" name="id_categoria" placeholder="ID Categoría">
+          <div class="mb-3">
+            <label class="form-label">Precio *</label>
+            <input class="form-control" type="number" name="precio" step="0.01" placeholder="Ej: 49.99" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Estado *</label>
+            <select class="form-select" name="estado" required>
+              <option value="">Seleccione estado</option>
+              <option value="activo">Activo</option>
+              <option value="inactivo">Inactivo</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Color</label>
+            <input class="form-control" name="color" placeholder="Ej: Rojo, Azul, Negro">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">ID Categoría</label>
+            <input class="form-control" type="number" name="id_categoria" placeholder="Ej: 5">
+          </div>
+
+          <small class="text-muted">* Campos obligatorios</small>
         </div>
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-success">Guardar</button>
+          <button type="submit" class="btn btn-success">
+            <i class="fas fa-save"></i> Guardar
+          </button>
         </div>
       </form>
     </div>
@@ -160,40 +194,76 @@
         </div>
 
         <div class="modal-body">
-          <input class="form-control mb-2" name="id_producto" readonly>
-          <input class="form-control mb-2" name="nombre" placeholder="Nombre">
-          <textarea class="form-control mb-2" name="descripcion" placeholder="Descripción"></textarea>
-          <input class="form-control mb-2" type="number" name="cantidad" placeholder="Cantidad">
+          <div class="mb-3">
+            <label class="form-label">ID Producto</label>
+            <input class="form-control" name="id_producto" readonly>
+          </div>
 
-          {{-- NUEVA IMAGEN (OPCIONAL) --}}
-          <input class="form-control mb-2" type="file" name="imagen">
+          <div class="mb-3">
+            <label class="form-label">Nombre *</label>
+            <input class="form-control" name="nombre" placeholder="Nombre del producto" required>
+          </div>
 
-          {{-- IMAGEN ACTUAL --}}
-          <div class="mb-2">
+          <div class="mb-3">
+            <label class="form-label">Descripción *</label>
+            <textarea class="form-control" name="descripcion" rows="3" placeholder="Descripción del producto" required></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Cantidad *</label>
+            <input class="form-control" type="number" name="cantidad" placeholder="Cantidad disponible" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Nueva Imagen (opcional)</label>
+            <input class="form-control" type="file" name="imagen" accept="image/*">
+            <small class="text-muted">Si no seleccionas una imagen, se mantendrá la actual</small>
+          </div>
+
+          <div class="mb-3">
             <label class="form-label">Imagen actual</label><br>
-            <img id="imagenActual" src="" width="120" class="rounded border">
+            <img id="imagenActual" src="" width="120" class="rounded border" alt="Sin imagen">
           </div>
 
           {{-- 🔑 CLAVE PARA NO BORRAR LA IMAGEN --}}
           <input type="hidden" name="imagen_actual">
 
-          <input class="form-control mb-2" type="number" name="id_vendedor" placeholder="ID Vendedor">
-          <input class="form-control mb-2" type="number" name="precio" step="0.01" placeholder="Precio">
+          <div class="mb-3">
+            <label class="form-label">ID Vendedor *</label>
+            <input class="form-control" type="number" name="id_vendedor" placeholder="ID del vendedor" required>
+          </div>
 
-          <select class="form-select mb-2" name="estado">
-            <option value="activo">Activo</option>
-            <option value="inactivo">Inactivo</option>
-          </select>
+          <div class="mb-3">
+            <label class="form-label">Precio *</label>
+            <input class="form-control" type="number" name="precio" step="0.01" placeholder="Precio del producto" required>
+          </div>
 
-          <input class="form-control mb-2" name="color" placeholder="Color">
+          <div class="mb-3">
+            <label class="form-label">Estado *</label>
+            <select class="form-select" name="estado" required>
+              <option value="activo">Activo</option>
+              <option value="inactivo">Inactivo</option>
+            </select>
+          </div>
 
-          <input class="form-control mb-2" type="number" name="id_categoria" placeholder="ID Categoría">
-    
+          <div class="mb-3">
+            <label class="form-label">Color</label>
+            <input class="form-control" name="color" placeholder="Color del producto">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">ID Categoría</label>
+            <input class="form-control" type="number" name="id_categoria" placeholder="ID de la categoría">
+          </div>
+
+          <small class="text-muted">* Campos obligatorios</small>
         </div>
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-warning">Actualizar</button>
+          <button type="submit" class="btn btn-warning">
+            <i class="fas fa-sync-alt"></i> Actualizar
+          </button>
         </div>
       </form>
     </div>
