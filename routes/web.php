@@ -37,12 +37,15 @@ Route::post('/perfil/actualizar', [PerfilController::class, 'actualizar'])->name
 
 // Vista ropa hombre
 Route::get('/hombre', [HombreController::class, 'index'])->name('hombre');
+Route::get('/hombre/productos/{id}/detalle', [HombreController::class, 'detalle'])->name('hombre.productos.detalle');
 
 // Vista ropa Mujer
 Route::get('/mujer', [MujerController::class, 'index'])->name('mujer');
+Route::get('/mujer/productos/{id}/detalle', [MujerController::class, 'detalle'])->name('mujer.productos.detalle');
 
 // Vista ropa de moda
 Route::get('/moda', [ModaController::class, 'index'])->name('moda');
+Route::get('/moda/productos/{id}/detalle', [ModaController::class, 'detalle'])->name('moda.productos.detalle');
 
 // Inicio del administrador
 Route::get('/admin', function () {
@@ -74,13 +77,13 @@ Route::post('/producto/actualizar', [ProductoController::class, 'update'])->name
 Route::post('/producto/eliminar', [ProductoController::class, 'destroy'])->name('producto.eliminar');
 
 
-
 Route::get('/admin/Pedido', [PedidoController::class, 'index'])->name('admin.Pedido');
 Route::get('/pedido', [PedidoController::class, 'index'])->name('pedido.index');
 
 Route::post('/pedido/agregar', [PedidoController::class, 'store'])->name('pedido.agregar');
 Route::post('/pedido/actualizar', [PedidoController::class, 'update'])->name('pedido.actualizar');
 Route::post('/pedido/eliminar', [PedidoController::class, 'destroy'])->name('pedido.eliminar');
+
 // Cambiar estado desde el select
 Route::post('/pedido/cambiar-estado', 
     [PedidoController::class, 'cambiarEstado']
