@@ -2,9 +2,19 @@
 
 @section('contenido')
 
-{{-- MENSAJE --}}
+{{-- MENSAJES --}}
 @if (!empty($mensaje))
     <div class="alert alert-info text-center">{{ $mensaje }}</div>
+@endif
+
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
 @endif
 
 <div class="card mt-3">
@@ -70,7 +80,7 @@
                                 '{{ $pro['precio'] }}',
                                 '{{ $pro['estado'] }}',
                                 '{{ $pro['color'] }}',
-                                '{{ $pro['id_categoria'] }}'
+                                '{{ $pro['id_categoria'] }}',
                                 '{{ $pro['imagen'] }}'
                             )">
                             <i class="fas fa-edit"></i>
@@ -86,12 +96,55 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="10" class="text-center">No hay productos registrados.</td>
+                    <td colspan="11" class="text-center">No hay productos registrados.</td>
                 </tr>
             @endforelse
             </tbody>
         </table>
     </div>
+</div>
+
+{{-- ======================== MODAL AGREGAR ======================== --}}
+<div class="modal fade" id="modalAgregarProducto" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" enctype="multipart/form-data" action="{{ route('producto.agregar') }}">
+        @csrf
+
+        <div class="modal-header">
+          <h5 class="modal-title">Agregar Producto</h5>
+          <button class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <input class="form-control mb-2" name="nombre" placeholder="Nombre" required>
+          <textarea class="form-control mb-2" name="descripcion" placeholder="Descripción" required></textarea>
+          <input class="form-control mb-2" type="number" name="cantidad" placeholder="Cantidad" required>
+
+          {{-- IMAGEN (REQUERIDA) --}}
+          <input class="form-control mb-2" type="file" name="imagen" required>
+
+          <input class="form-control mb-2" type="number" name="id_vendedor" placeholder="ID Vendedor" required>
+          <input class="form-control mb-2" type="number" name="precio" step="0.01" placeholder="Precio" required>
+
+          <select class="form-select mb-2" name="estado" required>
+            <option value="">Seleccione estado</option>
+            <option value="activo">Activo</option>
+            <option value="inactivo">Inactivo</option>
+          </select>
+
+          <input class="form-control mb-2" name="color" placeholder="Color">
+
+          <input class="form-control mb-2" type="number" name="id_categoria" placeholder="ID Categoría">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-success">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 {{-- ======================== MODAL ACTUALIZAR ======================== --}}
@@ -108,9 +161,9 @@
 
         <div class="modal-body">
           <input class="form-control mb-2" name="id_producto" readonly>
-          <input class="form-control mb-2" name="nombre">
-          <textarea class="form-control mb-2" name="descripcion"></textarea>
-          <input class="form-control mb-2" type="number" name="cantidad">
+          <input class="form-control mb-2" name="nombre" placeholder="Nombre">
+          <textarea class="form-control mb-2" name="descripcion" placeholder="Descripción"></textarea>
+          <input class="form-control mb-2" type="number" name="cantidad" placeholder="Cantidad">
 
           {{-- NUEVA IMAGEN (OPCIONAL) --}}
           <input class="form-control mb-2" type="file" name="imagen">
@@ -124,23 +177,50 @@
           {{-- 🔑 CLAVE PARA NO BORRAR LA IMAGEN --}}
           <input type="hidden" name="imagen_actual">
 
-          <input class="form-control mb-2" type="number" name="id_vendedor">
-          <input class="form-control mb-2" type="number" name="precio" step="0.01">
+          <input class="form-control mb-2" type="number" name="id_vendedor" placeholder="ID Vendedor">
+          <input class="form-control mb-2" type="number" name="precio" step="0.01" placeholder="Precio">
 
           <select class="form-select mb-2" name="estado">
             <option value="activo">Activo</option>
             <option value="inactivo">Inactivo</option>
           </select>
 
-          <input class="form-control" name="color">
+          <input class="form-control mb-2" name="color" placeholder="Color">
 
-          <input class="form-control mb-2" type="number" name="id_categoria">
+          <input class="form-control mb-2" type="number" name="id_categoria" placeholder="ID Categoría">
     
         </div>
 
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button class="btn btn-warning">Actualizar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-warning">Actualizar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{{-- ======================== MODAL ELIMINAR ======================== --}}
+<div class="modal fade" id="modalEliminarProducto" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" action="{{ route('producto.eliminar') }}">
+        @csrf
+
+        <div class="modal-header">
+          <h5 class="modal-title">Eliminar Producto</h5>
+          <button class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <input type="hidden" name="id_producto">
+          <p>¿Está seguro que desea eliminar este producto?</p>
+          <p class="text-danger"><strong>Esta acción no se puede deshacer.</strong></p>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-danger">Eliminar</button>
         </div>
       </form>
     </div>
@@ -161,7 +241,6 @@ function cargarProducto(id, nombre, descripcion, cantidad, id_vendedor, precio, 
     modal.querySelector('[name="estado"]').value = estado;
     modal.querySelector('[name="color"]').value = color;
     modal.querySelector('[name="id_categoria"]').value = id_categoria;
-
 
     // ✅ MOSTRAR Y GUARDAR IMAGEN ACTUAL
     modal.querySelector('[name="imagen_actual"]').value = imagen;

@@ -145,7 +145,7 @@ class ProductoController extends Controller
         $id = $request->id_producto;
 
         // 🔹 Obtener producto para borrar imagen
-        $productoActual = $this->productoService->obtenerProductoPorId($id);
+    
 
         if (
             !empty($productoActual['imagen']) &&
