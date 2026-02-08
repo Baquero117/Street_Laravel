@@ -58,7 +58,7 @@ Route::get('/admin', function () {
 })->name('admin.inicio');
 
 
-// Carrito
+// 🛒 Rutas del Carrito
 Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito');
 Route::post('/carrito/agregar', [CarritoController::class, 'agregar'])->name('carrito.agregar');
 Route::delete('/carrito/eliminar/{id}', [CarritoController::class, 'eliminar'])->name('carrito.eliminar');
