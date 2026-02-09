@@ -5,19 +5,42 @@ let productoActual = null;
 let idDetalleSeleccionado = null;
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Página cargada, buscando botones...');
-    const botones = document.querySelectorAll('.ver-detalle-dinamico');
+    console.log('Página cargada, buscando imágenes...');
     
-    botones.forEach((boton) => {
-        boton.addEventListener('click', function() {
+    const imagenes = document.querySelectorAll('.product-image');
+    
+    imagenes.forEach((imagen) => {
+        imagen.addEventListener('click', function() {
             const idProducto = this.getAttribute('data-id');
             verDetalle(idProducto);
         });
+        
+        imagen.style.cursor = 'pointer';
     });
     
-    // 👇 Actualizar contador al cargar la página
     actualizarContadorCarrito();
+    initScrollEffects();
 });
+
+// Efecto de scroll del navbar - INVERTIDO
+function initScrollEffects() {
+    const brandLogo = document.getElementById('brandLogo');
+    const navbar = document.getElementById('mainNavbar');
+
+    window.addEventListener('scroll', function() {
+        const currentScroll = window.pageYOffset;
+
+        if (currentScroll > 50) {
+            // Al hacer scroll: logo desaparece y navbar se vuelve transparente
+            brandLogo.classList.add('fade-out');
+            navbar.classList.add('scrolled');
+        } else {
+            // Al inicio: logo visible y navbar blanco
+            brandLogo.classList.remove('fade-out');
+            navbar.classList.remove('scrolled');
+        }
+    });
+}
 
 function verDetalle(idProducto) {
     fetch(`/productos/${idProducto}/detalle`)
@@ -32,42 +55,33 @@ function verDetalle(idProducto) {
             tallaSeleccionada = null;
             idDetalleSeleccionado = null; 
 
-            // Llenar datos básicos
             document.getElementById('modalNombre').textContent = data.nombre;
             document.getElementById('modalImagen').src = data.imagen ? '/storage/' + data.imagen : 'https://via.placeholder.com/400x400';
             document.getElementById('modalDescripcion').textContent = data.descripcion || 'Sin descripción';
             document.getElementById('modalColor').textContent = data.color || 'No especificado';
             document.getElementById('modalPrecio').textContent = new Intl.NumberFormat('es-CO').format(data.precio);
             
-            // Renderizar Tallas
             const tallasContainer = document.getElementById('modalTallas');
             tallasContainer.innerHTML = '';
-            
+
             if (data.detalles && data.detalles.length > 0) {
                 data.detalles.forEach(detalle => {
-                    const badge = document.createElement('span');
-                    badge.className = 'badge bg-secondary me-2 mb-2';
-                    badge.style.cursor = 'pointer';
-                    badge.style.fontSize = '1rem';
-                    badge.style.padding = '8px 15px';
-                    badge.textContent = detalle.talla;
+                    const cajaTalla = document.createElement('div');
+                    cajaTalla.className = 'talla-item';
+                    cajaTalla.textContent = detalle.talla;
 
-                    badge.onclick = function() {
-                        document.querySelectorAll('#modalTallas .badge').forEach(b => {
-                            b.classList.remove('bg-success');
-                            b.classList.add('bg-secondary');
-                        });
-                        this.classList.remove('bg-secondary');
-                        this.classList.add('bg-success');
+                    cajaTalla.onclick = function() {
+                        document.querySelectorAll('.talla-item').forEach(t => t.classList.remove('selected'));
+                        this.classList.add('selected');
                         
                         tallaSeleccionada = detalle.talla;
                         idDetalleSeleccionado = detalle.id_detalle_producto;
-                        console.log("Talla:", tallaSeleccionada, "ID:", idDetalleSeleccionado);
+                        console.log("Seleccionado:", tallaSeleccionada);
                     };
-                    tallasContainer.appendChild(badge);
+                    tallasContainer.appendChild(cajaTalla);
                 });
             } else {
-                tallasContainer.innerHTML = '<span class="text-muted">Sin stock disponible</span>';
+                tallasContainer.innerHTML = '<span class="text-muted">Sin stock</span>';
             }
             
             modal.show();
@@ -133,13 +147,12 @@ function agregarAlCarrito() {
     });
 }
 
-// 🔢 Actualizar contador del carrito
 function actualizarContadorCarrito() {
     fetch('/carrito/contador')
         .then(response => response.json())
         .then(data => {
             console.log('🔢 Contador:', data);
-            const iconoCarrito = document.querySelector('.bi-cart3');
+            const iconoCarrito = document.querySelector('.bi-bag');
             if (!iconoCarrito) return;
             
             const parent = iconoCarrito.parentElement;

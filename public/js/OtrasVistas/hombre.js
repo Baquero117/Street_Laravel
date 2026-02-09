@@ -1,105 +1,181 @@
-// Modal de Bootstrap
-const modal = new bootstrap.Modal(document.getElementById('detalleModalHombre'));
+// Variables globales corregidas para tu HTML
+const modalElement = document.getElementById('detalleModal');
+const modal = new bootstrap.Modal(modalElement);
 let tallaSeleccionada = null;
 let productoActual = null;
+let idDetalleSeleccionado = null;
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Página de Hombre cargada');
+    console.log('Página de Hombre cargada, buscando imágenes...');
     
-    const botones = document.querySelectorAll('.ver-detalle-hombre');
-    console.log('Botones encontrados:', botones.length);
+    // En tu Blade, las imágenes tienen la clase 'product-image'
+    const imagenes = document.querySelectorAll('.product-image');
     
-    botones.forEach((boton, index) => {
-        console.log(`Botón ${index + 1} con ID:`, boton.getAttribute('data-id'));
-        
-        boton.addEventListener('click', function() {
+    imagenes.forEach((imagen) => {
+        imagen.addEventListener('click', function() {
             const idProducto = this.getAttribute('data-id');
-            console.log('Click en botón con ID:', idProducto);
-            verDetalleHombre(idProducto);
+            verDetalle(idProducto);
         });
+        imagen.style.cursor = 'pointer';
     });
+    
+    // Funciones iniciales
+    actualizarContadorCarrito();
+    initScrollEffects();
 });
 
-// Función para obtener y mostrar el detalle del producto
-function verDetalleHombre(idProducto) {
+// Efecto de scroll para el navbar (Logo desaparece, navbar cambia)
+function initScrollEffects() {
+    const brandLogo = document.getElementById('brandLogo');
+    const navbar = document.getElementById('mainNavbar');
+
+    if (!brandLogo || !navbar) return;
+
+    window.addEventListener('scroll', function() {
+        const currentScroll = window.pageYOffset;
+        if (currentScroll > 50) {
+            brandLogo.classList.add('fade-out');
+            navbar.classList.add('scrolled');
+        } else {
+            brandLogo.classList.remove('fade-out');
+            navbar.classList.remove('scrolled');
+        }
+    });
+}
+
+// Función principal para ver el detalle (Ruta corregida para Hombre)
+function verDetalle(idProducto) {
+    // Usamos la ruta que tenías en el controlador de hombre
     fetch(`/hombre/productos/${idProducto}/detalle`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la respuesta');
-            }
-            return response.json();
-        })
+        .then(response => response.ok ? response.json() : Promise.reject('Error en red'))
         .then(data => {
             if (data.error) {
-                alert('Error al cargar el detalle del producto');
+                alert('Error al cargar el detalle');
                 return;
             }
             
             productoActual = data;
-            productoActual.id_producto = idProducto;
+            productoActual.id_producto = idProducto; // Aseguramos el ID
+            tallaSeleccionada = null;
+            idDetalleSeleccionado = null; 
+
+            // Llenamos el modal usando los IDs exactos de tu Blade
+            document.getElementById('modalNombre').textContent = data.nombre;
+            document.getElementById('modalImagen').src = data.imagen ? '/storage/' + data.imagen : 'https://via.placeholder.com/400x400';
+            document.getElementById('modalDescripcion').textContent = data.descripcion || 'Sin descripción';
+            document.getElementById('modalColor').textContent = data.color || 'No especificado';
             
-            // Llenar el modal con los datos
-            document.getElementById('modalNombreHombre').textContent = data.nombre;
-            if (data.imagen) {
-                document.getElementById('modalImagenHombre').src = '/storage/' + data.imagen;
-            } else {
-                document.getElementById('modalImagenHombre').src = 'https://via.placeholder.com/400x400?text=Sin+Imagen';
-            }
-            document.getElementById('modalDescripcionHombre').textContent = data.descripcion || 'Sin descripción';
-            document.getElementById('modalColorHombre').textContent = data.color || 'No especificado';
-            document.getElementById('modalPrecioHombre').textContent = 
-                new Intl.NumberFormat('es-CO').format(data.precio);
+            // Formateo de precio
+            document.getElementById('modalPrecio').textContent = new Intl.NumberFormat('es-CO').format(data.precio);
             
-            // Mostrar tallas
-            const tallasContainer = document.getElementById('modalTallasHombre');
+            const tallasContainer = document.getElementById('modalTallas');
             tallasContainer.innerHTML = '';
-            
-            if (data.tallas && data.tallas.length > 0) {
-                data.tallas.forEach(talla => {
-                    const badge = document.createElement('span');
-                    badge.className = 'badge bg-secondary me-2 mb-2';
-                    badge.style.cursor = 'pointer';
-                    badge.style.fontSize = '1rem';
-                    badge.style.padding = '8px 15px';
-                    badge.textContent = talla;
-                    badge.onclick = function() {
-                        document.querySelectorAll('#modalTallasHombre .badge').forEach(b => {
-                            b.classList.remove('bg-success');
-                            b.classList.add('bg-secondary');
-                        });
-                        this.classList.remove('bg-secondary');
-                        this.classList.add('bg-success');
-                        tallaSeleccionada = talla;
+
+            // Manejo de tallas (Soporta el formato de 'detalles' con ID)
+            const detalles = data.detalles || data.tallas;
+
+            if (detalles && detalles.length > 0) {
+                detalles.forEach(item => {
+                    const cajaTalla = document.createElement('div');
+                    // Usamos la clase 'talla-item' para el estilo de cuadrito
+                    cajaTalla.className = 'talla-item'; 
+                    
+                    const nombreTalla = item.talla || item;
+                    const idVariante = item.id_detalle_producto || null;
+                    
+                    cajaTalla.textContent = nombreTalla;
+
+                    cajaTalla.onclick = function() {
+                        document.querySelectorAll('.talla-item').forEach(t => t.classList.remove('selected'));
+                        this.classList.add('selected');
+                        
+                        tallaSeleccionada = nombreTalla;
+                        idDetalleSeleccionado = idVariante;
+                        console.log("Seleccionado:", tallaSeleccionada, "ID Detalle:", idDetalleSeleccionado);
                     };
-                    tallasContainer.appendChild(badge);
+                    tallasContainer.appendChild(cajaTalla);
                 });
             } else {
-                tallasContainer.innerHTML = '<span class="text-muted">Talla única</span>';
+                tallasContainer.innerHTML = '<span class="text-muted">Sin stock</span>';
             }
             
-            tallaSeleccionada = null;
             modal.show();
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error al cargar el detalle del producto');
+            alert('Error al cargar el producto');
         });
 }
 
-// Función para agregar al carrito
-function agregarAlCarritoHombre() {
+// Agregar al carrito con TOKEN CSRF
+function agregarAlCarrito() {
     if (!productoActual) return;
     
-    if (productoActual.tallas && productoActual.tallas.length > 0 && !tallaSeleccionada) {
+    if (!tallaSeleccionada) {
         alert('Por favor selecciona una talla');
         return;
     }
     
-    console.log('Agregar al carrito:', {
-        producto: productoActual,
-        talla: tallaSeleccionada
+    const datos = {
+        id_producto: productoActual.id_producto,
+        id_detalle_producto: idDetalleSeleccionado,
+        talla: tallaSeleccionada,
+        cantidad: 1,
+        precio: productoActual.precio
+    };
+
+    fetch('/carrito/agregar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify(datos)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.redirect) {
+            window.location.href = data.redirect;
+            return;
+        }
+
+        if (data.success) {
+            alert('✅ ' + data.mensaje);
+            modal.hide();
+            actualizarContadorCarrito();
+        } else {
+            alert('❌ ' + (data.mensaje || 'Error al agregar'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error de conexión');
     });
-    
-    alert('Producto agregado al carrito');
-    modal.hide();
+}
+
+// Contador del carrito dinámico
+function actualizarContadorCarrito() {
+    fetch('/carrito/contador')
+        .then(response => response.json())
+        .then(data => {
+            const iconoCarrito = document.querySelector('.bi-bag');
+            if (!iconoCarrito) return;
+            
+            const parent = iconoCarrito.parentElement;
+            let badge = parent.querySelector('.badge');
+            
+            if (data.cantidad > 0) {
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.className = 'badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle';
+                    badge.style.fontSize = '0.7rem';
+                    parent.style.position = 'relative';
+                    parent.appendChild(badge);
+                }
+                badge.textContent = data.cantidad;
+            } else if (badge) {
+                badge.remove();
+            }
+        })
+        .catch(() => console.log("Carrito vacío o error"));
 }

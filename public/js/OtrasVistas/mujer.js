@@ -1,105 +1,184 @@
-// Modal de Bootstrap
-const modal = new bootstrap.Modal(document.getElementById('detalleModalMujer'));
+// Variables globales integradas
+const modalElement = document.getElementById('detalleModalMujer');
+const modal = new bootstrap.Modal(modalElement);
 let tallaSeleccionada = null;
 let productoActual = null;
+let idDetalleSeleccionado = null; // Para manejar el ID específico de la variante si existe
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Página de Mujer cargada');
     
-    const botones = document.querySelectorAll('.ver-detalle-mujer');
-    console.log('Botones encontrados:', botones.length);
+    // Inicializar efectos visuales
+    initScrollEffects();
+    actualizarContadorCarrito();
+
+    // Eventos para abrir el detalle (clic en imagen o botón "Ver más")
+    const disparadores = document.querySelectorAll('.ver-detalle-mujer');
     
-    botones.forEach((boton, index) => {
-        console.log(`Botón ${index + 1} con ID:`, boton.getAttribute('data-id'));
-        
-        boton.addEventListener('click', function() {
+    disparadores.forEach((el) => {
+        el.addEventListener('click', function() {
             const idProducto = this.getAttribute('data-id');
-            console.log('Click en botón con ID:', idProducto);
             verDetalleMujer(idProducto);
         });
+        el.style.cursor = 'pointer';
     });
 });
 
-// Función para obtener y mostrar el detalle del producto
+/**
+ * Efecto de scroll para el navbar (estilo premium)
+ */
+function initScrollEffects() {
+    const navbar = document.getElementById('mainNavbar');
+    const brandLogo = document.getElementById('brandLogo');
+
+    if (!navbar) return;
+
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+            if (brandLogo) brandLogo.classList.add('fade-out');
+        } else {
+            navbar.classList.remove('scrolled');
+            if (brandLogo) brandLogo.classList.remove('fade-out');
+        }
+    });
+}
+
+/**
+ * Obtiene los datos del producto y llena el modal
+ */
 function verDetalleMujer(idProducto) {
     fetch(`/mujer/productos/${idProducto}/detalle`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la respuesta');
-            }
-            return response.json();
-        })
+        .then(response => response.ok ? response.json() : Promise.reject('Error en red'))
         .then(data => {
             if (data.error) {
-                alert('Error al cargar el detalle del producto');
+                alert('No se pudo cargar el detalle del producto');
                 return;
             }
             
             productoActual = data;
             productoActual.id_producto = idProducto;
-            
-            // Llenar el modal con los datos
+            tallaSeleccionada = null;
+            idDetalleSeleccionado = null; 
+
+            // Llenar campos del modal
             document.getElementById('modalNombreMujer').textContent = data.nombre;
-            if (data.imagen) {
-                document.getElementById('modalImagenMujer').src = '/storage/' + data.imagen;
-            } else {
-                document.getElementById('modalImagenMujer').src = 'https://via.placeholder.com/400x400?text=Sin+Imagen';
-            }
-            document.getElementById('modalDescripcionMujer').textContent = data.descripcion || 'Sin descripción';
-            document.getElementById('modalColorMujer').textContent = data.color || 'No especificado';
-            document.getElementById('modalPrecioMujer').textContent = 
-                new Intl.NumberFormat('es-CO').format(data.precio);
+            document.getElementById('modalImagenMujer').src = data.imagen ? '/storage/' + data.imagen : 'https://via.placeholder.com/400x400?text=Sin+Imagen';
+            document.getElementById('modalDescripcionMujer').textContent = data.descripcion || 'Sin descripción disponible';
+            document.getElementById('modalColorMujer').textContent = data.color || 'Multicolor';
+            document.getElementById('modalPrecioMujer').textContent = new Intl.NumberFormat('es-CO').format(data.precio);
             
-            // Mostrar tallas
+            // Renderizar tallas como cuadritos (talla-item)
             const tallasContainer = document.getElementById('modalTallasMujer');
             tallasContainer.innerHTML = '';
             
-            if (data.tallas && data.tallas.length > 0) {
-                data.tallas.forEach(talla => {
-                    const badge = document.createElement('span');
-                    badge.className = 'badge bg-secondary me-2 mb-2';
-                    badge.style.cursor = 'pointer';
-                    badge.style.fontSize = '1rem';
-                    badge.style.padding = '8px 15px';
-                    badge.textContent = talla;
-                    badge.onclick = function() {
-                        document.querySelectorAll('#modalTallasMujer .badge').forEach(b => {
-                            b.classList.remove('bg-success');
-                            b.classList.add('bg-secondary');
-                        });
-                        this.classList.remove('bg-secondary');
-                        this.classList.add('bg-success');
-                        tallaSeleccionada = talla;
+            // Soporta tanto array simple ['S','M'] como array de objetos de base de datos
+            const detalles = data.detalles || data.tallas;
+
+            if (detalles && detalles.length > 0) {
+                detalles.forEach(item => {
+                    const cajaTalla = document.createElement('div');
+                    cajaTalla.className = 'talla-item'; // Clase definida en tu CSS
+                    
+                    const nombreTalla = item.talla || item;
+                    const idVariante = item.id_detalle_producto || null;
+                    
+                    cajaTalla.textContent = nombreTalla;
+
+                    cajaTalla.onclick = function() {
+                        document.querySelectorAll('.talla-item').forEach(t => t.classList.remove('selected'));
+                        this.classList.add('selected');
+                        
+                        tallaSeleccionada = nombreTalla;
+                        idDetalleSeleccionado = idVariante;
                     };
-                    tallasContainer.appendChild(badge);
+                    tallasContainer.appendChild(cajaTalla);
                 });
             } else {
-                tallasContainer.innerHTML = '<span class="text-muted">Talla única</span>';
+                tallasContainer.innerHTML = '<span class="text-muted small">Talla única / Sin stock</span>';
             }
             
-            tallaSeleccionada = null;
             modal.show();
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error al cargar el detalle del producto');
+            alert('Error al conectar con el servidor');
         });
 }
 
-// Función para agregar al carrito
+/**
+ * Envía el producto al carrito mediante POST
+ */
 function agregarAlCarritoMujer() {
     if (!productoActual) return;
     
-    if (productoActual.tallas && productoActual.tallas.length > 0 && !tallaSeleccionada) {
-        alert('Por favor selecciona una talla');
+    if (!tallaSeleccionada && (productoActual.tallas?.length > 0 || productoActual.detalles?.length > 0)) {
+        alert('Por favor, selecciona una talla antes de añadir.');
         return;
     }
     
-    console.log('Agregar al carrito:', {
-        producto: productoActual,
-        talla: tallaSeleccionada
+    const datos = {
+        id_producto: productoActual.id_producto,
+        id_detalle_producto: idDetalleSeleccionado,
+        talla: tallaSeleccionada,
+        cantidad: 1,
+        precio: productoActual.precio
+    };
+
+    fetch('/carrito/agregar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify(datos)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.redirect) {
+            window.location.href = data.redirect; // Redirige al login si no está autenticado
+            return;
+        }
+
+        if (data.success) {
+            alert('✨ ' + data.mensaje);
+            modal.hide();
+            actualizarContadorCarrito();
+        } else {
+            alert('❌ ' + (data.mensaje || 'Error al agregar'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error de conexión al carrito');
     });
-    
-    alert('Producto agregado al carrito');
-    modal.hide();
+}
+
+/**
+ * Actualiza el número de productos en el icono del carrito
+ */
+function actualizarContadorCarrito() {
+    fetch('/carrito/contador')
+        .then(response => response.json())
+        .then(data => {
+            const iconoCarrito = document.querySelector('.bi-bag') || document.querySelector('.bi-cart3');
+            if (!iconoCarrito) return;
+            
+            const parent = iconoCarrito.parentElement;
+            let badge = parent.querySelector('.badge');
+            
+            if (data.cantidad > 0) {
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.className = 'badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle';
+                    badge.style.fontSize = '0.65rem';
+                    parent.style.position = 'relative';
+                    parent.appendChild(badge);
+                }
+                badge.textContent = data.cantidad;
+            } else if (badge) {
+                badge.remove();
+            }
+        })
+        .catch(() => console.log("Carrito sin items"));
 }
