@@ -3,196 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda Online</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Lo mejor de la moda - Urban Street</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rubik:wght@300;400;500;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rubik:wght@300;400;500;700&family=Permanent+Marker&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/OtrasVistas/moda.css') }}">
 </head>
 
 <body>
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top my-0">
-        <div class="container-fluid bg-white shadow-sm fixed-top py-2">
-
-            <a href="{{ url('/inicio') }}" class="navbar-brand fw-bold logo-urbano px-5">
-                Urban Street
-            </a>
-
-            <div class="collapse navbar-collapse justify-content-center">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{ url('/hombre') }}" >Hombre</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/mujer') }}">Mujer</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/moda') }}">Lo mejor de la moda</a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="d-flex align-items-center gap-3">
-                <form class="d-flex custom-search">
-                    <div class="input-group">
-                        <input class="form-control rounded-pill" type="search" placeholder="Buscar..." aria-label="Buscar">
-
-                        <span class="input-group-text bg-white border-0 rounded-pill ms-n5">
-                            <i class="bi bi-search"></i>
-                        </span>
-                    </div>
-                </form>
-
-                <div class="dropdown">
-                    
-                    <a href="#" class="text-dark fs-5 dropdown-toggle" data-bs-toggle="dropdown">
-                        <i class="bi bi-person-circle"></i>
+    <nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
+        <div class="container-fluid px-4 py-2">
+            <div class="row w-100 align-items-center g-0">
+                
+                <!-- Logo izquierda -->
+                <div class="col-auto">
+                    <a href="{{ url('/inicio') }}" class="navbar-brand logo-urbano mb-0" id="brandLogo">
+                        URBAN STREET
                     </a>
-
-                    <ul class="dropdown-menu dropdown-menu-end">
-
-                        <li>
-                            <a class="dropdown-item" href="{{ url('cuenta') }}">
-                                Ver Perfil
-                            </a>
-                        </li>
-
-                        <li>
-                            <form action="{{ route('logout') }}" method="POST" class="m-0">
-                                @csrf
-                                <button type="submit" class="dropdown-item">
-                                    Cerrar sesión
-                                </button>
-                            </form>
-                        </li>
-
-                    </ul>
                 </div>
 
-                {{-- CARRITO --}}
-                <a href="{{ url('/carrito') }}" class="text-dark fs-5">
-                    <i class="bi bi-cart3"></i>
-                </a>
-            </div>
+                <!-- Links centrados -->
+                <div class="col d-flex justify-content-center">
+                    <div class="d-flex gap-4">
+                        <a href="{{ url('/hombre') }}" class="nav-link-custom">HOMBRE</a>
+                        <a href="{{ url('/mujer') }}" class="nav-link-custom">MUJER</a>
+                        <a href="{{ url('/moda') }}" class="nav-link-custom active-page">LO MEJOR DE LA MODA</a>
+                    </div>
+                </div>
 
+                <!-- Iconos derecha -->
+                <div class="col-auto d-flex align-items-center gap-3">
+                    
+                    <!-- Búsqueda -->
+                    <div class="icon-wrapper">
+                        <i class="bi bi-search fs-5"></i>
+                    </div>
+
+                    <!-- Usuario -->
+                    <div class="dropdown icon-wrapper">
+                        <a href="#" class="text-dark" data-bs-toggle="dropdown">
+                            <i class="bi bi-person fs-5"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
+                            <li><a class="dropdown-item py-2" href="{{ url('cuenta') }}">Perfil</a></li>
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item py-2">Cerrar sesión</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Carrito -->
+                    <a href="{{ url('/carrito') }}" class="text-dark icon-wrapper position-relative">
+                        <i class="bi bi-bag fs-5"></i>
+                    </a>
+                </div>
+
+            </div>
         </div>
     </nav>
 
 
-    <!-- CARRUSEL -->
-    <div class="container py-4 mt-5">
-        <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
-            <div class="carousel-inner">
+    <!-- CARRUSEL HERO -->
+    <div class="hero-carousel-section">
+        <div class="container py-4 mt-3">
+            <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
+                <div class="carousel-inner">
 
-                <div class="carousel-item active">
-                    <img src="{{ asset('img/OtrasVistas/Ofertas.jpg') }}"
-                         class="d-block w-100 rounded-3"
-                         alt="Imagen principal"
-                         style="height: 550px; object-fit: cover;">
+                    <div class="carousel-item active">
+                        <img src="{{ asset('img/OtrasVistas/Ofertas.jpg') }}"
+                             class="d-block w-100 rounded-3 hero-image"
+                             alt="Ofertas especiales">
+                    </div>
+
+                    <div class="carousel-item">
+                        <img src="{{ asset('img/OtrasVistas/gracias.jpg') }}"
+                             class="d-block w-100 rounded-3 hero-image"
+                             alt="Gracias por tu compra">
+                    </div>
+
+                    <div class="carousel-item">
+                        <img src="{{ asset('img/OtrasVistas/descuento.jpg') }}"
+                             class="d-block w-100 rounded-3 hero-image"
+                             alt="Descuentos">
+                    </div>
+
                 </div>
 
-                <div class="carousel-item">
-                    <img src="{{ asset('img/OtrasVistas/gracias.jpg') }}"
-                         class="d-block w-100 rounded-3"
-                         alt="Imagen principal"
-                         style="height: 550px; object-fit: cover;">
-                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
 
-                <div class="carousel-item">
-                    <img src="{{ asset('img/OtrasVistas/descuento.jpg') }}"
-                         class="d-block w-100 rounded-3"
-                         alt="Imagen principal"
-                         style="height: 550px; object-fit: cover;">
-                </div>
-
-
+                <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
             </div>
-
-            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </button>
-
-            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </button>
         </div>
     </div>
 
 
+    <!-- CARDS -->
+    <div class="container-fluid bg-light text-dark py-5 mt-2">
+        <div class="container">
+            <h2 class="text-center mb-4">Lo mejor de la moda urbana</h2>
 
- <!-- CARDS -->
-<div class="container-fluid bg-light text-dark py-5 mt-2">
-    <div class="container">
-        <h2 class="text-center mb-4">Lo mejor de la moda urbana</h2>
-
-        <div class="row g-4">
-            @forelse($productos as $producto)
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <img src="{{ asset('storage/' . $producto['imagen']) }}" 
-                             class="card-img-top" 
-                             alt="{{ $producto['nombre'] }}"
-                             onerror="this.src='https://via.placeholder.com/400x400?text=Sin+Imagen'">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">{{ $producto['nombre'] }}</h5>
-                            <p class="text-muted mb-2">{{ $producto['color'] ?? 'Varios colores' }}</p>
-                            <p class="fw-bold text-success fs-5">${{ number_format($producto['precio'], 0, ',', '.') }}</p>
+            <div class="row g-4">
+                @forelse($productos as $producto)
+                    <div class="col-md-3">
+                        <div class="card h-100 product-card border-0">
+                            <div class="image-wrapper position-relative">
+                                <img src="{{ asset('storage/' . $producto['imagen']) }}" 
+                                     class="card-img-top product-image" 
+                                     alt="{{ $producto['nombre'] }}"
+                                     data-id="{{ $producto['id_producto'] }}"
+                                     onerror="this.src='https://via.placeholder.com/400x400?text=Sin+Imagen'">
+                                
+                                <!-- Logo en esquina superior derecha -->
+                                <div class="product-logo">夜</div>
+                            </div>
                             
-                            <button class="btn btn-dark ver-detalle-moda" data-id="{{ $producto['id_producto'] }}">
-                                Ver más
-                            </button>
+                            <div class="card-body px-0 pt-3 pb-2">
+                                <h6 class="card-title mb-1 text-dark fw-normal" style="font-size: 0.9rem;">
+                                    {{ $producto['nombre'] }}
+                                </h6>
+                                <p class="text-dark mb-0 fw-bold" style="font-size: 0.95rem;">
+                                    {{ number_format($producto['precio'], 3, '.', ',') }} COP
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            @empty
-                <div class="col-12">
-                    <div class="alert alert-info text-center">
-                        No hay productos de moda disponibles en este momento
+                @empty
+                    <div class="col-12">
+                        <div class="alert alert-info text-center">
+                            No hay productos de moda disponibles en este momento
+                        </div>
                     </div>
-                </div>
-            @endforelse
+                @endforelse
+            </div>
         </div>
     </div>
+
 
     <!-- MODAL -->
-    <div class="modal fade" id="detalleModalModa" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-dark text-white">
-                    <h5 class="modal-title" id="modalNombreModa"></h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <img id="modalImagenModa" src="" class="img-fluid rounded" alt="">
+    <div class="modal fade" id="detalleModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content border-0 rounded-0 overflow-hidden">
+                <button type="button" class="btn-close custom-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                
+                <div class="modal-body p-0">
+                    <div class="row g-0">
+                        <div class="col-md-7 d-flex align-items-center bg-light">
+                            <img id="modalImagen" src="" class="img-fluid w-100 img-product-detail" alt="">
                         </div>
-                        <div class="col-md-6">
-                            <p id="modalDescripcionModa"></p>
-                            <p><strong>Color:</strong> <span id="modalColorModa"></span></p>
-                            <p><strong>Precio:</strong> <span class="text-success fw-bold fs-4">$<span id="modalPrecioModa"></span></span></p>
-                            <div class="mb-3">
-                                <strong>Tallas disponibles:</strong>
-                                <div id="modalTallasModa" class="mt-2"></div>
+                        
+                        <div class="col-md-5 d-flex flex-column p-4 p-lg-5" style="max-height: 90vh; overflow-y: auto;">
+                            <h2 id="modalNombre" class="fw-bold mb-1 text-uppercase"></h2>
+                            <p id="modalColor" class="text-muted small mb-3"></p>
+                            
+                            <h3 class="fw-light mb-4 text-dark">$<span id="modalPrecio"></span></h3>
+                            
+                            <div class="mb-4">
+                                <p id="modalDescripcion" class="text-secondary small" style="line-height: 1.6;"></p>
                             </div>
-                            <button class="btn btn-success w-100" onclick="agregarAlCarritoModa()">
-                                <i class="bi bi-cart-plus"></i> Agregar al Carrito
-                            </button>
+
+                            <div class="mb-4">
+                                <label class="fw-bold small mb-2 text-uppercase" style="letter-spacing: 1px;">Seleccionar Talla</label>
+                                <div id="modalTallas" class="d-flex flex-wrap gap-2"></div>
+                            </div>
+
+                            <div class="mt-auto border-top pt-4">
+                                <button class="btn btn-dark w-100 rounded-0 py-3 mb-2 text-uppercase fw-bold" onclick="agregarAlCarrito()">
+                                    Añadir al carrito
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 
     <!-- FOOTER -->
@@ -240,7 +235,6 @@
         </div>
     </footer>
 
-    {{-- JS --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/OtrasVistas/moda.js') }}"></script>
 

@@ -123,7 +123,7 @@ body {
 /* Carrusel con transición fade */
 .carousel-fade .carousel-item {
     opacity: 0;
-    transition: opacity 0.80s ease-in-out;
+    transition: opacity 1.2s ease-in-out;
 }
 
 .carousel-fade .carousel-item.active {
@@ -307,20 +307,15 @@ body {
     transition: opacity 0.3s linear;
 }
 
-#modalImagenMujer {
-    width: 100%;
-    /* 'contain' asegura que la imagen se vea completa dentro del espacio */
-    height: 85vh; 
-    object-fit: contain !important; 
-    /* Añadimos un fondo sutil para que si la imagen es delgada, no se vea vacío */
-    background-color: #f8f9fa; 
-    display: block;
+/* Contenedor del modal */
+#detalleModal .modal-content {
+    max-height: 90vh;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
-/* Ajuste para que en móviles no sea tan gigante */
-@media (max-width: 768px) {
-    #modalImagenMujer {
-        height: 50vh;
+@media (min-width: 992px) {
+    #detalleModal .modal-dialog {
+        max-width: 80%;
     }
 }
 
@@ -388,38 +383,4 @@ body {
 
 .detalle {
     display: none;
-}
-
-/* Botón de cerrar Modal - ESQUINA DERECHA */
-.custom-close-modal {
-    position: absolute;
-    right: 15px;
-    top: 15px;
-    z-index: 1051; /* Por encima del contenido del modal */
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 50%;
-    padding: 10px;
-    opacity: 0.8;
-    transition: all 0.3s ease;
-    border: none;
-}
-
-.custom-close-modal:hover {
-    opacity: 1;
-    background-color: #fff;
-    transform: rotate(90deg);
-}
-
-/* Asegurar que el contenido del modal sea el punto de referencia */
-#detalleModalMujer .modal-content {
-    position: relative; 
-    max-height: 90vh;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-}
-
-/* Ajuste para la imagen del modal */
-#modalImagenMujer {
-    height: 85vh; 
-    object-fit: cover;
-    width: 100%;
 }

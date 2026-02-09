@@ -1,105 +1,173 @@
-// Modal de Bootstrap
-const modal = new bootstrap.Modal(document.getElementById('detalleModalModa'));
+// Variables globales
+const modal = new bootstrap.Modal(document.getElementById('detalleModal'));
 let tallaSeleccionada = null;
 let productoActual = null;
+let idDetalleSeleccionado = null;
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Página de Moda cargada');
+    console.log('Página de Moda cargada, buscando imágenes...');
     
-    const botones = document.querySelectorAll('.ver-detalle-moda');
-    console.log('Botones encontrados:', botones.length);
+    const imagenes = document.querySelectorAll('.product-image');
     
-    botones.forEach((boton, index) => {
-        console.log(`Botón ${index + 1} con ID:`, boton.getAttribute('data-id'));
-        
-        boton.addEventListener('click', function() {
+    imagenes.forEach((imagen) => {
+        imagen.addEventListener('click', function() {
             const idProducto = this.getAttribute('data-id');
-            console.log('Click en botón con ID:', idProducto);
-            verDetalleModa(idProducto);
+            verDetalle(idProducto);
         });
+        
+        imagen.style.cursor = 'pointer';
     });
+    
+    actualizarContadorCarrito();
+    initScrollEffects();
 });
 
-// Función para obtener y mostrar el detalle del producto
-function verDetalleModa(idProducto) {
+// Efecto de scroll del navbar
+function initScrollEffects() {
+    const brandLogo = document.getElementById('brandLogo');
+    const navbar = document.getElementById('mainNavbar');
+
+    window.addEventListener('scroll', function() {
+        const currentScroll = window.pageYOffset;
+
+        if (currentScroll > 50) {
+            brandLogo.classList.add('fade-out');
+            navbar.classList.add('scrolled');
+        } else {
+            brandLogo.classList.remove('fade-out');
+            navbar.classList.remove('scrolled');
+        }
+    });
+}
+
+function verDetalle(idProducto) {
     fetch(`/moda/productos/${idProducto}/detalle`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la respuesta');
-            }
-            return response.json();
-        })
+        .then(response => response.ok ? response.json() : Promise.reject('Error en red'))
         .then(data => {
             if (data.error) {
-                alert('Error al cargar el detalle del producto');
+                alert('Error al cargar el detalle');
                 return;
             }
             
             productoActual = data;
-            productoActual.id_producto = idProducto;
+            tallaSeleccionada = null;
+            idDetalleSeleccionado = null; 
+
+            document.getElementById('modalNombre').textContent = data.nombre;
+            document.getElementById('modalImagen').src = data.imagen ? '/storage/' + data.imagen : 'https://via.placeholder.com/400x400';
+            document.getElementById('modalDescripcion').textContent = data.descripcion || 'Sin descripción';
+            document.getElementById('modalColor').textContent = data.color || 'No especificado';
+            document.getElementById('modalPrecio').textContent = new Intl.NumberFormat('es-CO').format(data.precio);
             
-            // Llenar el modal con los datos
-            document.getElementById('modalNombreModa').textContent = data.nombre;
-            if (data.imagen) {
-                document.getElementById('modalImagenModa').src = '/storage/' + data.imagen;
-            } else {
-                document.getElementById('modalImagenModa').src = 'https://via.placeholder.com/400x400?text=Sin+Imagen';
-            }
-            document.getElementById('modalDescripcionModa').textContent = data.descripcion || 'Sin descripción';
-            document.getElementById('modalColorModa').textContent = data.color || 'No especificado';
-            document.getElementById('modalPrecioModa').textContent = 
-                new Intl.NumberFormat('es-CO').format(data.precio);
-            
-            // Mostrar tallas
-            const tallasContainer = document.getElementById('modalTallasModa');
+            const tallasContainer = document.getElementById('modalTallas');
             tallasContainer.innerHTML = '';
-            
-            if (data.tallas && data.tallas.length > 0) {
-                data.tallas.forEach(talla => {
-                    const badge = document.createElement('span');
-                    badge.className = 'badge bg-secondary me-2 mb-2';
-                    badge.style.cursor = 'pointer';
-                    badge.style.fontSize = '1rem';
-                    badge.style.padding = '8px 15px';
-                    badge.textContent = talla;
-                    badge.onclick = function() {
-                        document.querySelectorAll('#modalTallasModa .badge').forEach(b => {
-                            b.classList.remove('bg-success');
-                            b.classList.add('bg-secondary');
-                        });
-                        this.classList.remove('bg-secondary');
-                        this.classList.add('bg-success');
-                        tallaSeleccionada = talla;
+
+            if (data.detalles && data.detalles.length > 0) {
+                data.detalles.forEach(detalle => {
+                    const cajaTalla = document.createElement('div');
+                    cajaTalla.className = 'talla-item';
+                    cajaTalla.textContent = detalle.talla;
+
+                    cajaTalla.onclick = function() {
+                        document.querySelectorAll('.talla-item').forEach(t => t.classList.remove('selected'));
+                        this.classList.add('selected');
+                        
+                        tallaSeleccionada = detalle.talla;
+                        idDetalleSeleccionado = detalle.id_detalle_producto;
+                        console.log("Seleccionado:", tallaSeleccionada);
                     };
-                    tallasContainer.appendChild(badge);
+                    tallasContainer.appendChild(cajaTalla);
                 });
             } else {
-                tallasContainer.innerHTML = '<span class="text-muted">Talla única</span>';
+                tallasContainer.innerHTML = '<span class="text-muted">Sin stock</span>';
             }
             
-            tallaSeleccionada = null;
             modal.show();
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error al cargar el detalle del producto');
+            alert('Error al cargar el producto');
         });
 }
 
-// Función para agregar al carrito
-function agregarAlCarritoModa() {
-    if (!productoActual) return;
+function agregarAlCarrito() {
+    if (!productoActual) {
+        alert('Error: No hay producto seleccionado');
+        return;
+    }
     
-    if (productoActual.tallas && productoActual.tallas.length > 0 && !tallaSeleccionada) {
+    if (!idDetalleSeleccionado) {
         alert('Por favor selecciona una talla');
         return;
     }
     
-    console.log('Agregar al carrito:', {
-        producto: productoActual,
-        talla: tallaSeleccionada
+    const datos = {
+        id_detalle_producto: idDetalleSeleccionado,
+        talla: tallaSeleccionada,
+        cantidad: 1,
+        precio: productoActual.precio
+    };
+
+    console.log('📦 Enviando al carrito:', datos);
+
+    fetch('/carrito/agregar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+        },
+        body: JSON.stringify(datos)
+    })
+    .then(response => {
+        console.log('📥 Respuesta recibida:', response.status);
+        return response.json();
+    })
+    .then(data => {
+        console.log('📥 Datos:', data);
+        
+        if (data.redirect) {
+            alert(data.mensaje);
+            window.location.href = data.redirect;
+            return;
+        }
+
+        if (data.success) {
+            alert('✅ ' + data.mensaje);
+            modal.hide();
+            actualizarContadorCarrito();
+        } else {
+            alert('❌ ' + (data.mensaje || 'No se pudo agregar'));
+        }
+    })
+    .catch(error => {
+        console.error('❌ Error:', error);
+        alert('Error de conexión');
     });
-    
-    alert('Producto agregado al carrito');
-    modal.hide();
+}
+
+function actualizarContadorCarrito() {
+    fetch('/carrito/contador')
+        .then(response => response.json())
+        .then(data => {
+            console.log('🔢 Contador:', data);
+            const iconoCarrito = document.querySelector('.bi-bag');
+            if (!iconoCarrito) return;
+            
+            const parent = iconoCarrito.parentElement;
+            let badge = parent.querySelector('.badge');
+            
+            if (data.cantidad > 0) {
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.className = 'badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle';
+                    badge.style.fontSize = '0.7rem';
+                    parent.style.position = 'relative';
+                    parent.appendChild(badge);
+                }
+                badge.textContent = data.cantidad;
+            } else if (badge) {
+                badge.remove();
+            }
+        })
+        .catch(error => console.error('Error al actualizar contador:', error));
 }

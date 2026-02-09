@@ -1,6 +1,5 @@
-// Variables globales corregidas para tu HTML
-const modalElement = document.getElementById('detalleModal');
-const modal = new bootstrap.Modal(modalElement);
+// Variables globales
+const modal = new bootstrap.Modal(document.getElementById('detalleModal'));
 let tallaSeleccionada = null;
 let productoActual = null;
 let idDetalleSeleccionado = null;
@@ -8,7 +7,6 @@ let idDetalleSeleccionado = null;
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Página de Hombre cargada, buscando imágenes...');
     
-    // En tu Blade, las imágenes tienen la clase 'product-image'
     const imagenes = document.querySelectorAll('.product-image');
     
     imagenes.forEach((imagen) => {
@@ -16,23 +14,22 @@ document.addEventListener('DOMContentLoaded', function() {
             const idProducto = this.getAttribute('data-id');
             verDetalle(idProducto);
         });
+        
         imagen.style.cursor = 'pointer';
     });
     
-    // Funciones iniciales
     actualizarContadorCarrito();
     initScrollEffects();
 });
 
-// Efecto de scroll para el navbar (Logo desaparece, navbar cambia)
+// Efecto de scroll del navbar
 function initScrollEffects() {
     const brandLogo = document.getElementById('brandLogo');
     const navbar = document.getElementById('mainNavbar');
 
-    if (!brandLogo || !navbar) return;
-
     window.addEventListener('scroll', function() {
         const currentScroll = window.pageYOffset;
+
         if (currentScroll > 50) {
             brandLogo.classList.add('fade-out');
             navbar.classList.add('scrolled');
@@ -43,9 +40,7 @@ function initScrollEffects() {
     });
 }
 
-// Función principal para ver el detalle (Ruta corregida para Hombre)
 function verDetalle(idProducto) {
-    // Usamos la ruta que tenías en el controlador de hombre
     fetch(`/hombre/productos/${idProducto}/detalle`)
         .then(response => response.ok ? response.json() : Promise.reject('Error en red'))
         .then(data => {
@@ -55,43 +50,31 @@ function verDetalle(idProducto) {
             }
             
             productoActual = data;
-            productoActual.id_producto = idProducto; // Aseguramos el ID
             tallaSeleccionada = null;
             idDetalleSeleccionado = null; 
 
-            // Llenamos el modal usando los IDs exactos de tu Blade
             document.getElementById('modalNombre').textContent = data.nombre;
             document.getElementById('modalImagen').src = data.imagen ? '/storage/' + data.imagen : 'https://via.placeholder.com/400x400';
             document.getElementById('modalDescripcion').textContent = data.descripcion || 'Sin descripción';
             document.getElementById('modalColor').textContent = data.color || 'No especificado';
-            
-            // Formateo de precio
             document.getElementById('modalPrecio').textContent = new Intl.NumberFormat('es-CO').format(data.precio);
             
             const tallasContainer = document.getElementById('modalTallas');
             tallasContainer.innerHTML = '';
 
-            // Manejo de tallas (Soporta el formato de 'detalles' con ID)
-            const detalles = data.detalles || data.tallas;
-
-            if (detalles && detalles.length > 0) {
-                detalles.forEach(item => {
+            if (data.detalles && data.detalles.length > 0) {
+                data.detalles.forEach(detalle => {
                     const cajaTalla = document.createElement('div');
-                    // Usamos la clase 'talla-item' para el estilo de cuadrito
-                    cajaTalla.className = 'talla-item'; 
-                    
-                    const nombreTalla = item.talla || item;
-                    const idVariante = item.id_detalle_producto || null;
-                    
-                    cajaTalla.textContent = nombreTalla;
+                    cajaTalla.className = 'talla-item';
+                    cajaTalla.textContent = detalle.talla;
 
                     cajaTalla.onclick = function() {
                         document.querySelectorAll('.talla-item').forEach(t => t.classList.remove('selected'));
                         this.classList.add('selected');
                         
-                        tallaSeleccionada = nombreTalla;
-                        idDetalleSeleccionado = idVariante;
-                        console.log("Seleccionado:", tallaSeleccionada, "ID Detalle:", idDetalleSeleccionado);
+                        tallaSeleccionada = detalle.talla;
+                        idDetalleSeleccionado = detalle.id_detalle_producto;
+                        console.log("Seleccionado:", tallaSeleccionada);
                     };
                     tallasContainer.appendChild(cajaTalla);
                 });
@@ -107,34 +90,43 @@ function verDetalle(idProducto) {
         });
 }
 
-// Agregar al carrito con TOKEN CSRF
 function agregarAlCarrito() {
-    if (!productoActual) return;
+    if (!productoActual) {
+        alert('Error: No hay producto seleccionado');
+        return;
+    }
     
-    if (!tallaSeleccionada) {
+    if (!idDetalleSeleccionado) {
         alert('Por favor selecciona una talla');
         return;
     }
     
     const datos = {
-        id_producto: productoActual.id_producto,
         id_detalle_producto: idDetalleSeleccionado,
         talla: tallaSeleccionada,
         cantidad: 1,
         precio: productoActual.precio
     };
 
+    console.log('📦 Enviando al carrito:', datos);
+
     fetch('/carrito/agregar', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
         },
         body: JSON.stringify(datos)
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('📥 Respuesta recibida:', response.status);
+        return response.json();
+    })
     .then(data => {
+        console.log('📥 Datos:', data);
+        
         if (data.redirect) {
+            alert(data.mensaje);
             window.location.href = data.redirect;
             return;
         }
@@ -144,20 +136,20 @@ function agregarAlCarrito() {
             modal.hide();
             actualizarContadorCarrito();
         } else {
-            alert('❌ ' + (data.mensaje || 'Error al agregar'));
+            alert('❌ ' + (data.mensaje || 'No se pudo agregar'));
         }
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error('❌ Error:', error);
         alert('Error de conexión');
     });
 }
 
-// Contador del carrito dinámico
 function actualizarContadorCarrito() {
     fetch('/carrito/contador')
         .then(response => response.json())
         .then(data => {
+            console.log('🔢 Contador:', data);
             const iconoCarrito = document.querySelector('.bi-bag');
             if (!iconoCarrito) return;
             
@@ -177,5 +169,5 @@ function actualizarContadorCarrito() {
                 badge.remove();
             }
         })
-        .catch(() => console.log("Carrito vacío o error"));
+        .catch(error => console.error('Error al actualizar contador:', error));
 }
