@@ -96,8 +96,9 @@ function actualizarCantidad(idCarrito, cantidad) {
             );
             
             const nuevoSubtotal = precioUnitario * cantidad;
+            // 👇 CAMBIADO: Mostrar con 2 decimales
             item.querySelector('.subtotal-item').textContent = 
-                '$' + nuevoSubtotal.toLocaleString('es-CO', {maximumFractionDigits: 0});
+                '$' + nuevoSubtotal.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             
             // Actualizar totales
             if (data.total !== undefined) {
@@ -115,6 +116,15 @@ function actualizarCantidad(idCarrito, cantidad) {
         console.error('Error:', error);
         mostrarNotificacion('Error al actualizar cantidad', 'error');
     });
+}
+
+// ========== FUNCIÓN: ACTUALIZAR TOTALES EN RESUMEN ==========
+function actualizarTotales(total) {
+    // 👇 CAMBIADO: Mostrar con 2 decimales
+    const totalFormateado = '$' + total.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    
+    document.getElementById('subtotal-resumen').textContent = totalFormateado;
+    document.getElementById('total-resumen').textContent = totalFormateado;
 }
 
 // ========== FUNCIÓN: ELIMINAR ITEM ==========
@@ -190,26 +200,67 @@ function vaciarCarrito() {
     });
 }
 
-// ========== FUNCIÓN: RECALCULAR TOTALES ==========
-function recalcularTotales() {
-    let total = 0;
-    
-    document.querySelectorAll('.subtotal-item').forEach(subtotalElement => {
-        const subtotal = parseFloat(
-            subtotalElement.textContent
-                .replace('$', '')
-                .replace(/\./g, '')
-                .replace(',', '.')
-        );
-        total += subtotal;
+// ========== FUNCIÓN: ACTUALIZAR CANTIDAD ==========
+function actualizarCantidad(idCarrito, cantidad) {
+    fetch('/carrito/actualizar', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+            id_carrito: idCarrito,
+            cantidad: cantidad
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Actualizar input
+            const input = document.querySelector(`.input-cantidad[data-id="${idCarrito}"]`);
+            input.value = cantidad;
+            
+            // Actualizar subtotal del item
+            const item = document.querySelector(`.item-carrito[data-id-carrito="${idCarrito}"]`);
+            const precioTexto = item.querySelector('.card-text.text-muted.mb-2').textContent
+                .replace('Precio unitario: $', '')
+                .replace(/\./g, '')      // Quitar puntos
+                .replace(',', '.')       // Cambiar coma por punto
+                .trim();
+            
+            const precioUnitario = parseFloat(precioTexto);
+            
+            const nuevoSubtotal = precioUnitario * cantidad;
+            
+            // Actualizar el subtotal con formato correcto
+            item.querySelector('.subtotal-item').textContent = 
+                '$' + nuevoSubtotal.toLocaleString('es-CO', {
+                    minimumFractionDigits: 2, 
+                    maximumFractionDigits: 2
+                });
+            
+            // Actualizar totales
+            if (data.total !== undefined) {
+                actualizarTotales(data.total);
+            } else {
+                recalcularTotales();
+            }
+            
+            mostrarNotificacion('Cantidad actualizada', 'success');
+        } else {
+            mostrarNotificacion('Error al actualizar cantidad', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        mostrarNotificacion('Error al actualizar cantidad', 'error');
     });
-    
-    actualizarTotales(total);
 }
 
 // ========== FUNCIÓN: ACTUALIZAR TOTALES EN RESUMEN ==========
 function actualizarTotales(total) {
-    const totalFormateado = '$' + total.toLocaleString('es-CO', {maximumFractionDigits: 0});
+    // 👇 CAMBIADO: Mostrar con 2 decimales
+    const totalFormateado = '$' + total.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
     
     document.getElementById('subtotal-resumen').textContent = totalFormateado;
     document.getElementById('total-resumen').textContent = totalFormateado;

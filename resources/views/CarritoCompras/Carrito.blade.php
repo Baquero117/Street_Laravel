@@ -65,66 +65,70 @@
                 <div class="col-lg-8">
                     <h3 class="mb-4">Mi Carrito</h3>
 
-                    @if(isset($carrito['items']) && count($carrito['items']) > 0)
-                        <div id="items-carrito">
-                        <!-- En el loop de items -->
-@foreach($carrito['items'] as $item)
-<div class="card mb-3 item-carrito" data-id-carrito="{{ $item['id_detalle_carrito'] }}">
-    <!-- 👆 Cambió de id_carrito a id_detalle_carrito -->
-    
-    <div class="row g-0 align-items-center">
-        <div class="col-md-2 text-center">
-            <img src="{{ asset('storage/' . $item['imagen']) }}" 
-                 class="img-fluid rounded p-2" 
-                 alt="{{ $item['nombre'] }}"
-                 onerror="this.src='https://via.placeholder.com/150x150?text=Sin+Imagen'"
-                 style="max-height: 150px; object-fit: contain;">
-        </div>
+    @if(isset($carrito['items']) && count($carrito['items']) > 0)
+    <div id="items-carrito">
 
-        <div class="col-md-7">
-            <div class="card-body">
-                <h5 class="card-title">{{ $item['nombre'] }}</h5>
-                <p class="card-text text-muted mb-1">Color: {{ $item['color'] ?? 'No especificado' }}</p>
-                <p class="card-text text-muted mb-1">Talla: {{ $item['talla'] }}</p>
-                <p class="card-text text-muted mb-2">Precio unitario: ${{ number_format($item['precio_unitario'], 0, ',', '.') }}</p>
 
-                <div class="d-flex align-items-center gap-2">
-                    <!-- Cantidad -->
-                    <div class="input-group" style="width: 120px;">
-                        <button class="btn btn-outline-secondary btn-sm btn-decrementar" 
-                                data-id="{{ $item['id_detalle_carrito'] }}"
-                                type="button">
-                            <i class="bi bi-dash"></i>
-                        </button>
-                        <input type="number" 
-                               class="form-control form-control-sm text-center input-cantidad" 
-                               data-id="{{ $item['id_detalle_carrito'] }}"
-                               value="{{ $item['cantidad'] }}" 
-                               min="1" 
-                               readonly>
-                        <button class="btn btn-outline-secondary btn-sm btn-incrementar" 
-                                data-id="{{ $item['id_detalle_carrito'] }}"
-                                type="button">
-                            <i class="bi bi-plus"></i>
-                        </button>
+        <!-- En el loop de items -->
+        @foreach($carrito['items'] as $item)
+        <div class="card mb-3 item-carrito" data-id-carrito="{{ $item['id_detalle_carrito'] }}">
+            
+            <div class="row g-0 align-items-center">
+                <div class="col-md-2 text-center">
+                    <img src="{{ asset('storage/' . $item['imagen']) }}" 
+                        class="img-fluid rounded p-2" 
+                        alt="{{ $item['nombre'] }}"
+                        onerror="this.src='https://via.placeholder.com/150x150?text=Sin+Imagen'"
+                        style="max-height: 150px; object-fit: contain;">
+                </div>
+
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ $item['nombre'] }}</h5>
+                        <p class="card-text text-muted mb-1">Color: {{ $item['color'] ?? 'No especificado' }}</p>
+                        <p class="card-text text-muted mb-1">Talla: {{ $item['talla'] }}</p>
+                        <!-- 👇 CAMBIADO: Mostrar con 2 decimales -->
+                        <p class="card-text text-muted mb-2">Precio unitario: ${{ number_format($item['precio_unitario'], 2, ',', '.') }}</p>
+
+                        <div class="d-flex align-items-center gap-2">
+                            <!-- Cantidad -->
+                            <div class="input-group" style="width: 120px;">
+                                <button class="btn btn-outline-secondary btn-sm btn-decrementar" 
+                                        data-id="{{ $item['id_detalle_carrito'] }}"
+                                        type="button">
+                                    <i class="bi bi-dash"></i>
+                                </button>
+                                <input type="number" 
+                                    class="form-control form-control-sm text-center input-cantidad" 
+                                    data-id="{{ $item['id_detalle_carrito'] }}"
+                                    value="{{ $item['cantidad'] }}" 
+                                    min="1" 
+                                    readonly>
+                                <button class="btn btn-outline-secondary btn-sm btn-incrementar" 
+                                        data-id="{{ $item['id_detalle_carrito'] }}"
+                                        type="button">
+                                    <i class="bi bi-plus"></i>
+                                </button>
+                            </div>
+
+                            <!-- Eliminar -->
+                            <button class="btn btn-sm btn-outline-danger btn-eliminar" 
+                                    data-id="{{ $item['id_detalle_carrito'] }}">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </button>
+                        </div>
                     </div>
+                </div>
 
-                    <!-- Eliminar -->
-                    <button class="btn btn-sm btn-outline-danger btn-eliminar" 
-                            data-id="{{ $item['id_detalle_carrito'] }}">
-                        <i class="bi bi-trash"></i> Eliminar
-                    </button>
+                <div class="col-md-3 text-end pe-4">
+                    <!-- 👇 CAMBIADO: Mostrar subtotal con 2 decimales -->
+                    <h5 class="text-dark subtotal-item">${{ number_format($item['subtotal'], 2, ',', '.') }}</h5>
                 </div>
             </div>
         </div>
+        @endforeach
 
-        <div class="col-md-3 text-end pe-4">
-            <h5 class="text-dark subtotal-item">${{ number_format($item['subtotal'], 0, ',', '.') }}</h5>
-        </div>
     </div>
-</div>
-@endforeach
-                        </div>
 
                         <!-- Botón vaciar carrito -->
                         <div class="text-end mb-3">
@@ -145,42 +149,40 @@
                     @endif
                 </div>
 
-                <!-- Columna resumen -->
-                <div class="col-lg-4 mt-4 mt-lg-0">
+            <!-- Columna resumen -->
+            <div class="col-lg-4 mt-4 mt-lg-0">
                     <div class="card p-4 shadow-sm" id="resumen-carrito">
-                        <h5 class="mb-3 border-bottom pb-2">Resumen del pedido</h5>
+                    <h5 class="mb-3 border-bottom pb-2">Resumen del pedido</h5>
 
-                        <p class="d-flex justify-content-between">
-                            <span>Subtotal:</span>
-                            <span class="fw-bold text-dark" id="subtotal-resumen">
-                                ${{ number_format($carrito['total'] ?? 0, 0, ',', '.') }}
+                    <p class="d-flex justify-content-between">
+                        <span>Subtotal:</span>
+                        <!-- 👇 CAMBIADO: Mostrar con 2 decimales -->
+                        <span class="fw-bold text-dark" id="subtotal-resumen">
+                            ${{ number_format($carrito['total'] ?? 0, 2, ',', '.') }}
+                        </span>
+                    </p>
+
+                    <p class="d-flex justify-content-between text-success">
+                        <span>Envío:</span>
+                        <span class="fw-bold">GRATIS</span>
+                    </p>
+
+                    <div class="border-top pt-3 mt-2">
+                        <p class="d-flex justify-content-between fs-5">
+                            <span class="fw-bold">Total:</span>
+                            <!-- 👇 CAMBIADO: Mostrar con 2 decimales -->
+                            <span class="fw-bold text-dark" id="total-resumen">
+                                ${{ number_format($carrito['total'] ?? 0, 2, ',', '.') }}
                             </span>
                         </p>
+                    </div>
 
-                        <p class="d-flex justify-content-between text-success">
-                            <span>Envío:</span>
-                            <span class="fw-bold">GRATIS</span>
-                        </p>
-
-                        <div class="border-top pt-3 mt-2">
-                            <p class="d-flex justify-content-between fs-5">
-                                <span class="fw-bold">Total:</span>
-                                <span class="fw-bold text-dark" id="total-resumen">
-                                    ${{ number_format($carrito['total'] ?? 0, 0, ',', '.') }}
-                                </span>
-                            </p>
-                        </div>
-
-                        @if(isset($carrito['items']) && count($carrito['items']) > 0)
-                        <button class="btn btn-boton-pago w-100 mt-3 py-2" id="btnProcederPago">
+                    <div class="d-grid gap-2 mt-4">
+                        <button class="btn btn-primary btn-lg" id="btnProcederPago">
                             Proceder al pago
                         </button>
-                        @else
-                        <button class="btn btn-secondary w-100 mt-3 py-2" disabled>
-                            Carrito vacío
-                        </button>
-                        @endif
                     </div>
+
                 </div>
 
             </div>
