@@ -178,9 +178,9 @@
                     </div>
 
                     <div class="d-grid gap-2 mt-4">
-                        <button class="btn btn-primary btn-lg" id="btnProcederPago">
+                        <a href="{{ route('checkout') }}" class="btn btn-primary btn-lg">
                             Proceder al pago
-                        </button>
+                        </a>
                     </div>
 
                 </div>

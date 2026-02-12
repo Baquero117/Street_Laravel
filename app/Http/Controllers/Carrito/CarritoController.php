@@ -7,14 +7,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
 use App\Models\Carrito\CarritoService;
+use App\Models\PuntoInicio\PerfilService;
+use Illuminate\Support\Facades\Auth;
 
 class CarritoController extends Controller
 {
     private $carritoService;
+    private $perfilService;
 
-    public function __construct(CarritoService $carritoService)
+    public function __construct(CarritoService $carritoService, PerfilService $perfilService)
     {
         $this->carritoService = $carritoService;
+        $this->perfilService = $perfilService;
     }
 
     // 🔒 Mostrar vista del carrito (requiere autenticación)
@@ -95,5 +99,42 @@ class CarritoController extends Controller
         $resultado = $this->carritoService->vaciarCarrito();
 
         return response()->json($resultado);
+    }
+
+        public function checkout()
+    {
+        // Verificar que el usuario tenga sesión activa (token de Spring Boot)
+        if (!session()->has('token')) {
+            return redirect()->route('login')->with('error', 'Debes iniciar sesión para continuar');
+        }
+
+        // Obtener carrito usando el servicio
+        $carrito = $this->carritoService->obtenerCarrito();
+
+        // Verificar que el carrito tenga items
+        if (!isset($carrito['items']) || empty($carrito['items'])) {
+            return redirect()->route('carrito')->with('warning', 'Tu carrito está vacío. Agrega productos antes de continuar.');
+        }
+
+        // 👇 OBTENER PERFIL COMPLETO DEL USUARIO
+        $perfil = $this->perfilService->obtenerPerfil();
+
+        if (!$perfil) {
+            return redirect()->route('login')->with('error', 'No se pudo obtener tu información. Por favor inicia sesión nuevamente.');
+        }
+
+        // Crear objeto de usuario con los datos del perfil
+        $usuario = (object)[
+            'id' => $perfil['id_cliente'] ?? session('usuario_id'),
+            'nombre' => $perfil['nombre'] ?? session('usuario_nombre'),
+            'apellido' => $perfil['apellido'] ?? '',
+            'email' => $perfil['correo_electronico'] ?? session('usuario_correo'),
+            'telefono' => $perfil['telefono'] ?? '',
+            'direccion' => $perfil['direccion'] ?? '',
+            'tipo' => session('usuario_tipo')
+        ];
+
+        // Retornar la vista de checkout
+        return view('CarritoCompras.Pedido', compact('carrito', 'usuario'));
     }
 }

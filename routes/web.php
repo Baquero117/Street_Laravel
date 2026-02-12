@@ -58,13 +58,16 @@ Route::get('/admin', function () {
 })->name('admin.inicio');
 
 
-// 🛒 Rutas del Carrito
-Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito');
-Route::post('/carrito/agregar', [CarritoController::class, 'agregar'])->name('carrito.agregar');
-Route::delete('/carrito/eliminar/{id}', [CarritoController::class, 'eliminar'])->name('carrito.eliminar');
-Route::put('/carrito/actualizar', [CarritoController::class, 'actualizar'])->name('carrito.actualizar');
-Route::get('/carrito/contador', [CarritoController::class, 'contador'])->name('carrito.contador');
-Route::delete('/carrito/vaciar', [CarritoController::class, 'vaciar'])->name('carrito.vaciar');
+// 🛒 Rutas del Carrito (agrupadas)
+Route::middleware(['web'])->group(function () {
+    Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito');
+    Route::post('/carrito/agregar', [CarritoController::class, 'agregar'])->name('carrito.agregar');
+    Route::delete('/carrito/eliminar/{id}', [CarritoController::class, 'eliminar'])->name('carrito.eliminar');
+    Route::put('/carrito/actualizar', [CarritoController::class, 'actualizar'])->name('carrito.actualizar');
+    Route::get('/carrito/contador', [CarritoController::class, 'contador'])->name('carrito.contador');
+    Route::delete('/carrito/vaciar', [CarritoController::class, 'vaciar'])->name('carrito.vaciar');
+    Route::get('/checkout', [CarritoController::class, 'checkout'])->name('checkout');
+});
 
 Route::get('/admin/Categoria', [CategoriaController::class, 'index'])->name('admin.Categoria');
 Route::get('/categoria', [CategoriaController::class, 'index'])->name('categoria.index');
