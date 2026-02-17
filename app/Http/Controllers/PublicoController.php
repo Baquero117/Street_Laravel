@@ -35,19 +35,24 @@ class PublicoController extends Controller
     }
 
     public function detalle($id)
-    {
-        try {
-            $response = Http::get("{$this->apiUrl}/producto/{$id}/detalle");
+{
+    try {
+        $response = Http::get("{$this->apiUrl}/producto/{$id}/detalle");
+        
+        if ($response->successful()) {
+            $data = $response->json();
             
-            if ($response->successful()) {
-                return response()->json($response->json());
-            }
+            // Asegurarnos de que devuelve el formato correcto con detalles
+            Log::info('Detalle del producto:', $data);
             
-            return response()->json(['error' => 'Producto no encontrado'], 404);
-            
-        } catch (\Exception $e) {
-            Log::error('Error al obtener detalle: ' . $e->getMessage());
-            return response()->json(['error' => 'Error al obtener detalle del producto'], 500);
+            return response()->json($data);
         }
+        
+        return response()->json(['error' => 'Producto no encontrado'], 404);
+        
+    } catch (\Exception $e) {
+        Log::error('Error al obtener detalle: ' . $e->getMessage());
+        return response()->json(['error' => 'Error al obtener detalle del producto'], 500);
     }
+}
 }

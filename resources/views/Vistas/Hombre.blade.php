@@ -125,411 +125,75 @@
 
 
     <!-- CARDS -->
- <div class="container-fluid bg-light text-dark py-5 mt-2">
-        <div class="container">
-            <h2 class="text-center mb-4">El mejor catalogo en ropa masculina </h2>
+<div class="container-fluid bg-light text-dark py-5 mt-2">
+    <div class="container">
+        <h2 class="text-center mb-4">El mejor catálogo en ropa masculina</h2>
 
-            <div class="row g-4">
-
-                {{-- CARD CARRUSEL 1--}}
-
+        <div class="row g-4">
+            @forelse($productos as $producto)
                 <div class="col-md-4">
                     <div class="card h-100">
-
-                        <div id="carouselCard1" class="carousel slide">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/camisa-gris.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/camisa-gris2.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/camisa-gris3.jpg') }}" class="d-block w-100">
-                                </div>
-                            </div>
-
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselCard1" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselCard1" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        </div>
-
+                        <img src="{{ asset('storage/' . $producto['imagen']) }}" 
+                             class="card-img-top" 
+                             alt="{{ $producto['nombre'] }}"
+                             onerror="this.src='https://via.placeholder.com/400x400?text=Sin+Imagen'">
                         <div class="card-body text-center">
-                            <h5 class="card-title">Camiseta gris</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Camiseta gris"
-                                data-descripcion="Camisa edición rick and morty de algodon."
-                                data-categoria="Casual"
-                                data-color="Gris"
-                                data-talla="M">
+                            <h5 class="card-title">{{ $producto['nombre'] }}</h5>
+                            <p class="text-muted mb-2">{{ $producto['color'] ?? 'Varios colores' }}</p>
+                            <p class="fw-bold text-success fs-5">${{ number_format($producto['precio'], 0, ',', '.') }}</p>
+                            
+                            <button class="btn btn-dark ver-detalle-hombre" data-id="{{ $producto['id_producto'] }}">
                                 Ver más
                             </button>
                         </div>
                     </div>
                 </div>
-
-
-
-             
-
-                {{-- CARD CARRUSEL 2 --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-
-                        <div id="carouselCard2" class="carousel slide">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/oversize-negra2.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/oversize-negra.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/oversize-negra3.jpg') }}" class="d-block w-100">
-                                </div>
-                            </div>
-
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselCard2" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselCard2" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        </div>
-
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Camiseta negra</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Camiseta negra"
-                                data-descripcion="Camiseta negra estilo oversize de algodon."
-                                data-categoria="Casual"
-                                data-color="Negro"
-                                data-talla="M">
-                                Ver más
-                            </button>
-                        </div>
+            @empty
+                <div class="col-12">
+                    <div class="alert alert-info text-center">
+                        No hay productos de hombre disponibles en este momento
                     </div>
                 </div>
-
-
-                {{-- CARD CARRUSEL 3--}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-
-                        <div id="carouselCard3" class="carousel slide">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/jean-azul2.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/jean-azul3.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/jean-azul.jpg') }}" class="d-block w-100">
-                                </div>
-                            </div>
-
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselCard3" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselCard3" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        </div>
-
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Jean azul</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Jean azul"
-                                data-descripcion="Jean azul estilizado."
-                                data-categoria="Casual"
-                                data-color="azul"
-                                data-talla="32">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-
-
-                               {{-- CARD CARRUSEL 4  --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-
-                        <div id="carouselCard4" class="carousel slide">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/buzo-negro.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/buzo-negro2.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/buzo-negro3.jpg') }}" class="d-block w-100">
-                                </div>
-                            </div>
-
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselCard4" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselCard4" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        </div>
-
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Buzo negro</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Buzo negro"
-                                data-descripcion="Buzo negro de algodon."
-                                data-categoria="Casual"
-                                data-color="Negro"
-                                data-talla="M">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                               {{-- CARD CARRUSEL 5 --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-
-                        <div id="carouselCard5" class="carousel slide">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/pantalon-negro.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/pantalon-negro2.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/pantalon-negro3.jpg') }}" class="d-block w-100">
-                                </div>
-                            </div>
-
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselCard5" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselCard5" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        </div>
-
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Pantalon negro</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Pantalon cargo negro"
-                                data-descripcion="Pantalon cargo negro en drill ."
-                                data-categoria="Casual"
-                                data-color="Negro"
-                                data-talla="M">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-
-                           {{-- CARD CARRUSEL 6 --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-
-                        <div id="carouselCard6" class="carousel slide">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/camisa-manga.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/camisa-manga3.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/camisa-manga2.jpg') }}" class="d-block w-100">
-                                </div>
-                            </div>
-
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselCard6" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselCard6" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        </div>
-
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Camiseta estilizada</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Camiseta estilizada"
-                                data-descripcion="Camiseta de algodon con estilo en las mangas."
-                                data-categoria="Casual"
-                                data-color="Gris"
-                                data-talla="M">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                             {{-- CARD CARRUSEL 7 --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-
-                        <div id="carouselCard7" class="carousel slide">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/camisa-lila.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/camisa-lila3.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/camisa-lila2.jpg') }}" class="d-block w-100">
-                                </div>
-                            </div>
-
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselCard7" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselCard7" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        </div>
-
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Camiseta lila</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Camiseta lila"
-                                data-descripcion="Camiseta color lila de algodon."
-                                data-categoria="Casual"
-                                data-color="Lila"
-                                data-talla="M">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                              {{-- CARD CARRUSEL 8 --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-
-                        <div id="carouselCard8" class="carousel slide">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/oversize-cafe.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/oversize-cafe3.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/oversize-cafe2.jpg') }}" class="d-block w-100">
-                                </div>
-                            </div>
-
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselCard8" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselCard8" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        </div>
-
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Camiseta café</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Camiseta café"
-                                data-descripcion="Camiseta café estilo oversize de algodon."
-                                data-categoria="Casual"
-                                data-color="Café"
-                                data-talla="M">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                              {{-- CARD CARRUSEL 9 --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-
-                        <div id="carouselCard9" class="carousel slide">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/baggy-azul.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/baggy-azul2.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Hombre/baggy-azul3.jpg') }}" class="d-block w-100">
-                                </div>
-                            </div>
-
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselCard9" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselCard9" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        </div>
-
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Baggy azul</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Baggy azul"
-                                data-descripcion="Pantalon Jean azul estilo baggy."
-                                data-categoria="Casual"
-                                data-color="Azul"
-                                data-talla="M">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
+            @endforelse
         </div>
-
-        <!-- MODAL -->
-        <div class="modal fade" id="detalleModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-
-                    <div class="modal-header bg-dark text-white">
-                        <h5 class="modal-title" id="modalNombre"></h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <p id="modalDescripcion"></p>
-                        <p><strong>Categoría:</strong> <span id="modalCategoria"></span></p>
-                        <p><strong>Color:</strong> <span id="modalColor"></span></p>
-                        <p><strong>Talla:</strong> <span id="modalTalla"></span></p>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
     </div>
+
+    <!-- MODAL -->
+    <div class="modal fade" id="detalleModalHombre" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title" id="modalNombreHombre"></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img id="modalImagenHombre" src="" class="img-fluid rounded" alt="">
+                        </div>
+                        <div class="col-md-6">
+                            <p id="modalDescripcionHombre"></p>
+                            <p><strong>Color:</strong> <span id="modalColorHombre"></span></p>
+                            <p><strong>Precio:</strong> <span class="text-success fw-bold fs-4">$<span id="modalPrecioHombre"></span></span></p>
+                            <div class="mb-3">
+                                <strong>Tallas disponibles:</strong>
+                                <div id="modalTallasHombre" class="mt-2"></div>
+                            </div>
+                            <button class="btn btn-success w-100" onclick="agregarAlCarritoHombre()">
+                                <i class="bi bi-cart-plus"></i> Agregar al Carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
     <!-- FOOTER -->

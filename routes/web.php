@@ -21,6 +21,7 @@ use App\Http\Controllers\Administrador\ReporteController;
 Route::get('/admin/Reportes', [ReporteController::class, 'index'])
     ->name('admin.Reportes');
 
+
 Route::get('/login', [LoginController::class, 'mostrar'])->name('login');
 Route::post('/login', [LoginController::class, 'procesar'])->name('login.procesar');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -39,19 +40,35 @@ Route::get('/cuenta', [PerfilController::class, 'mostrarCuenta'])->name('cuenta'
 Route::get('/perfil', [PerfilController::class, 'mostrar'])->name('perfil');
 Route::post('/perfil/actualizar', [PerfilController::class, 'actualizar'])->name('perfil.actualizar');
 
+
 // Vista ropa hombre
 Route::get('/hombre', [HombreController::class, 'index'])->name('hombre');
+Route::get('/hombre/productos/{id}/detalle', [HombreController::class, 'detalle'])->name('hombre.productos.detalle');
+
 
 // Vista ropa Mujer
 Route::get('/mujer', [MujerController::class, 'index'])->name('mujer');
+Route::get('/mujer/productos/{id}/detalle', [MujerController::class, 'detalle'])->name('mujer.productos.detalle');
+
 
 // Vista ropa de moda
 Route::get('/moda', [ModaController::class, 'index'])->name('moda');
+Route::get('/moda/productos/{id}/detalle', [ModaController::class, 'detalle'])->name('moda.productos.detalle');
+
 
 // Inicio del administrador
 Route::get('/admin', function () {
     return view('Administrador.InicioAdmin.InicioAdmin');
 })->name('admin.inicio');
+
+
+// 🛒 Rutas del Carrito
+Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito');
+Route::post('/carrito/agregar', [CarritoController::class, 'agregar'])->name('carrito.agregar');
+Route::delete('/carrito/eliminar/{id}', [CarritoController::class, 'eliminar'])->name('carrito.eliminar');
+Route::put('/carrito/actualizar', [CarritoController::class, 'actualizar'])->name('carrito.actualizar');
+Route::get('/carrito/contador', [CarritoController::class, 'contador'])->name('carrito.contador');
+Route::delete('/carrito/vaciar', [CarritoController::class, 'vaciar'])->name('carrito.vaciar');
 
 Route::get('/admin/Categoria', [CategoriaController::class, 'index'])->name('admin.Categoria');
 Route::get('/categoria', [CategoriaController::class, 'index'])->name('categoria.index');
@@ -78,13 +95,13 @@ Route::post('/producto/actualizar', [ProductoController::class, 'update'])->name
 Route::post('/producto/eliminar', [ProductoController::class, 'destroy'])->name('producto.eliminar');
 
 
-
 Route::get('/admin/Pedido', [PedidoController::class, 'index'])->name('admin.Pedido');
 Route::get('/pedido', [PedidoController::class, 'index'])->name('pedido.index');
 
 Route::post('/pedido/agregar', [PedidoController::class, 'store'])->name('pedido.agregar');
 Route::post('/pedido/actualizar', [PedidoController::class, 'update'])->name('pedido.actualizar');
 Route::post('/pedido/eliminar', [PedidoController::class, 'destroy'])->name('pedido.eliminar');
+
 // Cambiar estado desde el select
 Route::post('/pedido/cambiar-estado', 
     [PedidoController::class, 'cambiarEstado']

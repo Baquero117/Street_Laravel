@@ -123,410 +123,76 @@
 
 
 
-    <!-- CARDS -->
- <div class="container-fluid bg-light text-dark py-5 mt-2">
-        <div class="container">
-            <h2 class="text-center mb-4">El mejor catalogo en ropa femenina </h2>
+ <!-- CARDS -->
+<div class="container-fluid bg-light text-dark py-5 mt-2">
+    <div class="container">
+        <h2 class="text-center mb-4">Lo mejor de la moda urbana</h2>
 
-            <div class="row g-4">
-
-                {{-- CARD CARRUSEL 1--}}
-
+        <div class="row g-4">
+            @forelse($productos as $producto)
                 <div class="col-md-4">
                     <div class="card h-100">
-
-                        <div id="carouselCard1" class="carousel slide">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/jean-azul.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/jean-azul2.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/jean-azul3.jpg') }}" class="d-block w-100">
-                                </div>
-                            </div>
-
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselCard1" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselCard1" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        </div>
-
+                        <img src="{{ asset('storage/' . $producto['imagen']) }}" 
+                             class="card-img-top" 
+                             alt="{{ $producto['nombre'] }}"
+                             onerror="this.src='https://via.placeholder.com/400x400?text=Sin+Imagen'">
                         <div class="card-body text-center">
-                            <h5 class="card-title">Jean azul</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Jean azul"
-                                data-descripcion="Jean azul estilo baggy con dos tonos de azul."
-                                data-categoria="Casual"
-                                data-color="Azul"
-                                data-talla="28">
+                            <h5 class="card-title">{{ $producto['nombre'] }}</h5>
+                            <p class="text-muted mb-2">{{ $producto['color'] ?? 'Varios colores' }}</p>
+                            <p class="fw-bold text-success fs-5">${{ number_format($producto['precio'], 0, ',', '.') }}</p>
+                            
+                            <button class="btn btn-dark ver-detalle-moda" data-id="{{ $producto['id_producto'] }}">
                                 Ver más
                             </button>
                         </div>
                     </div>
                 </div>
-
-
-
-             
-
-                {{-- CARD CARRUSEL 2 --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-
-                        <div id="carouselCard2" class="carousel slide">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/gorro-rojo.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/gorro-rojo2.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/gorro-rojo3.jpg') }}" class="d-block w-100">
-                                </div>
-                            </div>
-
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselCard2" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselCard2" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        </div>
-
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Gorro rojo</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Gorro rojo"
-                                data-descripcion="Gorro de algodon en color rojo."
-                                data-categoria="Casual"
-                                data-color="rojo"
-                                data-talla="M">
-                                Ver más
-                            </button>
-                        </div>
+            @empty
+                <div class="col-12">
+                    <div class="alert alert-info text-center">
+                        No hay productos de moda disponibles en este momento
                     </div>
                 </div>
-
-
-                {{-- CARD CARRUSEL 3--}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-
-                        <div id="carouselCard3" class="carousel slide">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/camiseta-verde.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/camiseta-verde2.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/camiseta-verde3.jpg') }}" class="d-block w-100">
-                                </div>
-                            </div>
-
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselCard3" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselCard3" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        </div>
-
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Camiseta verde</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Camiseta verde"
-                                data-descripcion="Camiseta oversize color verde."
-                                data-categoria="Casual"
-                                data-color="verde"
-                                data-talla="XL">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-
-
-                               {{-- CARD CARRUSEL 4  --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-
-                        <div id="carouselCard4" class="carousel slide">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/chaqueta-jean.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/chaqueta-jean2.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/chaqueta-jean3.jpg') }}" class="d-block w-100">
-                                </div>
-                            </div>
-
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselCard4" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselCard4" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        </div>
-
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Chaqueta jean</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Chaqueta jean"
-                                data-descripcion="Chaqueta en jean de color negro."
-                                data-categoria="Casual"
-                                data-color="Negro"
-                                data-talla="L">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                               {{-- CARD CARRUSEL 5 --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-
-                        <div id="carouselCard5" class="carousel slide">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/vestido-gris.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/vestido-gris2.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/vestido-gris3.jpg') }}" class="d-block w-100">
-                                </div>
-                            </div>
-
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselCard5" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselCard5" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        </div>
-
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Vestido gris</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Vestido gris"
-                                data-descripcion="Vestido largo en color gris ."
-                                data-categoria="Casual"
-                                data-color="Gris"
-                                data-talla="M">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-
-                           {{-- CARD CARRUSEL 6 --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-
-                        <div id="carouselCard6" class="carousel slide">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/medias.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/medias2.jpg') }}" class="d-block w-100">
-                                </div>
-                                
-                            </div>
-
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselCard6" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselCard6" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        </div>
-
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Medias blancas</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Medias blancas"
-                                data-descripcion="Medias blancas con detalles en morado."
-                                data-categoria="Casual"
-                                data-color="Blanco"
-                                data-talla="M">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                             {{-- CARD CARRUSEL 7 --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-
-                        <div id="carouselCard7" class="carousel slide">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/pantalon-cargo.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/pantalon-cargo2.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/pantalon-cargo3.jpg') }}" class="d-block w-100">
-                                </div>
-                            </div>
-
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselCard7" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselCard7" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        </div>
-
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Pantalon cargo</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Pantalon cargo"
-                                data-descripcion="Pantalon cargo en color kaki."
-                                data-categoria="Casual"
-                                data-color="kaki"
-                                data-talla="M">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                              {{-- CARD CARRUSEL 8 --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-
-                        <div id="carouselCard8" class="carousel slide">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/gorra.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/gorra2.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/gorra3.jpg') }}" class="d-block w-100">
-                                </div>
-                            </div>
-
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselCard8" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselCard8" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        </div>
-
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Gorra negra</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Gorra negra"
-                                data-descripcion="Gorra en color negro y bordado."
-                                data-categoria="Casual"
-                                data-color="Negro"
-                                data-talla="M">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                              {{-- CARD CARRUSEL 9 --}}
-                <div class="col-md-4">
-                    <div class="card h-100">
-
-                        <div id="carouselCard9" class="carousel slide">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/baggy-azul.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/baggy-azul2.jpg') }}" class="d-block w-100">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="{{ asset('img/OtrasVistas/Moda/baggy-azul3.jpg') }}" class="d-block w-100">
-                                </div>
-                            </div>
-
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselCard9" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselCard9" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        </div>
-
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Baggy azul</h5>
-                            <button class="btn btn-dark ver-detalle"
-                                data-nombre="Baggy azul"
-                                data-descripcion="Pantalon Jean azul estilo baggy."
-                                data-categoria="Casual"
-                                data-color="Azul"
-                                data-talla="28">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
+            @endforelse
         </div>
-
-        <!-- MODAL -->
-        <div class="modal fade" id="detalleModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-
-                    <div class="modal-header bg-dark text-white">
-                        <h5 class="modal-title" id="modalNombre"></h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <p id="modalDescripcion"></p>
-                        <p><strong>Categoría:</strong> <span id="modalCategoria"></span></p>
-                        <p><strong>Color:</strong> <span id="modalColor"></span></p>
-                        <p><strong>Talla:</strong> <span id="modalTalla"></span></p>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
     </div>
+
+    <!-- MODAL -->
+    <div class="modal fade" id="detalleModalModa" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title" id="modalNombreModa"></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img id="modalImagenModa" src="" class="img-fluid rounded" alt="">
+                        </div>
+                        <div class="col-md-6">
+                            <p id="modalDescripcionModa"></p>
+                            <p><strong>Color:</strong> <span id="modalColorModa"></span></p>
+                            <p><strong>Precio:</strong> <span class="text-success fw-bold fs-4">$<span id="modalPrecioModa"></span></span></p>
+                            <div class="mb-3">
+                                <strong>Tallas disponibles:</strong>
+                                <div id="modalTallasModa" class="mt-2"></div>
+                            </div>
+                            <button class="btn btn-success w-100" onclick="agregarAlCarritoModa()">
+                                <i class="bi bi-cart-plus"></i> Agregar al Carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
     <!-- FOOTER -->

@@ -1,114 +1,162 @@
-// Modal de Bootstrap
+// Variables globales
 const modal = new bootstrap.Modal(document.getElementById('detalleModal'));
 let tallaSeleccionada = null;
 let productoActual = null;
+let idDetalleSeleccionado = null;
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Página cargada, buscando botones...');
-    
-    // Buscar todos los botones después de que la página cargue
     const botones = document.querySelectorAll('.ver-detalle-dinamico');
-    console.log('Botones encontrados:', botones.length);
     
-    botones.forEach((boton, index) => {
-        console.log(`Botón ${index + 1} con ID:`, boton.getAttribute('data-id'));
-        
+    botones.forEach((boton) => {
         boton.addEventListener('click', function() {
             const idProducto = this.getAttribute('data-id');
-            console.log('Click en botón con ID:', idProducto);
             verDetalle(idProducto);
         });
     });
+    
+    // 👇 Actualizar contador al cargar la página
+    actualizarContadorCarrito();
 });
 
-// Función para obtener y mostrar el detalle del producto
 function verDetalle(idProducto) {
     fetch(`/productos/${idProducto}/detalle`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la respuesta');
-            }
-            return response.json();
-        })
+        .then(response => response.ok ? response.json() : Promise.reject('Error en red'))
         .then(data => {
             if (data.error) {
-                alert('Error al cargar el detalle del producto');
+                alert('Error al cargar el detalle');
                 return;
             }
             
             productoActual = data;
-            productoActual.id_producto = idProducto;
-            
-            // Llenar el modal con los datos
+            tallaSeleccionada = null;
+            idDetalleSeleccionado = null; 
+
+            // Llenar datos básicos
             document.getElementById('modalNombre').textContent = data.nombre;
-            // Verificar si hay imagen antes de asignarla
-            if (data.imagen) {
-                document.getElementById('modalImagen').src = '/storage/' + data.imagen;
-            } else {
-                document.getElementById('modalImagen').src = 'https://via.placeholder.com/400x400?text=Sin+Imagen';
-            }
+            document.getElementById('modalImagen').src = data.imagen ? '/storage/' + data.imagen : 'https://via.placeholder.com/400x400';
             document.getElementById('modalDescripcion').textContent = data.descripcion || 'Sin descripción';
             document.getElementById('modalColor').textContent = data.color || 'No especificado';
-            document.getElementById('modalPrecio').textContent = 
-                new Intl.NumberFormat('es-CO').format(data.precio);
+            document.getElementById('modalPrecio').textContent = new Intl.NumberFormat('es-CO').format(data.precio);
             
-            // Mostrar tallas
+            // Renderizar Tallas
             const tallasContainer = document.getElementById('modalTallas');
             tallasContainer.innerHTML = '';
             
-            if (data.tallas && data.tallas.length > 0) {
-                data.tallas.forEach(talla => {
+            if (data.detalles && data.detalles.length > 0) {
+                data.detalles.forEach(detalle => {
                     const badge = document.createElement('span');
                     badge.className = 'badge bg-secondary me-2 mb-2';
                     badge.style.cursor = 'pointer';
                     badge.style.fontSize = '1rem';
                     badge.style.padding = '8px 15px';
-                    badge.textContent = talla;
+                    badge.textContent = detalle.talla;
+
                     badge.onclick = function() {
-                        // Deseleccionar todas las tallas
                         document.querySelectorAll('#modalTallas .badge').forEach(b => {
                             b.classList.remove('bg-success');
                             b.classList.add('bg-secondary');
                         });
-                        // Seleccionar esta talla
                         this.classList.remove('bg-secondary');
                         this.classList.add('bg-success');
-                        tallaSeleccionada = talla;
+                        
+                        tallaSeleccionada = detalle.talla;
+                        idDetalleSeleccionado = detalle.id_detalle_producto;
+                        console.log("Talla:", tallaSeleccionada, "ID:", idDetalleSeleccionado);
                     };
                     tallasContainer.appendChild(badge);
                 });
             } else {
-                tallasContainer.innerHTML = '<span class="text-muted">Talla única</span>';
+                tallasContainer.innerHTML = '<span class="text-muted">Sin stock disponible</span>';
             }
             
-            // Resetear talla seleccionada
-            tallaSeleccionada = null;
-            
-            // Mostrar el modal
             modal.show();
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error al cargar el detalle del producto');
+            alert('Error al cargar el producto');
         });
 }
 
-// Función para agregar al carrito
 function agregarAlCarrito() {
-    if (!productoActual) return;
+    if (!productoActual) {
+        alert('Error: No hay producto seleccionado');
+        return;
+    }
     
-    // Si hay tallas y no se seleccionó ninguna
-    if (productoActual.tallas && productoActual.tallas.length > 0 && !tallaSeleccionada) {
+    if (!idDetalleSeleccionado) {
         alert('Por favor selecciona una talla');
         return;
     }
     
-    // Aquí implementarías la lógica del carrito
-    console.log('Agregar al carrito:', {
-        producto: productoActual,
-        talla: tallaSeleccionada
+    const datos = {
+        id_detalle_producto: idDetalleSeleccionado,
+        talla: tallaSeleccionada,
+        cantidad: 1,
+        precio: productoActual.precio
+    };
+
+    console.log('📦 Enviando al carrito:', datos);
+
+    fetch('/carrito/agregar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+        },
+        body: JSON.stringify(datos)
+    })
+    .then(response => {
+        console.log('📥 Respuesta recibida:', response.status);
+        return response.json();
+    })
+    .then(data => {
+        console.log('📥 Datos:', data);
+        
+        if (data.redirect) {
+            alert(data.mensaje);
+            window.location.href = data.redirect;
+            return;
+        }
+
+        if (data.success) {
+            alert('✅ ' + data.mensaje);
+            modal.hide();
+            actualizarContadorCarrito();
+        } else {
+            alert('❌ ' + (data.mensaje || 'No se pudo agregar'));
+        }
+    })
+    .catch(error => {
+        console.error('❌ Error:', error);
+        alert('Error de conexión');
     });
-    
-    alert('Producto agregado al carrito');
-    modal.hide();
+}
+
+// 🔢 Actualizar contador del carrito
+function actualizarContadorCarrito() {
+    fetch('/carrito/contador')
+        .then(response => response.json())
+        .then(data => {
+            console.log('🔢 Contador:', data);
+            const iconoCarrito = document.querySelector('.bi-cart3');
+            if (!iconoCarrito) return;
+            
+            const parent = iconoCarrito.parentElement;
+            let badge = parent.querySelector('.badge');
+            
+            if (data.cantidad > 0) {
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.className = 'badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle';
+                    badge.style.fontSize = '0.7rem';
+                    parent.style.position = 'relative';
+                    parent.appendChild(badge);
+                }
+                badge.textContent = data.cantidad;
+            } else if (badge) {
+                badge.remove();
+            }
+        })
+        .catch(error => console.error('Error al actualizar contador:', error));
 }
