@@ -5,8 +5,17 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', function() {
             const idCarrito = this.dataset.id;
             const input = document.querySelector(`.input-cantidad[data-id="${idCarrito}"]`);
-            const nuevaCantidad = parseInt(input.value) + 1;
+            const item = document.querySelector(`.item-carrito[data-id-carrito="${idCarrito}"]`);
+            const stockDisponible = parseInt(item.dataset.stock);
+            const cantidadActual = parseInt(input.value);
             
+            // ✅ Validar stock disponible ANTES de enviar
+            if (cantidadActual >= stockDisponible) {
+                mostrarNotificacion(`Solo hay ${stockDisponible} unidades disponibles`, 'warning');
+                return;
+            }
+            
+            const nuevaCantidad = cantidadActual + 1;
             actualizarCantidad(idCarrito, nuevaCantidad);
         });
     });
@@ -44,26 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
-    // ========== PROCEDER AL PAGO ==========
-    const btnPago = document.getElementById('btnProcederPago');
-    if (btnPago) {
-        btnPago.addEventListener('click', () => {
-            btnPago.disabled = true;
-            btnPago.innerHTML = `
-                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                Procesando...
-            `;
-            btnPago.classList.remove('btn-boton-pago');
-            btnPago.classList.add('btn-secondary');
-            
-            setTimeout(() => {
-                alert('¡Pedido confirmado! Redirigiendo al pago...');
-                // Aquí puedes redirigir a la página de pago
-                // window.location.href = '/pago';
-            }, 2000);
-        });
-    }
 });
 
 // ========== FUNCIÓN: ACTUALIZAR CANTIDAD ==========
@@ -82,25 +71,25 @@ function actualizarCantidad(idCarrito, cantidad) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Actualizar input
             const input = document.querySelector(`.input-cantidad[data-id="${idCarrito}"]`);
             input.value = cantidad;
             
-            // Actualizar subtotal del item
             const item = document.querySelector(`.item-carrito[data-id-carrito="${idCarrito}"]`);
-            const precioUnitario = parseFloat(
-                item.querySelector('.card-text.text-muted.mb-2').textContent
-                    .replace('Precio unitario: $', '')
-                    .replace(/\./g, '')
-                    .replace(',', '.')
-            );
+            const precioTexto = item.querySelector('.card-text.text-muted.mb-2').textContent
+                .replace('Precio unitario: $', '')
+                .replace(/\./g, '')
+                .replace(',', '.')
+                .trim();
             
+            const precioUnitario = parseFloat(precioTexto);
             const nuevoSubtotal = precioUnitario * cantidad;
-            // 👇 CAMBIADO: Mostrar con 2 decimales
-            item.querySelector('.subtotal-item').textContent = 
-                '$' + nuevoSubtotal.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             
-            // Actualizar totales
+            item.querySelector('.subtotal-item').textContent = 
+                '$' + nuevoSubtotal.toLocaleString('es-CO', {
+                    minimumFractionDigits: 2, 
+                    maximumFractionDigits: 2
+                });
+            
             if (data.total !== undefined) {
                 actualizarTotales(data.total);
             } else {
@@ -109,7 +98,9 @@ function actualizarCantidad(idCarrito, cantidad) {
             
             mostrarNotificacion('Cantidad actualizada', 'success');
         } else {
-            mostrarNotificacion('Error al actualizar cantidad', 'error');
+            // ✅ Mostrar mensaje específico de error de stock
+            const mensaje = data.mensaje || 'Error al actualizar cantidad';
+            mostrarNotificacion(mensaje, 'error');
         }
     })
     .catch(error => {
@@ -120,11 +111,25 @@ function actualizarCantidad(idCarrito, cantidad) {
 
 // ========== FUNCIÓN: ACTUALIZAR TOTALES EN RESUMEN ==========
 function actualizarTotales(total) {
-    // 👇 CAMBIADO: Mostrar con 2 decimales
     const totalFormateado = '$' + total.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
     
     document.getElementById('subtotal-resumen').textContent = totalFormateado;
     document.getElementById('total-resumen').textContent = totalFormateado;
+}
+
+// ✅ NUEVA FUNCIÓN: Recalcular totales desde el DOM
+function recalcularTotales() {
+    let total = 0;
+    document.querySelectorAll('.subtotal-item').forEach(subtotalEl => {
+        const subtotal = parseFloat(
+            subtotalEl.textContent
+                .replace('$', '')
+                .replace(/\./g, '')
+                .replace(',', '.')
+        );
+        total += subtotal;
+    });
+    actualizarTotales(total);
 }
 
 // ========== FUNCIÓN: ELIMINAR ITEM ==========
@@ -139,7 +144,6 @@ function eliminarItem(idCarrito) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Eliminar visualmente el item
             const item = document.querySelector(`.item-carrito[data-id-carrito="${idCarrito}"]`);
             item.style.transition = 'opacity 0.3s';
             item.style.opacity = '0';
@@ -147,16 +151,13 @@ function eliminarItem(idCarrito) {
             setTimeout(() => {
                 item.remove();
                 
-                // Verificar si el carrito está vacío
                 const itemsRestantes = document.querySelectorAll('.item-carrito');
                 if (itemsRestantes.length === 0) {
-                    location.reload(); // Recargar para mostrar mensaje de carrito vacío
+                    location.reload();
                 } else {
-                    // Actualizar totales
                     if (data.total !== undefined) {
                         actualizarTotales(data.total);
                     }
-                    // Actualizar contador del navbar
                     if (data.cantidad_items !== undefined) {
                         actualizarContadorNavbar(data.cantidad_items);
                     }
@@ -200,75 +201,9 @@ function vaciarCarrito() {
     });
 }
 
-// ========== FUNCIÓN: ACTUALIZAR CANTIDAD ==========
-function actualizarCantidad(idCarrito, cantidad) {
-    fetch('/carrito/actualizar', {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: JSON.stringify({
-            id_carrito: idCarrito,
-            cantidad: cantidad
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Actualizar input
-            const input = document.querySelector(`.input-cantidad[data-id="${idCarrito}"]`);
-            input.value = cantidad;
-            
-            // Actualizar subtotal del item
-            const item = document.querySelector(`.item-carrito[data-id-carrito="${idCarrito}"]`);
-            const precioTexto = item.querySelector('.card-text.text-muted.mb-2').textContent
-                .replace('Precio unitario: $', '')
-                .replace(/\./g, '')      // Quitar puntos
-                .replace(',', '.')       // Cambiar coma por punto
-                .trim();
-            
-            const precioUnitario = parseFloat(precioTexto);
-            
-            const nuevoSubtotal = precioUnitario * cantidad;
-            
-            // Actualizar el subtotal con formato correcto
-            item.querySelector('.subtotal-item').textContent = 
-                '$' + nuevoSubtotal.toLocaleString('es-CO', {
-                    minimumFractionDigits: 2, 
-                    maximumFractionDigits: 2
-                });
-            
-            // Actualizar totales
-            if (data.total !== undefined) {
-                actualizarTotales(data.total);
-            } else {
-                recalcularTotales();
-            }
-            
-            mostrarNotificacion('Cantidad actualizada', 'success');
-        } else {
-            mostrarNotificacion('Error al actualizar cantidad', 'error');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        mostrarNotificacion('Error al actualizar cantidad', 'error');
-    });
-}
-
-// ========== FUNCIÓN: ACTUALIZAR TOTALES EN RESUMEN ==========
-function actualizarTotales(total) {
-    // 👇 CAMBIADO: Mostrar con 2 decimales
-    const totalFormateado = '$' + total.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-    
-    document.getElementById('subtotal-resumen').textContent = totalFormateado;
-    document.getElementById('total-resumen').textContent = totalFormateado;
-}
-
 // ========== FUNCIÓN: ACTUALIZAR CONTADOR DEL NAVBAR ==========
 function actualizarContadorNavbar(cantidad) {
-    const iconoCarrito = document.querySelector('.bi-cart').parentElement;
+    const iconoCarrito = document.querySelector('.bi-cart3').parentElement;
     let badge = iconoCarrito.querySelector('.badge');
     
     if (cantidad > 0) {
@@ -286,8 +221,13 @@ function actualizarContadorNavbar(cantidad) {
 
 // ========== FUNCIÓN: MOSTRAR NOTIFICACIÓN ==========
 function mostrarNotificacion(mensaje, tipo) {
-    // Crear toast/notificación
-    const color = tipo === 'success' ? 'bg-success' : 'bg-danger';
+    const colores = {
+        'success': 'bg-success',
+        'error': 'bg-danger',
+        'warning': 'bg-warning text-dark'
+    };
+    
+    const color = colores[tipo] || 'bg-secondary';
     
     const toast = document.createElement('div');
     toast.className = `position-fixed top-0 end-0 m-3 p-3 ${color} text-white rounded`;
@@ -300,5 +240,5 @@ function mostrarNotificacion(mensaje, tipo) {
         toast.style.transition = 'opacity 0.3s';
         toast.style.opacity = '0';
         setTimeout(() => toast.remove(), 300);
-    }, 2000);
+    }, 3000);
 }

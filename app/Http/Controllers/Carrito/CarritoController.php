@@ -24,33 +24,47 @@ class CarritoController extends Controller
     // 🔒 Mostrar vista del carrito (requiere autenticación)
     public function index()
     {
-        // Verificar si el usuario inició sesión
         if (!Session::has('token')) {
             return redirect()->route('login')
                 ->with('error', 'Debes iniciar sesión para ver tu carrito');
         }
 
-        // Obtener el carrito del usuario autenticado
         $carrito = $this->carritoService->obtenerCarrito();
 
         return view('CarritoCompras.Carrito', compact('carrito'));
     }
 
+    // ✅ MEJORADO: Agregar producto con manejo de errores de stock
     public function agregar(Request $request) {
-    // Log para depuración
-    Log::info('Datos recibidos en Laravel:', $request->all());
+        Log::info('Datos recibidos en Laravel:', $request->all());
 
-    if (!session()->has('token')) {
-        return response()->json(['success' => false, 'mensaje' => 'No hay sesión'], 401);
+        if (!session()->has('token')) {
+            return response()->json(['success' => false, 'mensaje' => 'No hay sesión'], 401);
+        }
+
+        $resultado = $this->carritoService->agregarProducto($request->all());
+        
+        // ✅ Manejar códigos de error de stock
+        if (isset($resultado['resultado'])) {
+            if ($resultado['resultado'] == -1) {
+                return response()->json([
+                    'success' => false,
+                    'mensaje' => 'Stock insuficiente para agregar este producto',
+                    'tipo_error' => 'stock_insuficiente'
+                ], 400);
+            } elseif ($resultado['resultado'] == -2) {
+                return response()->json([
+                    'success' => false,
+                    'mensaje' => 'La cantidad total supera el stock disponible',
+                    'tipo_error' => 'supera_stock'
+                ], 400);
+            }
+        }
+        
+        return response()->json($resultado);
     }
 
-    $resultado = $this->carritoService->agregarProducto($request->all());
-    
-    // Si Java responde con éxito pero no devuelve success:true explícito
-    return response()->json($resultado);
-}
-
-    // Eliminar item del carrito
+    // ✅ MEJORADO: Eliminar item del carrito
     public function eliminar($idDetalleCarrito)
     {
         if (!Session::has('token')) {
@@ -62,7 +76,7 @@ class CarritoController extends Controller
         return response()->json($resultado);
     }
 
-    // Actualizar cantidad
+    // ✅ MEJORADO: Actualizar cantidad con validación de stock
     public function actualizar(Request $request)
     {
         if (!Session::has('token')) {
@@ -70,9 +84,18 @@ class CarritoController extends Controller
         }
 
         $resultado = $this->carritoService->actualizarCantidad(
-            $request->id_carrito, // Ahora es id_detalle_carrito
+            $request->id_carrito,
             $request->cantidad
         );
+
+        // ✅ Manejar error de stock insuficiente
+        if (isset($resultado['resultado']) && $resultado['resultado'] == -1) {
+            return response()->json([
+                'success' => false,
+                'mensaje' => 'Stock insuficiente. No se puede actualizar la cantidad.',
+                'tipo_error' => 'stock_insuficiente'
+            ], 400);
+        }
 
         return response()->json($resultado);
     }
@@ -101,29 +124,41 @@ class CarritoController extends Controller
         return response()->json($resultado);
     }
 
-        public function checkout()
+    // ✅ MEJORADO: Checkout con validación de stock antes de proceder
+    public function checkout()
     {
-        // Verificar que el usuario tenga sesión activa (token de Spring Boot)
         if (!session()->has('token')) {
             return redirect()->route('login')->with('error', 'Debes iniciar sesión para continuar');
         }
 
-        // Obtener carrito usando el servicio
         $carrito = $this->carritoService->obtenerCarrito();
 
-        // Verificar que el carrito tenga items
         if (!isset($carrito['items']) || empty($carrito['items'])) {
             return redirect()->route('carrito')->with('warning', 'Tu carrito está vacío. Agrega productos antes de continuar.');
         }
 
-        // 👇 OBTENER PERFIL COMPLETO DEL USUARIO
+        // ✅ NUEVO: Validar stock de todos los items antes de proceder
+        $erroresStock = [];
+        foreach ($carrito['items'] as $item) {
+            $stockDisponible = $item['stock_disponible'] ?? 0;
+            $cantidadCarrito = $item['cantidad'];
+            
+            if ($stockDisponible < $cantidadCarrito) {
+                $erroresStock[] = "{$item['nombre']} (Talla {$item['talla']}): Solo quedan {$stockDisponible} unidades disponibles";
+            }
+        }
+
+        if (!empty($erroresStock)) {
+            $mensajeError = "Algunos productos no tienen suficiente stock:\n" . implode("\n", $erroresStock);
+            return redirect()->route('carrito')->with('error', $mensajeError);
+        }
+
         $perfil = $this->perfilService->obtenerPerfil();
 
         if (!$perfil) {
             return redirect()->route('login')->with('error', 'No se pudo obtener tu información. Por favor inicia sesión nuevamente.');
         }
 
-        // Crear objeto de usuario con los datos del perfil
         $usuario = (object)[
             'id' => $perfil['id_cliente'] ?? session('usuario_id'),
             'nombre' => $perfil['nombre'] ?? session('usuario_nombre'),
@@ -134,7 +169,6 @@ class CarritoController extends Controller
             'tipo' => session('usuario_tipo')
         ];
 
-        // Retornar la vista de checkout
         return view('CarritoCompras.Pedido', compact('carrito', 'usuario'));
     }
 }

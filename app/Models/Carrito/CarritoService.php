@@ -66,7 +66,7 @@ class CarritoService
         }
     }
 
-    // ➕ Agregar producto al carrito - AHORA RECIBE UN ARRAY
+    // ✅ MEJORADO: Agregar producto con manejo de códigos de error
     public function agregarProducto(array $datosInput)
     {
         $headers = $this->obtenerHeaders();
@@ -76,7 +76,6 @@ class CarritoService
         }
 
         try {
-            // Mapeamos los datos al formato que Java espera exactamente
             $datosParaJava = [
                 'id_detalle_producto' => (int)$datosInput['id_detalle_producto'], 
                 'talla'               => $datosInput['talla'],
@@ -90,9 +89,19 @@ class CarritoService
                 ->post($this->apiUrl . "/agregar", $datosParaJava);
 
             Log::info('Respuesta agregar producto: ' . $response->status());
+            Log::info('Body respuesta: ' . $response->body());
             
             if ($response->successful()) {
-                return $response->json();
+                $data = $response->json();
+                
+                // ✅ Interpretar el resultado de Java
+                if (isset($data['success'])) {
+                    return $data;
+                }
+                
+                // Si Java no devuelve 'success' pero devuelve un número (códigos de error)
+                // Esto puede pasar si Java devuelve directamente el resultado del UPDATE/INSERT
+                return $data;
             }
 
             Log::error('Error al agregar producto: ' . $response->body());
@@ -104,7 +113,7 @@ class CarritoService
         }
     }
 
-    // 🔄 Actualizar cantidad (ahora usa id_detalle_carrito)
+    // ✅ MEJORADO: Actualizar cantidad con códigos de error
     public function actualizarCantidad(int $idDetalleCarrito, int $cantidad)
     {
         $headers = $this->obtenerHeaders();
@@ -116,12 +125,32 @@ class CarritoService
         try {
             $response = Http::withHeaders($headers)
                 ->put($this->apiUrl . "/actualizar", [
-                    'id_carrito' => $idDetalleCarrito, // Java lo espera como id_carrito
+                    'id_carrito' => $idDetalleCarrito,
                     'cantidad' => $cantidad
                 ]);
 
             if ($response->successful()) {
-                return $response->json();
+                $data = $response->json();
+                
+                // ✅ Verificar si Java devuelve código de error
+                if (isset($data['success'])) {
+                    return $data;
+                }
+                
+                // Si es un número, interpretarlo
+                if (is_numeric($data)) {
+                    if ($data == -1) {
+                        return [
+                            'success' => false,
+                            'resultado' => -1,
+                            'mensaje' => 'Stock insuficiente'
+                        ];
+                    } elseif ($data > 0) {
+                        return ['success' => true];
+                    }
+                }
+                
+                return $data;
             }
 
             return ['success' => false];
@@ -132,7 +161,7 @@ class CarritoService
         }
     }
 
-    // 🗑️ Eliminar item (usa id_detalle_carrito)
+    // 🗑️ Eliminar item
     public function eliminarItem(int $idDetalleCarrito)
     {
         $headers = $this->obtenerHeaders();
