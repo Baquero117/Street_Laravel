@@ -240,15 +240,6 @@ function getImagenUrl(imagen) {
 }
 
 async function confirmarPedido() {
-
-    // 👇 DEBUG: Ver si JavaScript puede leer el token
-    const tokenElement = document.getElementById('usuario-token');
-    console.log('=== DEBUG TOKEN EN JS ===');
-    console.log('Elemento existe?', tokenElement !== null);
-    console.log('Valor del elemento:', tokenElement?.value);
-    console.log('Longitud del token:', tokenElement?.value?.length || 0);
-    console.log('Primeros 50 chars:', tokenElement?.value?.substring(0, 50) || 'N/A');
-    
     const btnConfirmar = document.getElementById('btnConfirmar');
     btnConfirmar.disabled = true;
     btnConfirmar.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Procesando...';
@@ -260,28 +251,28 @@ async function confirmarPedido() {
         return sum + (precio * cantidad);
     }, 0);
 
-    // Obtener ID del cliente y token
     const idCliente = document.getElementById('usuario-id')?.value || null;
     const token = document.getElementById('usuario-token')?.value || '';
 
-    // 👇 DEBUG COMPLETO
-    console.log('=== DEBUG COMPLETO ===');
-    console.log('ID Cliente:', idCliente);
-    console.log('Token existe?', !!token);
-    console.log('Token longitud:', token.length);
-    console.log('Token (primeros 50):', token.substring(0, 50));
-    console.log('Método de pago:', metodoPagoSeleccionado);
-    console.log('Total:', total);
-
     if (!token) {
-        console.error('❌ NO HAY TOKEN');
         mostrarAlerta('No se encontró el token de autenticación. Por favor inicia sesión nuevamente.', 'danger');
         btnConfirmar.disabled = false;
         btnConfirmar.innerHTML = '<i class="bi bi-check-circle"></i> Confirmar Pedido';
         return;
     }
 
-    // Preparar datos del pedido
+    // 👇 PREPARAR ITEMS PARA LA FACTURA
+    const items = carritoProductos.map(p => ({
+        nombre: p.nombre || p.nombre_producto,
+        cantidad: p.cantidad || 1,
+        precio_unitario: parseFloat(p.precio_unitario || p.precio || 0),
+        subtotal: parseFloat(p.subtotal || (p.precio_unitario * p.cantidad)),
+        talla: p.talla || 'N/A',
+        color: p.color || 'N/A',
+        imagen: p.imagen || '' // 👈 IMPORTANTE: La ruta de la imagen
+    }));
+
+    // Preparar datos del pedido CON ITEMS
     const datosPedido = {
         id_cliente: parseInt(idCliente),
         fecha_pedido: new Date().toISOString().split('T')[0],
@@ -289,19 +280,16 @@ async function confirmarPedido() {
         estado: 'pendiente',
         metodo_pago: metodoPagoSeleccionado,
         numero_factura: generarNumeroFactura(),
-        ruta_factura: ''
+        ruta_factura: '',
+        items: items // 👈 AGREGAR ITEMS
     };
 
-    // 👇 HEADERS que se van a enviar
     const headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
     };
 
-    console.log('Headers a enviar:', headers);
     console.log('Datos del pedido:', datosPedido);
-    console.log('URL:', 'http://localhost:8080/pedido');
-    console.log('====================');
 
     try {
         const response = await fetch('http://localhost:8080/pedido', {
@@ -309,9 +297,6 @@ async function confirmarPedido() {
             headers: headers,
             body: JSON.stringify(datosPedido)
         });
-
-        console.log('Response status:', response.status);
-        console.log('Response headers:', response.headers);
 
         if (!response.ok) {
             const errorText = await response.text();
@@ -324,8 +309,6 @@ async function confirmarPedido() {
         
         if (resultado.id_pedido) {
             idPedidoCreado = resultado.id_pedido;
-        } else {
-            idPedidoCreado = await obtenerUltimoPedido(token);
         }
 
         // Mostrar modal de éxito
