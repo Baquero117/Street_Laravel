@@ -27,7 +27,7 @@
         </div>
 
         <ul class="menu">
-            <li><a href="{{ route('admin.inicio') }}"><i class="fas fa-home"></i><span> Inicio</span></a></li>
+            <li><a href="{{ route('admin.Reportes') }}"><i class="fas fa-home"></i><span> Reportes</span></a></li>
             <li><a href="{{ route('admin.Cliente') }}"><i class="fas fa-user"></i><span> Cliente</span></a></li>
             <li><a href="{{ route('admin.Vendedor') }}"><i class="fas fa-user-tie"></i><span> Vendedor</span></a></li>
             <li><a href="{{ route('admin.Pedido') }}"><i class="fas fa-shopping-cart"></i><span> Pedido</span></a></li>

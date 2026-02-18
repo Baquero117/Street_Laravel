@@ -16,6 +16,10 @@ use App\Http\Controllers\MasVistas\MujerController;
 use App\Http\Controllers\MasVistas\ModaController;
 use App\Http\Controllers\PuntoInicio\PerfilController;
 use App\Http\Controllers\PublicoController;
+use App\Http\Controllers\Administrador\ReporteController;
+
+Route::get('/admin/Reportes', [ReporteController::class, 'index'])
+    ->name('admin.Reportes');
 
 
 Route::get('/login', [LoginController::class, 'mostrar'])->name('login');
