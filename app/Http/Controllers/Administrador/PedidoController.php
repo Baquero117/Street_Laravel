@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Administrador\PedidoService;
 use App\Models\Administrador\ClienteService;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 
 class PedidoController extends Controller
 {
@@ -26,32 +27,39 @@ class PedidoController extends Controller
     }
 
     /* ===================== LISTAR PEDIDOS ===================== */
-    public function index()
-    {
-        $result = $this->pedidoService->obtenerPedidos();
-        $pedidos = [];
-        $mensaje = '';
+   public function index()
+{
+    $result = $this->pedidoService->obtenerPedidos();
+    $clientesResult = $this->clienteService->obtenerClientes(); // 👈 FALTA ESTO
 
-        if ($result['success']) {
-            foreach ($result['data'] as $pedido) {
+    $pedidos = [];
+    $mensaje = '';
+    $clientes = [];
 
-                // Obtener cliente (sin usar contraseña)
-                $cliente = $this->clienteService
-                    ->obtenerClientePorId($pedido['id_cliente']);
-
-                if ($cliente['success']) {
-                    unset($cliente['data']['contrasena']);
-                    $pedido['cliente'] = $cliente['data'];
-                }
-
-                $pedidos[] = $pedido;
-            }
-        } else {
-            $mensaje = $result['error'];
-        }
-
-        return view('Administrador.Pedido', compact('pedidos', 'mensaje'));
+    if ($clientesResult['success']) {
+        $clientes = $clientesResult['data'];
     }
+
+    if ($result['success']) {
+        foreach ($result['data'] as $pedido) {
+
+            $cliente = $this->clienteService
+                ->obtenerClientePorId($pedido['id_cliente']);
+
+            if ($cliente['success']) {
+                unset($cliente['data']['contrasena']);
+                $pedido['cliente'] = $cliente['data'];
+            }
+
+            $pedidos[] = $pedido;
+        }
+    } else {
+        $mensaje = $result['error'];
+    }
+
+    return view('Administrador.Pedido', compact('pedidos', 'mensaje', 'clientes'));
+}
+
 
     /* ===================== AGREGAR PEDIDO ===================== */
     public function store(Request $request)
@@ -80,7 +88,7 @@ class PedidoController extends Controller
     }
 
     /* ===================== ACTUALIZAR PEDIDO ===================== */
-    public function update(Request $request)
+    public function actualizar(Request $request)
     {
         $request->validate([
             'id_pedido'    => 'required|numeric',
@@ -148,4 +156,31 @@ class PedidoController extends Controller
 
         return redirect()->route('pedido.index');
     }
+
+    /* ===================== VER FACTURA ===================== */
+public function verFactura($id)
+{
+    $resultado = $this->pedidoService->obtenerFactura($id);
+
+    Log::info('verFactura resultado:', [
+        'success' => $resultado['success'],
+        'data_length' => isset($resultado['data']) ? strlen($resultado['data']) : 0
+    ]);
+
+    if ($resultado['success']) {
+        $pdfContent = $resultado['data'];
+
+        return response($pdfContent, 200, [
+            'Content-Type'        => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="factura_' . $id . '.pdf"',
+            'Content-Length'      => strlen($pdfContent),
+            'Cache-Control'       => 'no-cache, no-store',
+            'Pragma'              => 'no-cache',
+        ]);
+    }
+
+    return redirect()->route('pedido.index')
+        ->with('mensaje', 'Error al generar factura: ' . ($resultado['error'] ?? 'desconocido'));
+}
+
 }

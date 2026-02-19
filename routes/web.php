@@ -100,6 +100,7 @@ Route::post('/producto/eliminar', [ProductoController::class, 'destroy'])->name(
 
 Route::get('/admin/Pedido', [PedidoController::class, 'index'])->name('admin.Pedido');
 Route::get('/pedido', [PedidoController::class, 'index'])->name('pedido.index');
+Route::get('/pedido/factura/{id}', [PedidoController::class, 'verFactura'])->name('pedido.factura');
 
 Route::post('/pedido/agregar', [PedidoController::class, 'store'])->name('pedido.agregar');
 Route::post('/pedido/actualizar', [PedidoController::class, 'update'])->name('pedido.actualizar');

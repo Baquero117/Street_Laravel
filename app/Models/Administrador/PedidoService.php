@@ -3,10 +3,13 @@
 namespace App\Models\Administrador;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+
 
 class PedidoService
 {
     private $baseUrl = "http://localhost:8080/pedido";
+   
     private $token;
 
     public function __construct()
@@ -18,18 +21,18 @@ class PedidoService
     {
         return [
             'Authorization' => 'Bearer ' . $this->token,
-            'Content-Type'  => 'application/json'
+            'Accept'        => 'application/json'
         ];
     }
 
- 
-/* ===================== OBTENER PEDIDOS ===================== */
+    /* ===================== OBTENER PEDIDOS ===================== */
     public function obtenerPedidos()
     {
         $response = Http::withHeaders($this->headers())
             ->get($this->baseUrl);
 
         if ($response->successful()) {
+
             $data = $response->json();
 
             if (!is_array($data)) {
@@ -42,14 +45,14 @@ class PedidoService
 
             return [
                 'success' => true,
-                'data' => $data
+                'data'    => $data
             ];
         }
 
         return [
             'success' => false,
-            'data' => [],
-            'error' => 'HTTP ' . $response->status()
+            'data'    => [],
+            'error'   => 'HTTP ' . $response->status()
         ];
     }
 
@@ -64,17 +67,12 @@ class PedidoService
                 'estado'       => $estado
             ]);
 
-        if ($response->successful()) {
-            return ['success' => true];
-        }
-
-        return [
-            'success' => false,
-            'error' => 'HTTP ' . $response->status()
-        ];
+        return $response->successful()
+            ? ['success' => true]
+            : ['success' => false, 'error' => 'HTTP ' . $response->status()];
     }
 
-    /* ===================== ACTUALIZAR PEDIDO (PARCIAL) ===================== */
+    /* ===================== ACTUALIZAR PEDIDO ===================== */
     public function actualizarPedidoParcial($id, $fecha_pedido, $total)
     {
         $response = Http::withHeaders($this->headers())
@@ -83,14 +81,9 @@ class PedidoService
                 'total'        => $total
             ]);
 
-        if ($response->successful()) {
-            return ['success' => true];
-        }
-
-        return [
-            'success' => false,
-            'error' => 'HTTP ' . $response->status()
-        ];
+        return $response->successful()
+            ? ['success' => true]
+            : ['success' => false, 'error' => 'HTTP ' . $response->status()];
     }
 
     /* ===================== CAMBIAR ESTADO ===================== */
@@ -101,16 +94,33 @@ class PedidoService
                 'estado' => $estado
             ]);
 
-        if ($response->successful()) {
-            return ['success' => true];
-        }
+        return $response->successful()
+            ? ['success' => true]
+            : ['success' => false, 'error' => 'HTTP ' . $response->status()];
+    }
 
+    /* ===================== OBTENER FACTURA (PDF) ===================== */
+public function obtenerFactura($id)
+{
+    $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->token
+        ])
+        ->accept('application/pdf')
+        ->get($this->baseUrl . '/' . $id . '/factura/ver');
+
+    Log::info('Factura status: ' . $response->status());
+    Log::info('Factura content-type: ' . $response->header('Content-Type'));
+    Log::info('Factura body length: ' . strlen($response->body()));
+    if ($response->successful() && strlen($response->body()) > 0) {
         return [
-            'success' => false,
-            'error' => 'HTTP ' . $response->status()
+            'success' => true,
+            'data'    => $response->body()
         ];
     }
 
-    /* ===================== ELIMINAR (YA NO SE USA) ===================== */
-    // ❌ Eliminado intencionalmente
+    return [
+        'success' => false,
+        'error'   => 'HTTP ' . $response->status() . ' | Body vacío: ' . (strlen($response->body()) === 0 ? 'SÍ' : 'NO')
+    ];
+}
 }

@@ -13,12 +13,8 @@ $estados = ['Pendiente', 'Procesando', 'Enviado', 'Completado', 'Cancelado'];
 
 <div class="card mt-3">
 
-    <div class="card-header d-flex justify-content-between align-items-center">
+    <div class="card-header">
         <h5 class="mb-0">Gestión de Pedidos</h5>
-
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarPedido">
-            <i class="fas fa-plus"></i> Agregar
-        </button>
     </div>
 
     <div class="card-body p-0">
@@ -38,9 +34,18 @@ $estados = ['Pendiente', 'Procesando', 'Enviado', 'Completado', 'Cancelado'];
             @forelse ($pedidos as $pedido)
                 <tr>
                     <td>{{ $pedido['id_pedido'] }}</td>
-                    <td>{{ $pedido['id_cliente'] }}</td>
+
+                    {{-- NOMBRE DEL CLIENTE --}}
+                    <td>
+                        @if(isset($pedido['cliente']))
+                            {{ $pedido['cliente']['nombre'] }} {{ $pedido['cliente']['apellido'] }}
+                        @else
+                            <span class="text-danger">No disponible</span>
+                        @endif
+                    </td>
+
                     <td>{{ $pedido['fecha_pedido'] }}</td>
-                    <td>{{ $pedido['total'] }}</td>
+                    <td>${{ number_format($pedido['total'], 2) }}</td>
 
                     {{-- CAMBIAR ESTADO --}}
                     <td>
@@ -60,48 +65,51 @@ $estados = ['Pendiente', 'Procesando', 'Enviado', 'Completado', 'Cancelado'];
 
                     {{-- ACCIONES --}}
                     <td class="text-nowrap">
+                        {{-- VER DETALLE --}}
                         <button class="btn btn-info btn-sm"
                             data-bs-toggle="modal"
                             data-bs-target="#verPedido{{ $pedido['id_pedido'] }}">
-                            Ver
+                            <i class="fas fa-eye"></i> Ver
                         </button>
 
-                        <button class="btn btn-warning btn-sm"
-                            data-bs-toggle="modal"
-                            data-bs-target="#editarPedido{{ $pedido['id_pedido'] }}">
-                            Editar
-                        </button>
-
-                        <form method="POST" action="{{ route('pedido.cancelar') }}" class="d-inline">
-                            @csrf
-                            <input type="hidden" name="id_pedido" value="{{ $pedido['id_pedido'] }}">
-                            <button class="btn btn-danger btn-sm">Cancelar</button>
-                        </form>
-
-                        <button class="btn btn-secondary btn-sm" disabled>
-                            Factura
-                        </button>
+                        {{-- VER FACTURA --}}
+                        <a href="{{ route('pedido.factura', $pedido['id_pedido']) }}"
+                           target="_blank"
+                           class="btn btn-secondary btn-sm">
+                            <i class="fas fa-file-pdf"></i> Factura
+                        </a>
                     </td>
                 </tr>
 
-                {{-- MODAL VER INFORMACIÓN --}}
-                <div class="modal fade" id="verPedido{{ $pedido['id_pedido'] }}">
+                {{-- MODAL VER --}}
+                <div class="modal fade" id="verPedido{{ $pedido['id_pedido'] }}" tabindex="-1">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5>Información del Pedido</h5>
+                                <h5 class="modal-title">Información del Pedido #{{ $pedido['id_pedido'] }}</h5>
                                 <button class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
                             <div class="modal-body">
-                                <h6>Pedido</h6>
+
+                                <h6 class="text-muted">Pedido</h6>
                                 <p><b>ID:</b> {{ $pedido['id_pedido'] }}</p>
                                 <p><b>Fecha:</b> {{ $pedido['fecha_pedido'] }}</p>
-                                <p><b>Total:</b> {{ $pedido['total'] }}</p>
-                                <p><b>Estado:</b> {{ $pedido['estado'] }}</p>
+                                <p><b>Total:</b> ${{ number_format($pedido['total'], 2) }}</p>
+                                <p><b>Estado:</b>
+                                    <span class="badge 
+                                        @if($pedido['estado'] === 'Completado') bg-success
+                                        @elseif($pedido['estado'] === 'Cancelado') bg-danger
+                                        @elseif($pedido['estado'] === 'Enviado') bg-primary
+                                        @elseif($pedido['estado'] === 'Procesando') bg-warning text-dark
+                                        @else bg-secondary
+                                        @endif">
+                                        {{ $pedido['estado'] }}
+                                    </span>
+                                </p>
 
                                 <hr>
 
-                                <h6>Cliente</h6>
+                                <h6 class="text-muted">Cliente</h6>
                                 @if(isset($pedido['cliente']))
                                     <p><b>Nombre:</b> {{ $pedido['cliente']['nombre'] }} {{ $pedido['cliente']['apellido'] }}</p>
                                     <p><b>Dirección:</b> {{ $pedido['cliente']['direccion'] }}</p>
@@ -110,45 +118,23 @@ $estados = ['Pendiente', 'Procesando', 'Enviado', 'Completado', 'Cancelado'];
                                 @else
                                     <p class="text-danger">Cliente no disponible</p>
                                 @endif
+
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- MODAL EDITAR --}}
-                <div class="modal fade" id="editarPedido{{ $pedido['id_pedido'] }}">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form method="POST" action="{{ route('pedido.actualizar') }}">
-                                @csrf
-                                <input type="hidden" name="id_pedido" value="{{ $pedido['id_pedido'] }}">
-
-                                <div class="modal-header">
-                                    <h5>Actualizar Pedido</h5>
-                                    <button class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-
-                                <div class="modal-body">
-                                    <label>Fecha</label>
-                                    <input type="date" name="fecha_pedido" class="form-control mb-2"
-                                        value="{{ $pedido['fecha_pedido'] }}">
-
-                                    <label>Total</label>
-                                    <input type="number" step="0.01" name="total" class="form-control mb-2"
-                                        value="{{ $pedido['total'] }}">
-                                </div>
-
-                                <div class="modal-footer">
-                                    <button class="btn btn-warning">Actualizar</button>
-                                </div>
-                            </form>
+                            <div class="modal-footer">
+                                <a href="{{ route('pedido.factura', $pedido['id_pedido']) }}"
+                                   target="_blank"
+                                   class="btn btn-secondary">
+                                    <i class="fas fa-file-pdf"></i> Ver Factura
+                                </a>
+                                <button class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
             @empty
                 <tr>
-                    <td colspan="6" class="text-center">No hay pedidos</td>
+                    <td colspan="6" class="text-center text-muted py-3">No hay pedidos registrados</td>
                 </tr>
             @endforelse
             </tbody>
@@ -156,40 +142,6 @@ $estados = ['Pendiente', 'Procesando', 'Enviado', 'Completado', 'Cancelado'];
     </div>
 </div>
 
-{{-- MODAL AGREGAR PEDIDO --}}
-<div class="modal fade" id="modalAgregarPedido" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-
-            <form method="POST" action="{{ route('pedido.agregar') }}">
-                @csrf
-
-                <div class="modal-header">
-                    <h5 class="modal-title">Agregar Pedido</h5>
-                    <button class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body">
-                    <label>ID Cliente</label>
-                    <input type="number" name="id_cliente" class="form-control mb-2" required>
-
-                    <label>Fecha</label>
-                    <input type="date" name="fecha_pedido" class="form-control mb-2" required>
-
-                    <label>Total</label>
-                    <input type="number" step="0.01" name="total" class="form-control mb-2" required>
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button class="btn btn-success">Guardar</button>
-                </div>
-            </form>
-
-        </div>
-    </div>
-</div>
-
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 @endsection

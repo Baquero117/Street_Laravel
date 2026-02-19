@@ -20,14 +20,14 @@ class ClienteController extends Controller
 
         $this->clienteService = $clienteService;
     }
+public function index()
+{
+    $resultado = $this->clienteService->obtenerClientes();
+    $clientes = $resultado['success'] ? $resultado['data'] : [];
+    $mensaje = Session::get('mensaje', '');
 
-    public function index()
-    {
-        $clientes = $this->clienteService->obtenerClientes();
-        $mensaje = Session::get('mensaje', '');
-
-        return view('Administrador.Cliente', compact('clientes', 'mensaje'));
-    }
+    return view('Administrador.Cliente', compact('clientes', 'mensaje'));
+}
 
     public function store(Request $request)
     {

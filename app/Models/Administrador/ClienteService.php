@@ -23,17 +23,41 @@ class ClienteService
         ];
     }
 
-    public function obtenerClientes()
-    {
-        $response = Http::withHeaders($this->headers())
-            ->get($this->baseUrl);
+   public function obtenerClientes()
+{
+    $response = Http::withHeaders($this->headers())
+        ->get($this->baseUrl);
 
-        if ($response->successful()) {
-            return $response->json();
+    if ($response->successful()) {
+
+        $data = $response->json();
+
+        if (!is_array($data)) {
+            $data = [];
         }
 
-        return [];
+        // Si es un objeto single (tiene id_cliente directo), lo envuelve en array
+        if (isset($data['id_cliente'])) {
+            $data = [$data];
+        }
+
+        // Filtra cualquier elemento que no sea array (elimina bools, nulls, etc.)
+        $data = array_filter($data, fn($item) => is_array($item));
+        $data = array_values($data); // Reindexa
+
+        return [
+            "success" => true,
+            "data" => $data
+        ];
     }
+
+    return [
+        "success" => false,
+        "data" => [],
+        "error" => "HTTP " . $response->status()
+    ];
+}
+
 
     public function agregarCliente($nombre, $apellido, $contrasena, $direccion, $telefono, $correo_electronico)
     {
