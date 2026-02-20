@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rubik:wght@300;400;500;700&family=Permanent+Marker&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/PuntoInicio/Cliente/Perfil.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/PuntoInicio/Cliente/Cuenta.css') }}">
 </head>
 
 <body>
@@ -68,7 +68,7 @@
                     ¡Hola, {{ Session::get('usuario_nombre') }}!
                 </h2>
 
-                <a href="#" class="text-decoration-none text-dark">
+                <a href="{{ route('mis-pedidos') }}" class="text-decoration-none text-dark">
                     <div class="perfil-card">
                         <div class="perfil-card-title">Pedidos</div>
                         <div class="perfil-card-sub">Historial de pedidos</div>
@@ -77,7 +77,7 @@
 
                 <a href="{{ url('perfil') }}" class="text-decoration-none text-dark">
                     <div class="perfil-card">
-                        <div class="perfil-card-title">Cuenta</div>
+                        <div class="perfil-card-title">Perfil</div>
                         <div class="perfil-card-sub">Mi información personal</div>
                     </div>
                 </a>

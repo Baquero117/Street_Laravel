@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\Registro\RegistroController;
+use App\Http\Controllers\Recuperacion\RecuperacionController;
 use App\Http\Controllers\Administrador\CategoriaController;
 use App\Http\Controllers\Administrador\ClienteController;
 use App\Http\Controllers\Administrador\DetalleProductoController;
@@ -17,6 +18,8 @@ use App\Http\Controllers\MasVistas\ModaController;
 use App\Http\Controllers\PuntoInicio\PerfilController;
 use App\Http\Controllers\PublicoController;
 use App\Http\Controllers\Administrador\ReporteController;
+use App\Http\Controllers\PuntoInicio\PedidosController;
+
 
 Route::get('/admin/Reportes', [ReporteController::class, 'index'])
     ->name('admin.Reportes');
@@ -35,10 +38,32 @@ Route::get('/inicio', [PublicoController::class, 'index'])->name('inicio');
 Route::get('/productos/{id}/detalle', [PublicoController::class, 'detalle'])->name('productos.detalle');
 
 
+// Recuperación de contraseña
+// Paso 1: Formulario para ingresar el correo
+Route::get('/recuperar-contrasena', [RecuperacionController::class, 'mostrarSolicitud'])
+    ->name('recuperacion.solicitud');
+
+// Paso 2: Procesar el correo
+Route::post('/recuperar-contrasena', [RecuperacionController::class, 'procesarSolicitud'])
+    ->name('recuperacion.procesar-solicitud');
+
+// Paso 3: Formulario de nueva contraseña (llega desde el enlace del email)
+Route::get('/restablecer-contrasena', [RecuperacionController::class, 'mostrarRestablecimiento'])
+    ->name('recuperacion.restablecer');
+
+// Paso 4: Procesar la nueva contraseña
+Route::post('/restablecer-contrasena', [RecuperacionController::class, 'procesarRestablecimiento'])
+    ->name('recuperacion.procesar-restablecimiento');
+
 // Perfil de usuario
 Route::get('/cuenta', [PerfilController::class, 'mostrarCuenta'])->name('cuenta');
 Route::get('/perfil', [PerfilController::class, 'mostrar'])->name('perfil');
 Route::post('/perfil/actualizar', [PerfilController::class, 'actualizar'])->name('perfil.actualizar');
+
+// Pedidos del cliente
+Route::get('/mis-pedidos', [PedidosController::class, 'index'])->name('mis-pedidos');
+Route::get('/mis-pedidos/{id}/factura/ver', [PedidosController::class, 'verFactura'])->name('mis-pedidos.factura.ver');
+Route::get('/mis-pedidos/{id}/factura/descargar', [PedidosController::class, 'descargarFactura'])->name('mis-pedidos.factura.descargar');
 
 
 // Vista ropa hombre
