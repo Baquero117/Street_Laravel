@@ -183,4 +183,8 @@ public function verFactura($id)
         ->with('mensaje', 'Error al generar factura: ' . ($resultado['error'] ?? 'desconocido'));
 }
 
+
+
+
+
 }

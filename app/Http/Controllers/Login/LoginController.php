@@ -44,7 +44,7 @@ class LoginController extends Controller
             Session::put('usuario_correo', $resultado['datos']['correo_electronico']);
 
             if ($resultado['tipo'] === 'administrador') {
-                return redirect()->route('admin.inicio'); 
+                return redirect()->route('admin.Reportes'); 
             }
 
             if ($resultado['tipo'] === 'cliente') {

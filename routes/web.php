@@ -84,6 +84,10 @@ Route::get('/cliente', [ClienteController::class, 'index'])->name('cliente.index
 Route::post('/cliente/agregar', [ClienteController::class, 'store'])->name('cliente.agregar');
 Route::post('/cliente/actualizar', [ClienteController::class, 'update'])->name('cliente.actualizar');
 Route::post('/cliente/eliminar', [ClienteController::class, 'destroy'])->name('cliente.eliminar');
+Route::get('/cliente/buscar', 
+    [ClienteController::class, 'buscar']
+)->name('cliente.buscar');
+
 
 Route::get('/admin/DetalleProducto', [DetalleProductoController::class, 'index'])->name('admin.DetalleProducto');
 Route::get('/detalleproducto', [DetalleProductoController::class, 'index'])->name('detalle.index');
@@ -91,11 +95,20 @@ Route::post('/detalle/agregar', [DetalleProductoController::class, 'store'])->na
 Route::post('/detalle/actualizar', [DetalleProductoController::class, 'update'])->name('detalle.actualizar');
 Route::post('/detalle/eliminar', [DetalleProductoController::class, 'destroy'])->name('detalle.eliminar');
 
+Route::get('/detalle_producto/buscar', 
+    [DetalleProductoController::class, 'buscar']
+)->name('detalle_producto.buscar');
+
 Route::get('/admin/Producto', [ProductoController::class, 'index'])->name('admin.Producto');
 Route::get('/producto', [ProductoController::class, 'index'])->name('producto.index');
 Route::post('/producto/agregar', [ProductoController::class, 'store'])->name('producto.agregar');
 Route::post('/producto/actualizar', [ProductoController::class, 'update'])->name('producto.actualizar');
 Route::post('/producto/eliminar', [ProductoController::class, 'destroy'])->name('producto.eliminar');
+Route::get('/producto/buscar', 
+    [ProductoController::class, 'buscar']
+)->name('producto.buscar');
+
+
 
 
 Route::get('/admin/Pedido', [PedidoController::class, 'index'])->name('admin.Pedido');
@@ -115,6 +128,9 @@ Route::post('/pedido/cambiar-estado',
 Route::post('/pedido/cancelar', 
     [PedidoController::class, 'cancelar']
 )->name('pedido.cancelar');
+
+
+
 
 
 Route::get('/admin/Vendedor', [VendedorController::class, 'index'])->name('admin.Vendedor');

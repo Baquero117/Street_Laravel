@@ -119,9 +119,9 @@ else if (!empty($data['imagen_actual'])) {
     }
 
     return [
-        "success" => false,
-        "error" => $response->body()
-    ];
+    "success" => false,
+    "error" => $response->status() . ' - ' . $response->body() // ← ver respuesta completa
+];
 }
 
     // ============================
@@ -141,4 +141,14 @@ else if (!empty($data['imagen_actual'])) {
             "error" => "HTTP " . $response->status()
         ];
     }
+
+
+    public function buscarProducto($nombre)
+{
+    return Http::withHeaders($this->headers())
+        ->get($this->baseUrl . '/buscar', [
+            'nombre' => $nombre
+        ])
+        ->json();
+}
 }

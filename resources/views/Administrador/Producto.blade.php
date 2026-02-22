@@ -28,6 +28,23 @@
     </div>
 
     <div class="card-body p-0">
+   <div class="p-3 position-relative">
+    <div class="input-group">
+        <input type="text"
+               id="buscadorProducto"
+               class="form-control"
+               placeholder="Buscar producto...">
+
+        <button class="btn btn-primary" onclick="buscarManual()">
+            <i class="fas fa-search"></i> Buscar
+        </button>
+    </div>
+
+    <div id="sugerenciasProducto"
+         class="list-group shadow"
+       style="position:absolute; top:70px; left:15px; right:15px; z-index:1000;">
+    </div>
+</div>
         <table class="table table-striped mb-0">
             <thead class="table-dark">
                 <tr>
@@ -163,8 +180,13 @@
           </div>
 
           <div class="mb-3">
-            <label class="form-label">ID Categoría</label>
-            <input class="form-control" type="number" name="id_categoria" placeholder="Ej: 5">
+            <label class="form-label">Categoría *</label>
+            <select class="form-select" name="id_categoria" required>
+                <option value="">Seleccione categoría</option>
+                <option value="20">Hombre</option>
+                <option value="21">Mujer</option>
+                <option value="22">Unisex</option>
+            </select>
           </div>
 
           <small class="text-muted">* Campos obligatorios</small>
@@ -251,9 +273,11 @@
             <input class="form-control" name="color" placeholder="Color del producto">
           </div>
 
+          {{-- ✅ INPUT NUMÉRICO SIMPLE PARA CATEGORÍA --}}
           <div class="mb-3">
-            <label class="form-label">ID Categoría</label>
-            <input class="form-control" type="number" name="id_categoria" placeholder="ID de la categoría">
+            <label class="form-label">ID Categoría *</label>
+            <input class="form-control" type="number" name="id_categoria" placeholder="Ej: 20" required>
+            <small class="text-muted">20 = Hombre &nbsp;|&nbsp; 21 = Mujer &nbsp;|&nbsp; 22 = Unisex</small>
           </div>
 
           <small class="text-muted">* Campos obligatorios</small>
@@ -314,14 +338,97 @@ function cargarProducto(id, nombre, descripcion, cantidad, id_vendedor, precio, 
 
     // ✅ MOSTRAR Y GUARDAR IMAGEN ACTUAL
     modal.querySelector('[name="imagen_actual"]').value = imagen;
-    document.getElementById('imagenActual').src = imagen 
-        ? '/storage/' + imagen 
+    document.getElementById('imagenActual').src = imagen
+        ? '/storage/' + imagen
         : '';
 }
 
 function setEliminarId(id) {
     document.querySelector('#modalEliminarProducto [name="id_producto"]').value = id;
 }
+</script>
+
+
+
+
+
+
+
+<script>
+let timeout = null;
+
+document.getElementById('buscadorProducto').addEventListener('keyup', function() {
+
+    clearTimeout(timeout);
+
+    let query = this.value;
+    let sugerencias = document.getElementById('sugerenciasProducto');
+
+    if(query.length < 2){
+        sugerencias.innerHTML = "";
+        return;
+    }
+
+    timeout = setTimeout(() => {
+
+        fetch(`/producto/buscar?nombre=${query}`)
+            .then(response => response.json())
+            .then(data => {
+
+                sugerencias.innerHTML = "";
+
+                if(data.length === 0){
+                    sugerencias.innerHTML = `
+                        <div class="list-group-item text-muted">
+                            No se encontraron resultados
+                        </div>`;
+                    return;
+                }
+
+                data.forEach(producto => {
+
+                    let item = document.createElement('a');
+                    item.classList.add('list-group-item', 'list-group-item-action');
+                    item.innerHTML = `<strong>${producto.nombre}</strong> - $${producto.precio}`;
+
+                    item.onclick = function(){
+                        document.getElementById('buscadorProducto').value = producto.nombre;
+                        sugerencias.innerHTML = "";
+                        mostrarSoloProducto(producto.nombre);
+                    }
+
+                    sugerencias.appendChild(item);
+                });
+            });
+
+    }, 300);
+});
+
+function buscarManual(){
+    let valor = document.getElementById('buscadorProducto').value;
+    filtrarTabla(valor);
+}
+
+function mostrarSoloProducto(nombreSeleccionado) {
+    let filas = document.querySelectorAll("table tbody tr");
+
+    filas.forEach(fila => {
+        let nombreProducto = fila.children[1].textContent.trim().toLowerCase();
+
+        if(nombreProducto === nombreSeleccionado.toLowerCase()){
+            fila.style.display = "";
+        } else {
+            fila.style.display = "none";
+        }
+    });
+}
+
+document.getElementById('buscadorProducto').addEventListener('input', function() {
+    if(this.value === ""){
+        let filas = document.querySelectorAll("table tbody tr");
+        filas.forEach(fila => fila.style.display = "");
+    }
+});
 </script>
 
 @endsection

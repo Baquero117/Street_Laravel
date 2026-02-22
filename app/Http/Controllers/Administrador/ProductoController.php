@@ -163,4 +163,11 @@ class ProductoController extends Controller
 
         return redirect()->route('producto.index');
     }
+
+    public function buscar(Request $request)
+{
+    $productos = $this->productoService->buscarProducto($request->nombre);
+
+    return response()->json($productos);
+}
 }

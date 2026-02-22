@@ -19,6 +19,25 @@
     </div>
 
     <div class="card-body p-0">
+
+<div class="p-3 position-relative">
+    <div class="input-group">
+        <input type="text"
+               id="buscadorCliente"
+               class="form-control"
+               placeholder="Buscar cliente...">
+
+        <button class="btn btn-primary" onclick="buscarManualCliente()">
+            <i class="fas fa-search"></i> Buscar
+        </button>
+    </div>
+
+    <div id="sugerenciasCliente"
+         class="list-group shadow"
+         style="position:absolute; top:70px; left:15px; right:15px; z-index:1000;">
+    </div>
+</div>
+
         <table class="table table-striped mb-0">
             <thead class="table-dark">
                 <tr>
@@ -272,5 +291,122 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+
+
+
+
+
+
+<script>
+let timeoutCliente = null;
+
+document.getElementById('buscadorCliente').addEventListener('keyup', function() {
+
+    clearTimeout(timeoutCliente);
+
+    let query = this.value;
+    let sugerencias = document.getElementById('sugerenciasCliente');
+
+    if(query.length < 2){
+        sugerencias.innerHTML = "";
+        return;
+    }
+
+    timeoutCliente = setTimeout(() => {
+
+        fetch(`/cliente/buscar?dato=${query}`)
+            .then(response => response.json())
+            .then(data => {
+
+                sugerencias.innerHTML = "";
+
+                if(data.length === 0){
+                    sugerencias.innerHTML = `
+                        <div class="list-group-item text-muted">
+                            No se encontraron resultados
+                        </div>`;
+                    return;
+                }
+
+                data.forEach(cliente => {
+
+                    let item = document.createElement('a');
+                    item.classList.add('list-group-item', 'list-group-item-action');
+
+                    item.innerHTML = `
+                        <strong>${cliente.nombre} ${cliente.apellido}</strong>
+                        <br>
+                        <small>${cliente.correo_electronico}</small>
+                    `;
+
+                    item.onclick = function(){
+                        document.getElementById('buscadorCliente').value = 
+                            cliente.nombre + " " + cliente.apellido;
+
+                        sugerencias.innerHTML = "";
+                        mostrarSoloCliente(cliente.id_cliente);
+                    }
+
+                    sugerencias.appendChild(item);
+                });
+            });
+
+    }, 300);
+});
+
+
+function mostrarSoloCliente(idSeleccionado) {
+
+    let filas = document.querySelectorAll("table tbody tr");
+
+    filas.forEach(fila => {
+        let idCliente = fila.children[0].textContent.trim();
+
+        if(idCliente == idSeleccionado){
+            fila.style.display = "";
+        } else {
+            fila.style.display = "none";
+        }
+    });
+}
+
+
+document.getElementById('buscadorCliente').addEventListener('input', function() {
+    if(this.value === ""){
+        let filas = document.querySelectorAll("table tbody tr");
+        filas.forEach(fila => fila.style.display = "");
+    }
+});
+</script>
+<script>
+function buscarManualCliente(){
+    let valor = document.getElementById('buscadorCliente').value;
+    filtrarTablaCliente(valor);
+}
+
+function filtrarTablaCliente(valor) {
+
+    let filas = document.querySelectorAll("table tbody tr");
+
+    filas.forEach(fila => {
+
+        let nombre = fila.children[1].textContent.toLowerCase();
+        let apellido = fila.children[2].textContent.toLowerCase();
+        let correo = fila.children[3].textContent.toLowerCase();
+
+        if(
+            nombre.includes(valor.toLowerCase()) ||
+            apellido.includes(valor.toLowerCase()) ||
+            correo.includes(valor.toLowerCase())
+        ){
+            fila.style.display = "";
+        } else {
+            fila.style.display = "none";
+        }
+    });
+}
+</script>
+
 
 @endsection

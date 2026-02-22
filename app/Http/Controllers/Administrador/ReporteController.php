@@ -40,8 +40,15 @@ class ReporteController extends Controller
         $totalProductos = $productos->count();
 
       
-        $clientes = collect($clienteService->obtenerClientes());
-        $totalClientes = $clientes->count();
+        $clientesResponse = $clienteService->obtenerClientes();
+
+$clientes = collect([]);
+
+if ($clientesResponse['success']) {
+    $clientes = collect($clientesResponse['data']);
+}
+
+$totalClientes = $clientes->count();
 
         return view('Administrador.Reportes', compact(
             'pedidosRecientes',

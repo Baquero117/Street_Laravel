@@ -102,4 +102,13 @@ public function index()
 
         return redirect()->route('admin.Cliente');
     }
+
+    
+        public function buscar(Request $request)
+{
+    $clientes = $this->clienteService->buscarCliente($request->dato);
+
+    return response()->json($clientes);
+}
+
 }

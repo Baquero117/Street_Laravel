@@ -101,4 +101,19 @@ class DetalleProductoService
             "error" => "HTTP " . $response->status()
         ];
     }
+
+
+public function buscarDetalleProducto($id_producto)
+{
+    return Http::withHeaders($this->headers())
+        ->get($this->baseUrl . '/detalle_producto/buscar', [
+            'id_producto' => $id_producto
+        ])
+        ->json();
+}
+
+
+
+
+
 }

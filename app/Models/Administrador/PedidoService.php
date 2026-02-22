@@ -90,9 +90,9 @@ class PedidoService
     public function actualizarPedidoEstado($id, $estado)
     {
         $response = Http::withHeaders($this->headers())
-            ->put($this->baseUrl . '/' . $id, [
-                'estado' => $estado
-            ]);
+    ->patch($this->baseUrl . '/' . $id . '/estado', [
+        'estado' => $estado
+    ]);
 
         return $response->successful()
             ? ['success' => true]
@@ -123,4 +123,6 @@ public function obtenerFactura($id)
         'error'   => 'HTTP ' . $response->status() . ' | Body vacío: ' . (strlen($response->body()) === 0 ? 'SÍ' : 'NO')
     ];
 }
+
+
 }

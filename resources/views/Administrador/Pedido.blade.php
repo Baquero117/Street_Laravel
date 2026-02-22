@@ -18,7 +18,25 @@ $estados = ['Pendiente', 'Procesando', 'Enviado', 'Completado', 'Cancelado'];
     </div>
 
     <div class="card-body p-0">
+        <div class="p-3 position-relative">
+    <div class="input-group">
+       <input type="text"
+       id="buscadorPedido"
+       class="form-control"
+       placeholder="Buscar por ID cliente o estado...">
+
+        <button class="btn btn-primary" onclick="buscarManualPedido()">
+            <i class="fas fa-search"></i> Buscar
+        </button>
+    </div>
+
+    <div id="sugerenciasPedido"
+         class="list-group shadow"
+         style="position:absolute; top:70px; left:15px; right:15px; z-index:1000;">
+    </div>
+</div>
         <table class="table table-striped mb-0">
+            
             <thead class="table-dark">
                 <tr>
                     <th>ID</th>
@@ -32,7 +50,7 @@ $estados = ['Pendiente', 'Procesando', 'Enviado', 'Completado', 'Cancelado'];
 
             <tbody>
             @forelse ($pedidos as $pedido)
-                <tr>
+                <tr data-id-cliente="{{ $pedido['id_cliente'] }}" data-estado="{{ $pedido['estado'] }}">
                     <td>{{ $pedido['id_pedido'] }}</td>
 
                     {{-- NOMBRE DEL CLIENTE --}}
@@ -143,5 +161,54 @@ $estados = ['Pendiente', 'Procesando', 'Enviado', 'Completado', 'Cancelado'];
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+<script>
+function filtrarTablaPedido(valor) {
+    let filas = document.querySelectorAll("table tbody tr");
+
+    filas.forEach(fila => {
+        let idPedido = (fila.cells[0]?.textContent || '').trim();
+        let nombreCliente = (fila.cells[1]?.textContent || '').toLowerCase();
+        let idCliente = fila.getAttribute('data-id-cliente') || '';
+        let estado = fila.getAttribute('data-estado') || '';
+        let buscar = valor.toLowerCase().trim();
+
+        if (
+            idPedido === valor.trim() ||
+            idCliente === valor.trim() ||
+            nombreCliente.includes(buscar) ||
+            estado.toLowerCase().includes(buscar)
+        ) {
+            fila.style.display = "";
+        } else {
+            fila.style.display = "none";
+        }
+    });
+
+
+
+}
+
+document.getElementById('buscadorPedido').addEventListener('keyup', function() {
+    let query = this.value.trim();
+    let sugerencias = document.getElementById('sugerenciasPedido');
+    sugerencias.innerHTML = "";
+
+    if (query.length < 1) {
+        let filas = document.querySelectorAll("table tbody tr");
+        filas.forEach(fila => fila.style.display = "");
+        return;
+    }
+
+    filtrarTablaPedido(query);
+});
+
+function buscarManualPedido() {
+    let valor = document.getElementById('buscadorPedido').value;
+    filtrarTablaPedido(valor);
+}
+</script>
 
 @endsection

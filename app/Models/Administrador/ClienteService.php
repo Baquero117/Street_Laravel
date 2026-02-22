@@ -145,4 +145,14 @@ class ClienteService
         ];
     }
 
+public function buscarCliente($dato)
+{
+    return Http::withHeaders($this->headers())
+        ->get($this->baseUrl . '/cliente/buscar', [
+            'dato' => $dato
+        ])
+        ->json();
+}
+
+
 }

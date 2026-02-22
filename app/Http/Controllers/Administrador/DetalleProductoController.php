@@ -103,4 +103,12 @@ class DetalleProductoController extends Controller
 
         return redirect()->route('detalle.index');
     }
+
+    public function buscar(Request $request)
+{
+    $detalles = $this->detalleProductoService
+                     ->buscarDetalleProducto($request->id_producto);
+
+    return response()->json($detalles);
+}
 }
