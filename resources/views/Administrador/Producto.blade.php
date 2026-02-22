@@ -18,7 +18,6 @@
 @endif
 
 <div class="card mt-3">
-
     <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Gestión de Productos</h5>
 
@@ -28,23 +27,24 @@
     </div>
 
     <div class="card-body p-0">
-   <div class="p-3 position-relative">
-    <div class="input-group">
-        <input type="text"
-               id="buscadorProducto"
-               class="form-control"
-               placeholder="Buscar producto...">
+        <div class="p-3 position-relative">
+            <div class="input-group">
+                <input type="text"
+                       id="buscadorProducto"
+                       class="form-control"
+                       placeholder="Buscar producto...">
 
-        <button class="btn btn-primary" onclick="buscarManual()">
-            <i class="fas fa-search"></i> Buscar
-        </button>
-    </div>
+                <button class="btn btn-primary" onclick="buscarManual()">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+            </div>
 
-    <div id="sugerenciasProducto"
-         class="list-group shadow"
-       style="position:absolute; top:70px; left:15px; right:15px; z-index:1000;">
-    </div>
-</div>
+            <div id="sugerenciasProducto"
+                 class="list-group shadow"
+                 style="position:absolute; top:70px; left:15px; right:15px; z-index:1000;">
+            </div>
+        </div>
+
         <table class="table table-striped mb-0">
             <thead class="table-dark">
                 <tr>
@@ -129,44 +129,44 @@
         @csrf
 
         <div class="modal-header">
-          <h5 class="modal-title">Agregar Producto</h5>
+          <h5 class="modal-title modal-text">Agregar Producto</h5>
           <button class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 
         <div class="modal-body">
           <div class="mb-3">
-            <label class="form-label">Nombre *</label>
+            <label class="form-label modal-text">Nombre *</label>
             <input class="form-control" name="nombre" placeholder="Ej: Camiseta Nike" required>
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Descripción *</label>
+            <label class="form-label modal-text">Descripción *</label>
             <textarea class="form-control" name="descripcion" rows="3" placeholder="Describe el producto..." required></textarea>
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Cantidad *</label>
-            <input class="form-control" type="number" name="cantidad" placeholder="Ej: 10" required>
+            <label class="form-label modal-text">Cantidad *</label>
+            <input class="form-control" type="number" name="cantidad" placeholder="Ej: 10" required min="0">
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Imagen *</label>
+            <label class="form-label modal-text">Imagen *</label>
             <input class="form-control" type="file" name="imagen" accept="image/*" required>
-            <small class="text-muted">Formatos: JPG, JPEG, PNG, WEBP (Máx. 2MB)</small>
+            <small class="text-muted modal-text">Formatos: JPG, JPEG, PNG, WEBP (Máx. 2MB)</small>
           </div>
 
           <div class="mb-3">
-            <label class="form-label">ID Vendedor *</label>
-            <input class="form-control" type="number" name="id_vendedor" placeholder="Ej: 1" required>
+            <label class="form-label modal-text">ID Vendedor *</label>
+            <input class="form-control" type="number" name="id_vendedor" placeholder="Ej: 1" required min="0">
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Precio *</label>
-            <input class="form-control" type="number" name="precio" step="0.01" placeholder="Ej: 49.99" required>
+            <label class="form-label modal-text">Precio *</label>
+            <input class="form-control" type="number" name="precio" step="0.01" placeholder="Ej: 49.99" required min="0">
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Estado *</label>
+            <label class="form-label modal-text">Estado *</label>
             <select class="form-select" name="estado" required>
               <option value="">Seleccione estado</option>
               <option value="activo">Activo</option>
@@ -175,12 +175,12 @@
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Color</label>
+            <label class="form-label modal-text">Color</label>
             <input class="form-control" name="color" placeholder="Ej: Rojo, Azul, Negro">
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Categoría *</label>
+            <label class="form-label modal-text">Categoría *</label>
             <select class="form-select" name="id_categoria" required>
                 <option value="">Seleccione categoría</option>
                 <option value="20">Hombre</option>
@@ -189,7 +189,7 @@
             </select>
           </div>
 
-          <small class="text-muted">* Campos obligatorios</small>
+          <small class="text-muted modal-text">* Campos obligatorios</small>
         </div>
 
         <div class="modal-footer">
@@ -211,57 +211,56 @@
         @csrf
 
         <div class="modal-header">
-          <h5 class="modal-title">Actualizar Producto</h5>
+          <h5 class="modal-title modal-text">Actualizar Producto</h5>
           <button class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 
         <div class="modal-body">
           <div class="mb-3">
-            <label class="form-label">ID Producto</label>
+            <label class="form-label modal-text">ID Producto</label>
             <input class="form-control" name="id_producto" readonly>
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Nombre *</label>
+            <label class="form-label modal-text">Nombre *</label>
             <input class="form-control" name="nombre" placeholder="Nombre del producto" required>
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Descripción *</label>
+            <label class="form-label modal-text">Descripción *</label>
             <textarea class="form-control" name="descripcion" rows="3" placeholder="Descripción del producto" required></textarea>
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Cantidad *</label>
-            <input class="form-control" type="number" name="cantidad" placeholder="Cantidad disponible" required>
+            <label class="form-label modal-text">Cantidad *</label>
+            <input class="form-control" type="number" name="cantidad" placeholder="Cantidad disponible" required min="0">
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Nueva Imagen (opcional)</label>
+            <label class="form-label modal-text">Nueva Imagen (opcional)</label>
             <input class="form-control" type="file" name="imagen" accept="image/*">
-            <small class="text-muted">Si no seleccionas una imagen, se mantendrá la actual</small>
+            <small class="text-muted modal-text">Si no seleccionas una imagen, se mantendrá la actual</small>
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Imagen actual</label><br>
+            <label class="form-label modal-text">Imagen actual</label><br>
             <img id="imagenActual" src="" width="120" class="rounded border" alt="Sin imagen">
           </div>
 
-          {{-- 🔑 CLAVE PARA NO BORRAR LA IMAGEN --}}
           <input type="hidden" name="imagen_actual">
 
           <div class="mb-3">
-            <label class="form-label">ID Vendedor *</label>
-            <input class="form-control" type="number" name="id_vendedor" placeholder="ID del vendedor" required>
+            <label class="form-label modal-text">ID Vendedor *</label>
+            <input class="form-control" type="number" name="id_vendedor" placeholder="ID del vendedor" required min="0">
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Precio *</label>
-            <input class="form-control" type="number" name="precio" step="0.01" placeholder="Precio del producto" required>
+            <label class="form-label modal-text">Precio *</label>
+            <input class="form-control" type="number" name="precio" step="0.01" placeholder="Precio del producto" required min="0">
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Estado *</label>
+            <label class="form-label modal-text">Estado *</label>
             <select class="form-select" name="estado" required>
               <option value="activo">Activo</option>
               <option value="inactivo">Inactivo</option>
@@ -269,18 +268,17 @@
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Color</label>
+            <label class="form-label modal-text">Color</label>
             <input class="form-control" name="color" placeholder="Color del producto">
           </div>
 
-          {{-- ✅ INPUT NUMÉRICO SIMPLE PARA CATEGORÍA --}}
           <div class="mb-3">
-            <label class="form-label">ID Categoría *</label>
-            <input class="form-control" type="number" name="id_categoria" placeholder="Ej: 20" required>
-            <small class="text-muted">20 = Hombre &nbsp;|&nbsp; 21 = Mujer &nbsp;|&nbsp; 22 = Unisex</small>
+            <label class="form-label modal-text">ID Categoría *</label>
+            <input class="form-control" type="number" name="id_categoria" placeholder="Ej: 20" required min="0">
+            <small class="text-muted modal-text">20 = Hombre &nbsp;|&nbsp; 21 = Mujer &nbsp;|&nbsp; 22 = Unisex</small>
           </div>
 
-          <small class="text-muted">* Campos obligatorios</small>
+          <small class="text-muted modal-text">* Campos obligatorios</small>
         </div>
 
         <div class="modal-footer">
@@ -302,13 +300,13 @@
         @csrf
 
         <div class="modal-header">
-          <h5 class="modal-title">Eliminar Producto</h5>
+          <h5 class="modal-title modal-text">Eliminar Producto</h5>
           <button class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 
         <div class="modal-body">
           <input type="hidden" name="id_producto">
-          <p>¿Está seguro que desea eliminar este producto?</p>
+          <p class="modal-text">¿Está seguro que desea eliminar este producto?</p>
           <p class="text-danger"><strong>Esta acción no se puede deshacer.</strong></p>
         </div>
 
@@ -336,29 +334,27 @@ function cargarProducto(id, nombre, descripcion, cantidad, id_vendedor, precio, 
     modal.querySelector('[name="color"]').value = color;
     modal.querySelector('[name="id_categoria"]').value = id_categoria;
 
-    // ✅ MOSTRAR Y GUARDAR IMAGEN ACTUAL
     modal.querySelector('[name="imagen_actual"]').value = imagen;
-    document.getElementById('imagenActual').src = imagen
-        ? '/storage/' + imagen
-        : '';
+    document.getElementById('imagenActual').src = imagen ? '/storage/' + imagen : '';
 }
 
 function setEliminarId(id) {
     document.querySelector('#modalEliminarProducto [name="id_producto"]').value = id;
 }
-</script>
 
+// Evitar valores negativos
+document.querySelectorAll('input[type="number"]').forEach(input => {
+    input.addEventListener('input', () => {
+        if(parseFloat(input.value) < 0){
+            input.value = 0;
+        }
+    });
+});
 
-
-
-
-
-
-<script>
+// BUSCADOR
 let timeout = null;
 
 document.getElementById('buscadorProducto').addEventListener('keyup', function() {
-
     clearTimeout(timeout);
 
     let query = this.value;
@@ -370,23 +366,17 @@ document.getElementById('buscadorProducto').addEventListener('keyup', function()
     }
 
     timeout = setTimeout(() => {
-
         fetch(`/producto/buscar?nombre=${query}`)
             .then(response => response.json())
             .then(data => {
-
                 sugerencias.innerHTML = "";
 
                 if(data.length === 0){
-                    sugerencias.innerHTML = `
-                        <div class="list-group-item text-muted">
-                            No se encontraron resultados
-                        </div>`;
+                    sugerencias.innerHTML = `<div class="list-group-item text-muted">No se encontraron resultados</div>`;
                     return;
                 }
 
                 data.forEach(producto => {
-
                     let item = document.createElement('a');
                     item.classList.add('list-group-item', 'list-group-item-action');
                     item.innerHTML = `<strong>${producto.nombre}</strong> - $${producto.precio}`;
@@ -415,11 +405,7 @@ function mostrarSoloProducto(nombreSeleccionado) {
     filas.forEach(fila => {
         let nombreProducto = fila.children[1].textContent.trim().toLowerCase();
 
-        if(nombreProducto === nombreSeleccionado.toLowerCase()){
-            fila.style.display = "";
-        } else {
-            fila.style.display = "none";
-        }
+        fila.style.display = nombreProducto === nombreSeleccionado.toLowerCase() ? "" : "none";
     });
 }
 
@@ -430,5 +416,16 @@ document.getElementById('buscadorProducto').addEventListener('input', function()
     }
 });
 </script>
+
+{{-- ======================== CSS PARA MODO OSCURO ======================== --}}
+<style>
+.modal-text {
+    color: #212529; /* Texto por defecto oscuro */
+}
+
+body.dark-mode .modal-text {
+    color: #f8f9fa; /* Texto claro para dark mode */
+}
+</style>
 
 @endsection

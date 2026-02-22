@@ -123,29 +123,29 @@
         @csrf
 
         <div class="modal-header">
-          <h5 class="modal-title">Agregar Detalle</h5>
+          <h5 class="modal-title modal-text">Agregar Detalle</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 
         <div class="modal-body">
 
           <div class="mb-2">
-            <label class="form-label">Talla</label>
+            <label class="form-label modal-text">Talla</label>
             <input class="form-control" type="text" name="talla" required>
           </div>
 
           <div class="mb-2">
-            <label class="form-label">Imagen</label>
+            <label class="form-label modal-text">Imagen</label>
             <input class="form-control" type="file" name="imagen" accept="image/*" required>
           </div>
 
           <div class="mb-2">
-            <label class="form-label">ID Producto</label>
+            <label class="form-label modal-text">ID Producto</label>
             <input class="form-control" type="number" name="id_producto" required>
           </div>
           
           <div class="mb-2">
-            <label class="form-label">Cantidad</label>
+            <label class="form-label modal-text">Cantidad</label>
             <input class="form-control" type="number" step="0.01" name="cantidad" required>
           </div>
 
@@ -173,40 +173,51 @@
         @csrf
 
         <div class="modal-header">
-          <h5 class="modal-title">Actualizar Detalle</h5>
+          <h5 class="modal-title modal-text">Actualizar Detalle</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 
         <div class="modal-body">
 
-          <div class="mb-2">
-            <label class="form-label">ID Detalle</label>
-            <input class="form-control" type="number" name="id_detalle_producto" required>
-          </div>
+        <div class="mb-2">
+    <label class="form-label modal-text">ID Detalle</label>
+    <input class="form-control solo-modal-number"
+           type="number"
+           name="id_detalle_producto"
+           readonly
+           required>
+</div>
 
           <div class="mb-2">
-            <label class="form-label">Talla</label>
+            <<label class="form-label modal-text">Talla *</label>
             <input class="form-control" type="text" name="talla" required>
           </div>
 
           <div class="mb-2">
-            <label class="form-label">Imagen</label>
+           <label class="form-label modal-text">Imagen *</label>
             <input class="form-control" type="file" name="imagen" accept="image/*">
             <small class="text-muted">Si no selecciona una nueva imagen, se mantiene la actual.</small>
           </div>
 
+
+          <div class="mb-3">
+            <label class="form-label modal-text">Imagen actual</label><br>
+            <img id="imagenActual" src="" width="120" class="rounded border" alt="Sin imagen">
+          </div>
+
           <div class="mb-2">
-            <label class="form-label">ID Producto</label>
+            <label class="form-label modal-text">ID Producto *</label>
             <input class="form-control" type="number" name="id_producto" required>
           </div>
 
           <div class="mb-2">
-            <label class="form-label">Cantidad</label>
+            <label class="form-label modal-text">Cantidad *</label>
             <input class="form-control" type="number" step="0.01" name="cantidad" required>
           </div>
 
         </div>
 
+          <small class="text-muted modal-text">* Campos obligatorios</small>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
           <button type="submit" class="btn btn-warning">Actualizar</button>
@@ -229,14 +240,14 @@
         @csrf
 
         <div class="modal-header">
-          <h5 class="modal-title">Eliminar Detalle</h5>
+          <h5 class="modal-title modal-text">Eliminar Detalle</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 
         <div class="modal-body">
 
           <div class="mb-2">
-            <label class="form-label">ID Detalle</label>
+            <label class="form-label modal-text">ID Detalle</label>
             <input class="form-control" type="number" name="id_detalle_producto" required>
           </div>
 
@@ -258,7 +269,15 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+<style>
+.modal-text {
+    color: #212529; /* Texto normal */
+}
 
+body.dark-mode .modal-text {
+    color: #f8f9fa; /* Texto claro en modo oscuro */
+}
+</style>
 <script>
 let timeoutDetalle = null;
 
@@ -360,7 +379,28 @@ function setEliminarDetalleId(id) {
 }
 </script>
 
+<script>
+document.querySelectorAll('.modal input[type="number"]').forEach(input => {
 
+    // Forzar enteros desde el HTML
+    input.step = "1";
+    input.min = "0";
+
+    input.addEventListener('input', () => {
+
+        // Convertir a entero
+        let valor = parseInt(input.value);
+
+        if (isNaN(valor) || valor < 0) {
+            input.value = 0;
+        } else {
+            input.value = valor;
+        }
+
+    });
+
+});
+</script>
 
 
 @endsection
