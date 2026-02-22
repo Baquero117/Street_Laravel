@@ -1,0 +1,246 @@
+/* Base - igual que Perfil/Cuenta */
+.logo-urbano {
+    font-family: 'Anton', sans-serif;
+    font-size: 1rem;
+    text-transform: uppercase;
+    color: #000;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* ====================================
+   LAYOUT
+   ==================================== */
+
+.pedidos-container {
+    padding: 40px 60px;
+}
+
+.pedidos-titulo {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* ====================================
+   SIDEBAR CARDS - mismo estilo que Perfil
+   ==================================== */
+
+.cuenta-card {
+    border: 1px solid #e6e6e6;
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+    transition: 0.2s;
+    cursor: pointer;
+    background: white;
+}
+
+.cuenta-card:hover {
+    background: #f7f7f7;
+}
+
+.cuenta-card.active {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.cuenta-card.active .cuenta-card-title,
+.cuenta-card.active .cuenta-card-sub {
+    color: white;
+}
+
+.cuenta-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.cuenta-card-sub {
+    font-size: 13px;
+    color: #666;
+}
+
+/* ====================================
+   TARJETA DE PEDIDO
+   ==================================== */
+
+.pedido-card {
+    border: 1px solid #e6e6e6;
+    border-radius: 10px;
+    background: white;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+}
+
+.pedido-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Header */
+.pedido-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e6e6e6;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.pedido-numero {
+    font-size: 13px;
+    color: #555;
+    letter-spacing: 0.3px;
+}
+
+/* Cuerpo */
+.pedido-card-body {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    padding: 0;
+}
+
+.pedido-dato {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 16px 20px;
+    flex: 1;
+    min-width: 130px;
+    border-right: 1px solid #f0f0f0;
+}
+
+.pedido-dato:last-child {
+    border-right: none;
+}
+
+.pedido-icono {
+    font-size: 1.1rem;
+    color: #007bff;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.dato-label {
+    font-size: 11px;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    display: block;
+    margin-bottom: 3px;
+}
+
+.dato-valor {
+    font-size: 13px;
+    color: #222;
+}
+
+/* Footer con botones */
+.pedido-card-footer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    border-top: 1px solid #f0f0f0;
+    background-color: #fafafa;
+}
+
+/* ====================================
+   BOTONES
+   ==================================== */
+
+.btn {
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 13px;
+    transition: all 0.2s;
+    border: none;
+}
+
+.btn-guardar {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-guardar:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+.btn-ver-factura {
+    background-color: transparent;
+    color: #007bff;
+    border: 1px solid #007bff !important;
+    border-radius: 6px;
+    padding: 8px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-ver-factura:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+/* ====================================
+   BADGES DE ESTADO
+   ==================================== */
+
+.estado-badge {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.estado-pendiente  { background-color: #fff3cd; color: #856404; }
+.estado-procesando { background-color: #cfe2ff; color: #0a58ca; }
+.estado-enviado    { background-color: #d1ecf1; color: #0c5460; }
+.estado-entregado  { background-color: #d4edda; color: #155724; }
+.estado-cancelado  { background-color: #f8d7da; color: #721c24; }
+
+/* ====================================
+   RESPONSIVE
+   ==================================== */
+
+@media (max-width: 768px) {
+    .pedidos-container {
+        padding: 20px 15px;
+    }
+
+    .pedidos-titulo {
+        font-size: 22px;
+    }
+
+    .pedido-card-body {
+        flex-direction: column;
+    }
+
+    .pedido-dato {
+        border-right: none;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .pedido-card-footer {
+        flex-wrap: wrap;
+    }
+
+    .btn, .btn-ver-factura {
+        width: 100%;
+        justify-content: center;
+    }
+}

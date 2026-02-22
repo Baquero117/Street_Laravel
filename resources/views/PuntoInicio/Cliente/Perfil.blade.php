@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rubik:wght@300;400;500;700&family=Permanent+Marker&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/PuntoInicio/Cliente/Cuenta.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/PuntoInicio/Cliente/Perfil.css') }}">
 </head>
 
 <body>
@@ -66,7 +66,7 @@
                     Mi Información Personal
                 </h2>
 
-                <a href="#" class="text-decoration-none text-dark">
+                <a href="{{ route('mis-pedidos') }}" class="text-decoration-none text-dark">
                     <div class="cuenta-card">
                         <div class="cuenta-card-title">Pedidos</div>
                         <div class="cuenta-card-sub">Historial de pedidos</div>
@@ -75,7 +75,7 @@
 
                 <a href="{{ url('cuenta') }}" class="text-decoration-none text-dark">
                     <div class="cuenta-card active">
-                        <div class="cuenta-card-title">Cuenta</div>
+                        <div class="cuenta-card-title">Perfil</div>
                         <div class="cuenta-card-sub">Mi información personal</div>
                     </div>
                 </a>
@@ -184,7 +184,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset('js/PuntoInicio/Cliente/Cuenta.js') }}"></script>
+    <script src="{{ asset('js/PuntoInicio/Cliente/Perfil.js') }}"></script>
 
 </body>
 </html>

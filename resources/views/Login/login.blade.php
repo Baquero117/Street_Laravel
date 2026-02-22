@@ -72,7 +72,7 @@
 
       
         <div class="d-flex flex-column text-center">
-            <a href="#" class="text-decoration-none mb-2">
+            <a href="{{ route('recuperacion.solicitud') }}" class="text-decoration-none mb-2">
                 <i class="bi bi-key"></i> ¿Olvidaste tu contraseña?
             </a>
 
