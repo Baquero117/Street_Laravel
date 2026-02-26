@@ -22,7 +22,14 @@
             <p class="text-muted">Regístrate para continuar</p>
         </div>
 
-        <form action="{{ route('registro.procesar') }}" method="POST">
+
+        @if(Session::has('error'))
+            <div class="alert alert-danger">
+                {{ Session::get('error') }}
+            </div>
+        @endif
+        
+        <form action="{{ route('registro.procesar') }}" method="POST" id="registroForm">
             @csrf
 
             <div class="mb-3">
@@ -74,9 +81,15 @@
                         <i class="bi bi-eye"></i>
                     </span>
                 </div>
+                <!-- Indicadores de requisitos de contraseña -->
+                <div class="mt-2" id="passwordRequirements">
+                    <small class="d-block"><i class="bi bi-circle-fill" id="letrasIcon"></i> Mínimo 5 letras</small>
+                    <small class="d-block"><i class="bi bi-circle-fill" id="numerosIcon"></i> Mínimo 2 números</small>
+                    <small class="d-block"><i class="bi bi-circle-fill" id="especiaIcon"></i> Mínimo 1 carácter especial ( "_", "-", "*", "!" )</small>
+                </div>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100 rounded-3 mb-3">
+            <button type="submit" class="btn btn-primary w-100 rounded-3 mb-3" id="registroBtn">
                 <i class="bi bi-check2-circle me-2"></i>Registrarme
             </button>
         </form>
@@ -86,12 +99,6 @@
                 <i class="bi bi-box-arrow-in-right"></i> Ya tengo una cuenta
             </a>
         </div>
-
-        @if(session('error'))
-            <div class="alert alert-danger text-center mt-3 p-2">
-                {{ session('error') }}
-            </div>
-        @endif
 
     </div>
 

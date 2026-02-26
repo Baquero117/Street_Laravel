@@ -68,12 +68,6 @@
                     ¡Hola, {{ Session::get('usuario_nombre') }}!
                 </h2>
 
-                <a href="{{ route('mis-pedidos') }}" class="text-decoration-none text-dark">
-                    <div class="perfil-card">
-                        <div class="perfil-card-title">Pedidos</div>
-                        <div class="perfil-card-sub">Historial de pedidos</div>
-                    </div>
-                </a>
 
                 <a href="{{ url('perfil') }}" class="text-decoration-none text-dark">
                     <div class="perfil-card">
@@ -82,10 +76,18 @@
                     </div>
                 </a>
 
-                <a href="{{ url('inicio') }}" class="text-decoration-none text-dark">
+                {{-- Favoritos activo --}}
+                <a href="{{ route('favoritos') }}" class="text-decoration-none text-dark">
+                    <div class="perfil-card active">
+                        <div class="perfil-card-title">Favoritos</div>
+                        <div class="perfil-card-sub">Productos que me gustan</div>
+                    </div>
+                </a>
+
+                <a href="{{ route('mis-pedidos') }}" class="text-decoration-none text-dark">
                     <div class="perfil-card">
-                        <div class="perfil-card-title">Inicio</div>
-                        <div class="perfil-card-sub">Volver a la pagina principal</div>
+                        <div class="perfil-card-title">Pedidos</div>
+                        <div class="perfil-card-sub">Historial de pedidos</div>
                     </div>
                 </a>
 

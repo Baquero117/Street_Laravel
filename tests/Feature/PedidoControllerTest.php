@@ -65,3 +65,4 @@ class PedidoControllerTest extends TestCase
 
 }
 
+/** php artisan test --filter=PedidoControllerTest */

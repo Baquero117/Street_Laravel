@@ -35,12 +35,11 @@ class DetalleProductoService
         return [];
     }
 
-    public function agregarDetalle($talla, $rutaImagen, $id_producto, $cantidad)
+    public function agregarDetalle($talla, $id_producto, $cantidad)
     {
         $response = Http::withHeaders($this->headers())
             ->post($this->baseUrl, [
                 "talla" => $talla,
-                "imagen" => $rutaImagen,   // <= nombre del archivo ya guardado en storage
                 "id_producto" => $id_producto,
                 "cantidad" => $cantidad
             ]);
@@ -58,18 +57,13 @@ class DetalleProductoService
         ];
     }
 
-    public function actualizarDetalle($id, $talla, $rutaImagen = null, $id_producto, $cantidad)
+    public function actualizarDetalle($id, $talla, $id_producto, $cantidad)
     {
         $payload = [
             "talla" => $talla,
             "id_producto" => $id_producto,
             "cantidad" => $cantidad
         ];
-
-        // 🔥 Solo enviar imagen si existe una nueva
-        if ($rutaImagen !== null) {
-            $payload["imagen"] = $rutaImagen;
-        }
 
         $response = Http::withHeaders($this->headers())
             ->put($this->baseUrl . "/" . $id, $payload);
@@ -102,18 +96,12 @@ class DetalleProductoService
         ];
     }
 
-
-public function buscarDetalleProducto($id_producto)
-{
-    return Http::withHeaders($this->headers())
-        ->get($this->baseUrl . '/detalle_producto/buscar', [
-            'id_producto' => $id_producto
-        ])
-        ->json();
-}
-
-
-
-
-
+    public function buscarDetalleProducto($id_producto)
+    {
+        return Http::withHeaders($this->headers())
+            ->get($this->baseUrl . '/detalle_producto/buscar', [
+                'id_producto' => $id_producto
+            ])
+            ->json();
+    }
 }

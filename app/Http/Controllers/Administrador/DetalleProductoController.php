@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Administrador\DetalleProductoService;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
 
 class DetalleProductoController extends Controller
 {
@@ -35,16 +34,11 @@ class DetalleProductoController extends Controller
         $request->validate([
             'talla' => 'required|string|max:50',
             'id_producto' => 'required|numeric',
-            'imagen' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
             'cantidad' => 'required|numeric|min:1',
         ]);
 
-       
-        $rutaImagen = $request->file('imagen')->store('detalles', 'public');
-
         $resultado = $this->detalleProductoService->agregarDetalle(
             $request->talla,
-            $rutaImagen,
             $request->id_producto,
             $request->cantidad,
         );
@@ -63,21 +57,14 @@ class DetalleProductoController extends Controller
             'id_detalle_producto' => 'required|numeric',
             'talla' => 'required|string|max:50',
             'id_producto' => 'required|numeric',
-            'imagen' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'cantidad' => 'required|numeric|min:1',
         ]);
 
         $id = $request->id_detalle_producto;
 
-        $rutaImagen = null;
-        if ($request->hasFile('imagen')) {
-            $rutaImagen = $request->file('imagen')->store('detalles', 'public');
-        }
-
         $resultado = $this->detalleProductoService->actualizarDetalle(
             $id,
             $request->talla,
-            $rutaImagen,
             $request->id_producto,
             $request->cantidad
         );
@@ -105,10 +92,10 @@ class DetalleProductoController extends Controller
     }
 
     public function buscar(Request $request)
-{
-    $detalles = $this->detalleProductoService
-                     ->buscarDetalleProducto($request->id_producto);
+    {
+        $detalles = $this->detalleProductoService
+                         ->buscarDetalleProducto($request->id_producto);
 
-    return response()->json($detalles);
-}
+        return response()->json($detalles);
+    }
 }

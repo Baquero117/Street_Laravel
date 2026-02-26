@@ -123,3 +123,5 @@ class ClienteControllerTest extends TestCase
         $response->assertSessionHas('mensaje');
     }
 }
+
+/** php artisan test --filter=ClienteControllerTest */

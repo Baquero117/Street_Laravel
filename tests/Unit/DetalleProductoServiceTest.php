@@ -119,3 +119,5 @@ class DetalleProductoServiceTest extends TestCase
         $this->assertEquals(1, $resultado[0]['id_detalle_producto']);
     }
 }
+
+/** php artisan test --filter=DetalleProductoServiceTest */

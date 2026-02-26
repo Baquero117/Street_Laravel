@@ -131,3 +131,5 @@ class ProductoServiceTest extends TestCase
         $this->assertEquals('Zapato', $resultado[0]['nombre']);
     }
 }
+
+/** php artisan test --filter=ProductoServiceTest */

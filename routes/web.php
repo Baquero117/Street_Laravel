@@ -16,6 +16,7 @@ use App\Http\Controllers\MasVistas\HombreController;
 use App\Http\Controllers\MasVistas\MujerController;
 use App\Http\Controllers\MasVistas\ModaController;
 use App\Http\Controllers\PuntoInicio\PerfilController;
+use App\Http\Controllers\PuntoInicio\FavoritoController;
 use App\Http\Controllers\PublicoController;
 use App\Http\Controllers\Administrador\ReporteController;
 use App\Http\Controllers\PuntoInicio\PedidosController;
@@ -98,6 +99,15 @@ Route::middleware(['web'])->group(function () {
     Route::get('/checkout', [CarritoController::class, 'checkout'])->name('checkout');
 });
 
+
+// Rutas de Favoritos
+Route::get('/favoritos',                  [FavoritoController::class, 'index'])->name('favoritos');
+Route::post('/favoritos/agregar',         [FavoritoController::class, 'agregar'])->name('favoritos.agregar');
+Route::delete('/favoritos/{id}',          [FavoritoController::class, 'eliminar'])->name('favoritos.eliminar');
+Route::get('/favoritos/verificar/{id}',   [FavoritoController::class, 'verificar'])->name('favoritos.verificar');
+
+
+// Rutas del Administrador para CRUD de cada entidad
 Route::get('/admin/Categoria', [CategoriaController::class, 'index'])->name('admin.Categoria');
 Route::get('/categoria', [CategoriaController::class, 'index'])->name('categoria.index');
 Route::post('/categoria/agregar', [CategoriaController::class, 'store'])->name('categoria.agregar');
@@ -134,8 +144,6 @@ Route::get('/producto/buscar',
 )->name('producto.buscar');
 
 
-
-
 Route::get('/admin/Pedido', [PedidoController::class, 'index'])->name('admin.Pedido');
 Route::get('/pedido', [PedidoController::class, 'index'])->name('pedido.index');
 Route::get('/pedido/factura/{id}', [PedidoController::class, 'verFactura'])->name('pedido.factura');
@@ -153,10 +161,6 @@ Route::post('/pedido/cambiar-estado',
 Route::post('/pedido/cancelar', 
     [PedidoController::class, 'cancelar']
 )->name('pedido.cancelar');
-
-
-
-
 
 Route::get('/admin/Vendedor', [VendedorController::class, 'index'])->name('admin.Vendedor');
 Route::get('/vendedor', [VendedorController::class, 'index'])->name('vendedor.index');

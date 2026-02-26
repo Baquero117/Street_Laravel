@@ -13,13 +13,11 @@
     color: #000;
 }
 
-/* Efecto de desvanecimiento del logo */
 .logo-urbano.fade-out {
     opacity: 0;
     transform: translateY(-10px);
     pointer-events: none;
 }
-
 
 /* ====================================
    LAYOUT GENERAL Y BODY
@@ -35,9 +33,8 @@ body {
     padding-top: 70px;
 }
 
-
 /* ====================================
-   NAVBAR - BLANCO AL INICIO, TRANSPARENTE AL SCROLL
+   NAVBAR
    ==================================== */
 
 #mainNavbar {
@@ -46,13 +43,11 @@ body {
     transition: all 0.4s ease;
 }
 
-/* Cuando hace scroll, se vuelve transparente */
 #mainNavbar.scrolled {
     background-color: transparent !important;
     box-shadow: none !important;
 }
 
-/* Links de navegación (centrados) */
 .nav-link-custom {
     text-decoration: none;
     color: #000;
@@ -67,7 +62,6 @@ body {
     color: #666;
 }
 
-/* Iconos */
 .icon-wrapper {
     cursor: pointer;
     transition: opacity 0.2s ease;
@@ -81,7 +75,6 @@ body {
     color: #000;
 }
 
-/* Dropdown menu */
 .dropdown-menu {
     border: 1px solid #e5e5e5;
     margin-top: 0.5rem;
@@ -99,9 +92,8 @@ body {
     color: #000;
 }
 
-
 /* ====================================
-   CARRUSEL - ESTILO ELEGANTE CON FADE
+   CARRUSEL
    ==================================== */
 
 .carousel-section {
@@ -110,7 +102,6 @@ body {
     margin-top: 5px;
 }
 
-/* Carrusel con transición fade */
 .carousel-fade .carousel-item {
     opacity: 0;
     transition: opacity 0.80s ease-in-out;
@@ -120,7 +111,6 @@ body {
     opacity: 1;
 }
 
-/* Imágenes del carrusel */
 .carousel-image {
     width: 28%;
     height: auto;
@@ -134,7 +124,6 @@ body {
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
 }
 
-/* Controles del carrusel */
 .carousel-control-prev,
 .carousel-control-next {
     opacity: 0;
@@ -151,17 +140,15 @@ body {
     opacity: 1 !important;
 }
 
-/* Iconos de los controles */
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
 }
 
 /* ====================================
-   CARDS DE PRODUCTOS - ESTILO MINIMALISTA
+   CARDS DE PRODUCTOS
    ==================================== */
 
-/* Card principal */
 .product-card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     overflow: visible;
@@ -170,12 +157,10 @@ body {
     border: none;
 }
 
-/* Elevación suave al hacer hover */
 .product-card:hover {
     transform: translateY(-5px);
 }
 
-/* Contenedor de imagen - TAMAÑO FIJO */
 .image-wrapper {
     overflow: hidden;
     position: relative;
@@ -184,7 +169,6 @@ body {
     height: 400px;
 }
 
-/* Imagen del producto - COVER PARA LLENAR TODO EL ESPACIO */
 .product-image {
     transition: transform 0.5s ease;
     cursor: pointer;
@@ -194,12 +178,11 @@ body {
     object-position: center;
 }
 
-/* Efecto zoom en la imagen */
 .product-card:hover .product-image {
     transform: scale(1.08);
 }
 
-/* Logo 夜 en esquina superior derecha */
+/* Logo 夜 */
 .product-logo {
     position: absolute;
     top: 12px;
@@ -222,7 +205,6 @@ body {
     transform: scale(1.1);
 }
 
-/* Información del producto */
 .card-body {
     background: transparent;
 }
@@ -236,7 +218,6 @@ body {
     min-height: 2.5rem;
 }
 
-/* Indicador de color */
 .color-indicator {
     display: inline-block;
     width: 14px;
@@ -248,7 +229,6 @@ body {
     margin-right: 4px;
 }
 
-/* Overlay sutil al hacer hover */
 .image-wrapper::after {
     content: '';
     position: absolute;
@@ -265,38 +245,10 @@ body {
     background: rgba(0, 0, 0, 0.05);
 }
 
-/* Responsive - ajustes para pantallas medianas y pequeñas */
-@media (max-width: 991px) {
-    .image-wrapper {
-        height: 350px;
-    }
-    
-    .carousel-image {
-        width: 30%;
-    }
-}
-
-@media (max-width: 767px) {
-    .image-wrapper {
-        height: 300px;
-    }
-    
-    .carousel-image {
-        width: 90%;
-    }
-    
-    .carousel-item .d-flex {
-        flex-direction: column;
-        align-items: center;
-    }
-}
-
-
 /* ====================================
-   MODAL - DETALLE DEL PRODUCTO
+   MODAL
    ==================================== */
 
-/* Backdrop difuminado */
 .modal-backdrop.show {
     opacity: 0.85 !important;
     background-color: #000 !important;
@@ -308,7 +260,6 @@ body {
     transition: opacity 0.3s linear;
 }
 
-/* Contenedor del modal */
 #detalleModal .modal-content {
     max-height: 90vh;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
@@ -320,16 +271,14 @@ body {
     }
 }
 
-/* Imagen del producto en modal */
 .img-product-detail {
-    object-fit: contain !important; 
-    background-color: #f8f9fa; 
-    height: 80vh; 
+    object-fit: contain !important;
+    background-color: #f8f9fa;
+    height: 80vh;
     width: 100%;
     display: block;
 }
 
-/* Botón de cerrar */
 .custom-close {
     position: absolute;
     right: 20px;
@@ -340,7 +289,6 @@ body {
     border-radius: 50%;
 }
 
-/* Animaciones del modal */
 .modal.fade .modal-dialog {
     transform: translateY(30px);
     transition: transform 0.4s ease-out, opacity 0.4s ease-out;
@@ -352,9 +300,8 @@ body {
     opacity: 1;
 }
 
-
 /* ====================================
-   SELECTOR DE TALLAS
+   TALLAS
    ==================================== */
 
 .talla-item {
@@ -377,11 +324,107 @@ body {
     border-color: #000;
 }
 
-
 /* ====================================
    UTILIDADES
    ==================================== */
 
 .detalle {
     display: none;
+}
+
+/* ====================================
+   BOTÓN FAVORITO EN CARD  ❤
+   ==================================== */
+
+.btn-favorito {
+    /* Posición: esquina superior izquierda, simétrico al logo 夜 */
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 3;
+
+    /* Círculo blanco igual que .product-logo */
+    width: 32px;
+    height: 32px;
+    background-color: white;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    /* Oculto por defecto, aparece al hacer hover en la card */
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+
+    /* Evita que el click en el corazón abra el modal */
+    pointer-events: auto;
+}
+
+/* Mostrar al hacer hover en la card */
+.product-card:hover .btn-favorito {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Icono de corazón */
+.btn-favorito i {
+    font-size: 14px;
+    color: #555;
+    transition: color 0.2s ease;
+    pointer-events: none; /* el click lo recibe el button, no el icono */
+}
+
+/* Estado: ya es favorito (corazón rojo, siempre visible) */
+.btn-favorito.is-favorito {
+    opacity: 1;
+    transform: scale(1);
+    background-color: #fff0f0;
+}
+
+.btn-favorito.is-favorito i {
+    color: #dc3545;
+}
+
+/* Pequeña animación de "pulso" al agregar */
+@keyframes heartPop {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.35); }
+    70%  { transform: scale(0.9); }
+    100% { transform: scale(1); }
+}
+
+.btn-favorito.pop {
+    animation: heartPop 0.35s ease forwards;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+    .image-wrapper {
+        height: 350px;
+    }
+    .carousel-image {
+        width: 30%;
+    }
+}
+
+@media (max-width: 767px) {
+    .image-wrapper {
+        height: 300px;
+    }
+    .carousel-image {
+        width: 90%;
+    }
+    .carousel-item .d-flex {
+        flex-direction: column;
+        align-items: center;
+    }
+    /* En móvil el botón siempre visible (no hay hover) */
+    .btn-favorito {
+        opacity: 1;
+        transform: scale(1);
+    }
 }

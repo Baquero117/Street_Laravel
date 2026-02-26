@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Mis Pedidos - Urban Street</title>
+    <title>Mis Favoritos - Urban Street</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rubik:wght@300;400;500;700&family=Permanent+Marker&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/PuntoInicio/Cliente/Pedidos.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/PuntoInicio/Cliente/Favorito.css') }}">
 </head>
 
 <body>
 
+    {{-- NAVBAR --}}
     <nav class="navbar navbar-expand-lg navbar-light fixed-top my-0">
         <div class="container-fluid bg-white shadow-sm fixed-top py-2 d-flex align-items-center">
 
@@ -22,7 +23,6 @@
             </a>
 
             <div class="d-flex align-items-center gap-3 position-absolute end-0 me-3">
-
                 <div class="dropdown">
                     <a href="#" class="text-dark fs-5 dropdown-toggle" data-bs-toggle="dropdown">
                         <i class="bi bi-person-circle"></i>
@@ -48,13 +48,14 @@
         </div>
     </nav>
 
-    <div class="container pedidos-container mt-5 pt-5">
+    {{-- CONTENIDO PRINCIPAL --}}
+    <div class="container favoritos-container mt-5 pt-5">
         <div class="row">
 
-            {{-- Sidebar izquierda --}}
+            {{-- ── Sidebar izquierda ── --}}
             <div class="col-md-6 col-lg-5">
 
-                <h2 class="pedidos-titulo">Mis Pedidos</h2>
+                <h2 class="favoritos-titulo">Mis Favoritos</h2>
 
                 <a href="{{ route('perfil') }}" class="text-decoration-none text-dark">
                     <div class="cuenta-card">
@@ -62,17 +63,18 @@
                         <div class="cuenta-card-sub">Mi información personal</div>
                     </div>
                 </a>
-                
+
                 <a href="{{ route('mis-pedidos') }}" class="text-decoration-none text-dark">
-                    <div class="cuenta-card active">
+                    <div class="cuenta-card">
                         <div class="cuenta-card-title">Pedidos</div>
                         <div class="cuenta-card-sub">Historial de pedidos</div>
                     </div>
                 </a>
 
+
                 {{-- Favoritos activo --}}
                 <a href="{{ route('favoritos') }}" class="text-decoration-none text-dark">
-                    <div class="cuenta-card">
+                    <div class="cuenta-card active">
                         <div class="cuenta-card-title">Favoritos</div>
                         <div class="cuenta-card-sub">Productos que me gustan</div>
                     </div>
@@ -90,88 +92,125 @@
 
             </div>
 
-            {{-- Contenido derecha --}}
+            {{-- ── Contenido derecha ── --}}
             <div class="col-md-6 col-lg-7">
 
-                @if(empty($pedidos))
+                @if(empty($favoritos))
+                    {{-- Estado vacío --}}
                     <div class="formulario-contenedor text-center py-5">
-                        <i class="bi bi-bag-x" style="font-size: 3.5rem; color: #ccc;"></i>
-                        <h5 class="mt-4 fw-semibold">Aún no tienes pedidos</h5>
-                        <p class="text-muted" style="font-size: 14px;">Cuando realices una compra, aparecerá aquí.</p>
+                        <i class="bi bi-heart" style="font-size: 3.5rem; color: #ccc;"></i>
+                        <h5 class="mt-4 fw-semibold">Aún no tienes favoritos</h5>
+                        <p class="text-muted" style="font-size: 14px;">
+                            Cuando marques un producto con ♥, aparecerá aquí.
+                        </p>
                         <a href="{{ url('/inicio') }}" class="btn btn-guardar mt-2">Ir a la tienda</a>
                     </div>
 
                 @else
-                    <div class="d-flex flex-column gap-3">
-                        @foreach($pedidos as $pedido)
-                        <div class="pedido-card">
+                    {{-- Contador --}}
+                    <p class="favoritos-contador mb-3">
+                        <i class="bi bi-heart-fill text-danger me-1"></i>
+                        {{ count($favoritos) }} {{ count($favoritos) === 1 ? 'producto guardado' : 'productos guardados' }}
+                    </p>
 
-                            {{-- Header --}}
-                            <div class="pedido-card-header">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi bi-receipt"></i>
-                                    <span class="pedido-numero">{{ $pedido['numero_factura'] ?? 'N/A' }}</span>
-                                </div>
-                                <span class="estado-badge estado-{{ strtolower($pedido['estado'] ?? 'pendiente') }}">
-                                    {{ $pedido['estado'] ?? 'Pendiente' }}
-                                </span>
+                    <div class="d-flex flex-column gap-3" id="lista-favoritos">
+                        @foreach($favoritos as $item)
+                        <div class="favorito-card" id="card-favorito-{{ $item['id_favorito'] }}">
+
+                            {{-- Imagen --}}
+                            <div class="favorito-imagen-wrap">
+                                <img src="{{ asset('storage/' . $item['imagen']) }}"
+                                    alt="{{ $item['nombre'] }}"
+                                    class="favorito-imagen">
                             </div>
 
-                            {{-- Datos --}}
-                            <div class="pedido-card-body">
+                            {{-- Info --}}
+                            <div class="favorito-info">
 
-                                <div class="pedido-dato">
-                                    <i class="bi bi-calendar3 pedido-icono"></i>
-                                    <div>
-                                        <small class="dato-label">Fecha</small>
-                                        <p class="dato-valor mb-0">{{ $pedido['fecha_pedido'] ?? '-' }}</p>
-                                    </div>
-                                </div>
-
-                                <div class="pedido-dato">
-                                    <i class="bi bi-cash-stack pedido-icono"></i>
-                                    <div>
-                                        <small class="dato-label">Total</small>
-                                        <p class="dato-valor mb-0 fw-semibold">
-                                            ${{ number_format($pedido['total'] ?? 0, 3, '.', ',') }} COP
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="pedido-dato">
-                                    <i class="bi bi-credit-card pedido-icono"></i>
-                                    <div>
-                                        <small class="dato-label">Método de pago</small>
-                                        <p class="dato-valor mb-0">{{ $pedido['metodo_pago'] ?? '-' }}</p>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            {{-- Acciones --}}
-                            <div class="pedido-card-footer">
-                                @if(!empty($pedido['ruta_factura']))
-                                    <a href="{{ route('mis-pedidos.factura.ver', $pedido['id_pedido']) }}"
-                                        target="_blank" class="btn btn-ver-factura">
-                                        <i class="bi bi-eye me-1"></i> Ver factura
-                                    </a>
-
-                                    <a href="{{ route('mis-pedidos.factura.descargar', $pedido['id_pedido']) }}"
-                                        class="btn btn-guardar">
-                                        <i class="bi bi-download me-1"></i> Descargar
-                                    </a>
-                                @else
-                                    <span class="text-muted" style="font-size: 13px;">
-                                        <i class="bi bi-clock me-1"></i> Factura no disponible
+                                <div class="favorito-header">
+                                    <span class="favorito-nombre">{{ $item['nombre'] }}</span>
+                                    <span class="favorito-estado estado-{{ strtolower($item['estado'] ?? 'activo') }}">
+                                        {{ $item['estado'] ?? 'Activo' }}
                                     </span>
-                                @endif
+                                </div>
+
+                                <p class="favorito-descripcion">{{ $item['descripcion'] }}</p>
+
+                                <div class="favorito-footer">
+                                    <div class="favorito-meta">
+                                        <span class="favorito-color">
+                                            <i class="bi bi-circle-fill me-1" style="font-size: 9px;"></i>
+                                            {{ $item['color'] }}
+                                        </span>
+                                        <span class="favorito-precio">
+                                            ${{ number_format($item['precio'], 3, '.', ',') }} COP
+                                        </span>
+                                    </div>
+
+                                    <div class="favorito-acciones">
+                                        <button class="btn btn-ver-producto"
+                                                onclick="verDetalleFavorito({{ $item['id_producto'] }})">
+                                            <i class="bi bi-eye me-1"></i> Ver producto
+                                        </button>
+                                        <button class="btn btn-quitar-favorito"
+                                                data-id="{{ $item['id_favorito'] }}">
+                                            <i class="bi bi-heart-fill me-1"></i> Quitar
+                                        </button>
+                                    </div>
+                                </div>
+
                             </div>
 
                         </div>
                         @endforeach
                     </div>
+
                 @endif
 
+            </div>
+        </div>
+    </div>
+
+    {{-- MODAL DETALLE PRODUCTO — igual que Inicio --}}
+    <div class="modal fade" id="detalleModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content border-0 rounded-0 overflow-hidden">
+                <button type="button" class="btn-close custom-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                <div class="modal-body p-0">
+                    <div class="row g-0">
+
+                        {{-- Imagen --}}
+                        <div class="col-md-7 d-flex align-items-center bg-light">
+                            <img id="modalImagen" src="" class="img-fluid w-100 img-product-detail" alt="">
+                        </div>
+
+                        {{-- Info --}}
+                        <div class="col-md-5 d-flex flex-column p-4 p-lg-5" style="max-height: 90vh; overflow-y: auto;">
+                            <h2 id="modalNombre" class="fw-bold mb-1 text-uppercase"></h2>
+                            <p id="modalColor" class="text-muted small mb-3"></p>
+
+                            <h3 class="fw-light mb-4 text-dark">$<span id="modalPrecio"></span></h3>
+
+                            <div class="mb-4">
+                                <p id="modalDescripcion" class="text-secondary small" style="line-height: 1.6;"></p>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="fw-bold small mb-2 text-uppercase" style="letter-spacing: 1px;">Seleccionar Talla</label>
+                                <div id="modalTallas" class="d-flex flex-wrap gap-2"></div>
+                            </div>
+
+                            <div class="mt-auto border-top pt-4">
+                                <button class="btn btn-dark w-100 rounded-0 py-3 mb-2 text-uppercase fw-bold"
+                                        onclick="agregarAlCarrito()">
+                                    Añadir al carrito
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -215,7 +254,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset('js/PuntoInicio/Cliente/Pedidos.js') }}"></script>
+    <script src="{{ asset('js/PuntoInicio/Cliente/Favorito.js') }}"></script>
 
 </body>
 </html>

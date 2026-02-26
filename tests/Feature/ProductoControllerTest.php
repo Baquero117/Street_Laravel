@@ -139,3 +139,5 @@ class ProductoControllerTest extends TestCase
         $response->assertRedirect(route('producto.index'));
     }
 }
+
+/** php artisan test --filter=ProductoControllerTest */

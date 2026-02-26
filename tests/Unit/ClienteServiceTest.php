@@ -106,3 +106,5 @@ class ClienteServiceTest extends TestCase
         $this->assertEquals(1, $resultado['data']['id_cliente']);
     }
 }
+
+/** php artisan test --filter=ClienteServiceTest */

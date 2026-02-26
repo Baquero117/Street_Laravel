@@ -111,3 +111,5 @@ class PedidoServiceTest extends TestCase
         $this->assertEquals($fakePdfContent, $resultado['data']);
     }
 }
+
+/** php artisan test --filter=PedidoServiceTest */

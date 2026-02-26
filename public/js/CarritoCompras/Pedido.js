@@ -275,7 +275,7 @@ async function confirmarPedido() {
     // Preparar datos del pedido CON ITEMS
     const datosPedido = {
         id_cliente: parseInt(idCliente),
-        fecha_pedido: new Date().toISOString().split('T')[0],
+        fecha_pedido: new Date().toLocaleDateString('en-CA'),
         total: total,
         estado: 'pendiente',
         metodo_pago: metodoPagoSeleccionado,

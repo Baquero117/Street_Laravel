@@ -62,6 +62,12 @@
                     <a href="{{ url('/carrito') }}" class="text-dark icon-wrapper position-relative">
                         <i class="bi bi-bag fs-5"></i>
                     </a>
+
+                    <!-- Favoritos -->
+                    <a href="{{ route('favoritos') }}" class="text-dark icon-wrapper position-relative">
+                        <i class="bi bi-heart fs-5"></i>
+                    </a>
+
                 </div>
             </div>
         </div>
@@ -113,8 +119,18 @@
                                      data-id="{{ $producto['id_producto'] }}"
                                      onerror="this.src='https://via.placeholder.com/400x400?text=Sin+Imagen'">
                                 
-                                <!-- Logo en esquina superior derecha -->
+                                <!-- Logo 夜 esquina superior derecha -->
                                 <div class="product-logo">夜</div>
+
+                                <!-- ❤ Botón favorito esquina superior izquierda -->
+                                <button
+                                    class="btn-favorito"
+                                    data-id="{{ $producto['id_producto'] }}"
+                                    onclick="toggleFavorito(this)"
+                                    title="Añadir a favoritos">
+                                    <i class="bi bi-heart"></i>
+                                </button>
+
                             </div>
                             
                             <div class="card-body px-0 pt-3 pb-2">
@@ -195,7 +211,6 @@
             </div>
 
             <div class="row justify-content-center mt-4">
-
                 <div class="col-md-3 mb-3">
                     <h6 class="fw-bold">Acerca de Street Urban</h6>
                     <ul class="list-unstyled">
@@ -204,7 +219,6 @@
                         <li><a href="#" class="text-white text-decoration-none">Formas de pago</a></li>
                     </ul>
                 </div>
-
                 <div class="col-md-3 mb-3">
                     <h6 class="fw-bold">Información adicional</h6>
                     <ul class="list-unstyled">
@@ -213,7 +227,6 @@
                         <li><a href="#" class="text-white text-decoration-none">Política de protección de datos</a></li>
                     </ul>
                 </div>
-
             </div>
 
             <div class="text-center mt-4 border-top pt-3">

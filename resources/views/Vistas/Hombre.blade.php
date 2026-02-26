@@ -63,6 +63,12 @@
                     <a href="{{ url('/carrito') }}" class="text-dark icon-wrapper position-relative">
                         <i class="bi bi-bag fs-5"></i>
                     </a>
+
+                    <!-- Favoritos -->
+                    <a href="{{ route('favoritos') }}" class="text-dark icon-wrapper position-relative">
+                        <i class="bi bi-heart fs-5"></i>
+                    </a>
+
                 </div>
 
             </div>
@@ -130,8 +136,18 @@
                                      data-id="{{ $producto['id_producto'] }}"
                                      onerror="this.src='https://via.placeholder.com/400x400?text=Sin+Imagen'">
                                 
-                                <!-- Logo en esquina superior derecha -->
+                                <!-- Logo 夜 esquina superior derecha -->
                                 <div class="product-logo">夜</div>
+
+                                <!-- ❤ Botón favorito esquina superior izquierda -->
+                                <button
+                                    class="btn-favorito"
+                                    data-id="{{ $producto['id_producto'] }}"
+                                    onclick="toggleFavorito(this)"
+                                    title="Añadir a favoritos">
+                                    <i class="bi bi-heart"></i>
+                                </button>
+
                             </div>
                             
                             <div class="card-body px-0 pt-3 pb-2">

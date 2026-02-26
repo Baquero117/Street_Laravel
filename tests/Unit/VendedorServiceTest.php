@@ -104,3 +104,5 @@ class VendedorServiceTest extends TestCase
         $this->assertTrue($resultado['success']);
     }
 }
+
+/** php artisan test --filter=VendedorServiceTest */

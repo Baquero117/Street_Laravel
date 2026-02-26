@@ -66,6 +66,13 @@
                     Mi Información Personal
                 </h2>
 
+                <a href="{{ route('perfil') }}" class="text-decoration-none text-dark">
+                    <div class="cuenta-card active">
+                        <div class="cuenta-card-title">Perfil</div>
+                        <div class="cuenta-card-sub">Mi información personal</div>
+                    </div>
+                </a>
+                
                 <a href="{{ route('mis-pedidos') }}" class="text-decoration-none text-dark">
                     <div class="cuenta-card">
                         <div class="cuenta-card-title">Pedidos</div>
@@ -73,17 +80,11 @@
                     </div>
                 </a>
 
-                <a href="{{ url('cuenta') }}" class="text-decoration-none text-dark">
-                    <div class="cuenta-card active">
-                        <div class="cuenta-card-title">Perfil</div>
-                        <div class="cuenta-card-sub">Mi información personal</div>
-                    </div>
-                </a>
-
-                <a href="{{ url('inicio') }}" class="text-decoration-none text-dark">
+                {{-- Favoritos activo --}}
+                <a href="{{ route('favoritos') }}" class="text-decoration-none text-dark">
                     <div class="cuenta-card">
-                        <div class="cuenta-card-title">Inicio</div>
-                        <div class="cuenta-card-sub">Volver a la pagina principal</div>
+                        <div class="cuenta-card-title">Favoritos</div>
+                        <div class="cuenta-card-sub">Productos que me gustan</div>
                     </div>
                 </a>
 

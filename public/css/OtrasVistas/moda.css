@@ -13,17 +13,13 @@
     text-decoration: none;
 }
 
-.logo-urbano:hover {
-    color: #000;
-}
+.logo-urbano:hover { color: #000; }
 
-/* Efecto de desvanecimiento del logo */
 .logo-urbano.fade-out {
     opacity: 0;
     transform: translateY(-10px);
     pointer-events: none;
 }
-
 
 /* ====================================
    LAYOUT GENERAL Y BODY
@@ -39,9 +35,8 @@ body {
     padding-top: 70px;
 }
 
-
 /* ====================================
-   NAVBAR - BLANCO AL INICIO, TRANSPARENTE AL SCROLL
+   NAVBAR
    ==================================== */
 
 #mainNavbar {
@@ -50,13 +45,11 @@ body {
     transition: all 0.4s ease;
 }
 
-/* Cuando hace scroll, se vuelve transparente */
 #mainNavbar.scrolled {
     background-color: transparent !important;
     box-shadow: none !important;
 }
 
-/* Links de navegación (centrados) */
 .nav-link-custom {
     text-decoration: none;
     color: #000;
@@ -67,9 +60,7 @@ body {
     white-space: nowrap;
 }
 
-.nav-link-custom:hover {
-    color: #666;
-}
+.nav-link-custom:hover { color: #666; }
 
 .nav-link-custom.active-page {
     font-weight: 700;
@@ -77,21 +68,14 @@ body {
     padding-bottom: 2px;
 }
 
-/* Iconos */
 .icon-wrapper {
     cursor: pointer;
     transition: opacity 0.2s ease;
 }
 
-.icon-wrapper:hover {
-    opacity: 0.6;
-}
+.icon-wrapper:hover { opacity: 0.6; }
+.icon-wrapper i { color: #000; }
 
-.icon-wrapper i {
-    color: #000;
-}
-
-/* Dropdown menu */
 .dropdown-menu {
     border: 1px solid #e5e5e5;
     margin-top: 0.5rem;
@@ -99,16 +83,8 @@ body {
     backdrop-filter: blur(10px);
 }
 
-.dropdown-item {
-    font-size: 0.9rem;
-    color: #000;
-}
-
-.dropdown-item:hover {
-    background-color: #f8f9fa;
-    color: #000;
-}
-
+.dropdown-item { font-size: 0.9rem; color: #000; }
+.dropdown-item:hover { background-color: #f8f9fa; color: #000; }
 
 /* ====================================
    CARRUSEL HERO - BANNERS GRANDES
@@ -120,24 +96,19 @@ body {
     margin-top: 5px;
 }
 
-/* Carrusel hero con transición fade */
 .carousel-fade .carousel-item {
     opacity: 0;
     transition: opacity 1.2s ease-in-out;
 }
 
-.carousel-fade .carousel-item.active {
-    opacity: 1;
-}
+.carousel-fade .carousel-item.active { opacity: 1; }
 
-/* Imágenes del hero */
 .hero-image {
     height: 550px;
     object-fit: cover;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
-/* Controles del carrusel hero */
 .hero-carousel-section .carousel-control-prev,
 .hero-carousel-section .carousel-control-next {
     opacity: 0;
@@ -145,21 +116,15 @@ body {
 }
 
 .hero-carousel-section:hover .carousel-control-prev,
-.hero-carousel-section:hover .carousel-control-next {
-    opacity: 0.8;
-}
+.hero-carousel-section:hover .carousel-control-next { opacity: 0.8; }
 
 .hero-carousel-section .carousel-control-prev:hover,
-.hero-carousel-section .carousel-control-next:hover {
-    opacity: 1 !important;
-}
-
+.hero-carousel-section .carousel-control-next:hover { opacity: 1 !important; }
 
 /* ====================================
-   CARDS DE PRODUCTOS - ESTILO MINIMALISTA
+   CARDS DE PRODUCTOS
    ==================================== */
 
-/* Card principal */
 .product-card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     overflow: visible;
@@ -168,12 +133,8 @@ body {
     border: none;
 }
 
-/* Elevación suave al hacer hover */
-.product-card:hover {
-    transform: translateY(-5px);
-}
+.product-card:hover { transform: translateY(-5px); }
 
-/* Contenedor de imagen - TAMAÑO FIJO */
 .image-wrapper {
     overflow: hidden;
     position: relative;
@@ -182,7 +143,6 @@ body {
     height: 400px;
 }
 
-/* Imagen del producto - COVER PARA LLENAR TODO EL ESPACIO */
 .product-image {
     transition: transform 0.5s ease;
     cursor: pointer;
@@ -192,12 +152,8 @@ body {
     object-position: center;
 }
 
-/* Efecto zoom en la imagen */
-.product-card:hover .product-image {
-    transform: scale(1.08);
-}
+.product-card:hover .product-image { transform: scale(1.08); }
 
-/* Logo 夜 en esquina superior derecha */
 .product-logo {
     position: absolute;
     top: 12px;
@@ -216,14 +172,9 @@ body {
     transition: transform 0.2s ease;
 }
 
-.product-card:hover .product-logo {
-    transform: scale(1.1);
-}
+.product-card:hover .product-logo { transform: scale(1.1); }
 
-/* Información del producto */
-.card-body {
-    background: transparent;
-}
+.card-body { background: transparent; }
 
 .card-title {
     line-height: 1.4;
@@ -234,50 +185,32 @@ body {
     min-height: 2.5rem;
 }
 
-/* Overlay sutil al hacer hover */
 .image-wrapper::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0);
     transition: background 0.3s ease;
     pointer-events: none;
 }
 
-.product-card:hover .image-wrapper::after {
-    background: rgba(0, 0, 0, 0.05);
-}
+.product-card:hover .image-wrapper::after { background: rgba(0, 0, 0, 0.05); }
 
-/* Responsive - ajustes para pantallas medianas y pequeñas */
 @media (max-width: 991px) {
-    .image-wrapper {
-        height: 350px;
-    }
-    
-    .hero-image {
-        height: 400px;
-    }
+    .image-wrapper { height: 350px; }
+    .hero-image { height: 400px; }
 }
 
 @media (max-width: 767px) {
-    .image-wrapper {
-        height: 300px;
-    }
-    
-    .hero-image {
-        height: 300px;
-    }
+    .image-wrapper { height: 300px; }
+    .hero-image { height: 300px; }
 }
 
-
 /* ====================================
-   MODAL - DETALLE DEL PRODUCTO
+   MODAL
    ==================================== */
 
-/* Backdrop difuminado */
 .modal-backdrop.show {
     opacity: 0.85 !important;
     background-color: #000 !important;
@@ -289,28 +222,23 @@ body {
     transition: opacity 0.3s linear;
 }
 
-/* Contenedor del modal */
 #detalleModal .modal-content {
     max-height: 90vh;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
 @media (min-width: 992px) {
-    #detalleModal .modal-dialog {
-        max-width: 80%;
-    }
+    #detalleModal .modal-dialog { max-width: 80%; }
 }
 
-/* Imagen del producto en modal */
 .img-product-detail {
-    object-fit: contain !important; 
-    background-color: #f8f9fa; 
-    height: 80vh; 
+    object-fit: contain !important;
+    background-color: #f8f9fa;
+    height: 80vh;
     width: 100%;
     display: block;
 }
 
-/* Botón de cerrar */
 .custom-close {
     position: absolute;
     right: 20px;
@@ -321,7 +249,6 @@ body {
     border-radius: 50%;
 }
 
-/* Animaciones del modal */
 .modal.fade .modal-dialog {
     transform: translateY(30px);
     transition: transform 0.4s ease-out, opacity 0.4s ease-out;
@@ -333,9 +260,8 @@ body {
     opacity: 1;
 }
 
-
 /* ====================================
-   SELECTOR DE TALLAS
+   TALLAS
    ==================================== */
 
 .talla-item {
@@ -348,9 +274,7 @@ body {
     text-align: center;
 }
 
-.talla-item:hover {
-    border-color: #000;
-}
+.talla-item:hover { border-color: #000; }
 
 .talla-item.selected {
     background-color: #000 !important;
@@ -358,11 +282,66 @@ body {
     border-color: #000;
 }
 
-
 /* ====================================
    UTILIDADES
    ==================================== */
 
-.detalle {
-    display: none;
+.detalle { display: none; }
+
+/* ====================================
+   BOTÓN FAVORITO EN CARD ❤
+   ==================================== */
+
+.btn-favorito {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 3;
+    width: 32px;
+    height: 32px;
+    background-color: white;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+    pointer-events: auto;
+}
+
+.product-card:hover .btn-favorito {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.btn-favorito i {
+    font-size: 14px;
+    color: #555;
+    transition: color 0.2s ease;
+    pointer-events: none;
+}
+
+.btn-favorito.is-favorito {
+    opacity: 1;
+    transform: scale(1);
+    background-color: #fff0f0;
+}
+
+.btn-favorito.is-favorito i { color: #dc3545; }
+
+@keyframes heartPop {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.35); }
+    70%  { transform: scale(0.9); }
+    100% { transform: scale(1); }
+}
+
+.btn-favorito.pop { animation: heartPop 0.35s ease forwards; }
+
+@media (max-width: 767px) {
+    .btn-favorito { opacity: 1; transform: scale(1); }
 }

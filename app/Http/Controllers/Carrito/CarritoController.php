@@ -21,7 +21,6 @@ class CarritoController extends Controller
         $this->perfilService = $perfilService;
     }
 
-    // 🔒 Mostrar vista del carrito (requiere autenticación)
     public function index()
     {
         if (!Session::has('token')) {
@@ -31,7 +30,11 @@ class CarritoController extends Controller
 
         $carrito = $this->carritoService->obtenerCarrito();
 
-        return view('CarritoCompras.Carrito', compact('carrito'));
+        return response()
+            ->view('CarritoCompras.Carrito', compact('carrito'))
+            ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0');
     }
 
     // ✅ MEJORADO: Agregar producto con manejo de errores de stock

@@ -116,3 +116,5 @@ class DetalleProductoControllerTest extends TestCase
         $response->assertSessionHas('mensaje');
     }
 }
+
+/** php artisan test --filter=DetalleProductoControllerTest */

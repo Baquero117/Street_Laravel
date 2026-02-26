@@ -44,7 +44,6 @@
         <tr>
             <th>ID Detalle</th>
             <th>Talla</th>
-            <th>Imagen</th>
             <th>ID Producto</th>
             <th>Cantidad</th>
             <th>Acciones</th>
@@ -57,19 +56,6 @@
                 <tr>
                     <td>{{ $deta['id_detalle_producto'] }}</td>
                     <td>{{ $deta['talla'] }}</td>
-
-                    <td>
-                        @if (!empty($deta['imagen']))
-                            <a href="{{ asset('storage/' . $deta['imagen']) }}" target="_blank">
-                                <img src="{{ asset('storage/' . $deta['imagen']) }}"
-                                     width="80" height="80"
-                                     class="rounded border">
-                            </a>
-                        @else
-                            <span>Sin imagen</span>
-                        @endif
-                    </td>
-
                     <td>{{ $deta['id_producto'] }}</td>
                     <td>{{ $deta['cantidad'] }}</td>
 
@@ -101,7 +87,7 @@
             @endforeach
         @else
             <tr>
-                <td colspan="6" class="text-center">
+                <td colspan="5" class="text-center">
                     No se encontraron detalles de productos.
                 </td>
             </tr>
@@ -119,7 +105,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
 
-      <form method="POST" enctype="multipart/form-data" action="{{ route('detalle.agregar') }}">
+      <form method="POST" action="{{ route('detalle.agregar') }}">
         @csrf
 
         <div class="modal-header">
@@ -132,11 +118,6 @@
           <div class="mb-2">
             <label class="form-label modal-text">Talla</label>
             <input class="form-control" type="text" name="talla" required>
-          </div>
-
-          <div class="mb-2">
-            <label class="form-label modal-text">Imagen</label>
-            <input class="form-control" type="file" name="imagen" accept="image/*" required>
           </div>
 
           <div class="mb-2">
@@ -169,7 +150,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
 
-      <form method="POST" enctype="multipart/form-data" action="{{ route('detalle.actualizar') }}">
+      <form method="POST" action="{{ route('detalle.actualizar') }}">
         @csrf
 
         <div class="modal-header">
@@ -189,20 +170,8 @@
 </div>
 
           <div class="mb-2">
-            <<label class="form-label modal-text">Talla *</label>
+            <label class="form-label modal-text">Talla *</label>
             <input class="form-control" type="text" name="talla" required>
-          </div>
-
-          <div class="mb-2">
-           <label class="form-label modal-text">Imagen *</label>
-            <input class="form-control" type="file" name="imagen" accept="image/*">
-            <small class="text-muted">Si no selecciona una nueva imagen, se mantiene la actual.</small>
-          </div>
-
-
-          <div class="mb-3">
-            <label class="form-label modal-text">Imagen actual</label><br>
-            <img id="imagenActual" src="" width="120" class="rounded border" alt="Sin imagen">
           </div>
 
           <div class="mb-2">
@@ -343,7 +312,7 @@ function mostrarSoloDetalle(idProductoSeleccionado) {
     let filas = document.querySelectorAll("table tbody tr");
 
     filas.forEach(fila => {
-        let idProducto = fila.children[3].textContent.trim();
+        let idProducto = fila.children[2].textContent.trim();
 
         if(idProducto === idProductoSeleccionado){
             fila.style.display = "";
