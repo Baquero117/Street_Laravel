@@ -1,4 +1,70 @@
 // ============================================================
+//  TOAST PERSONALIZADO
+// ============================================================
+function mostrarNotificacion(mensaje, tipo) {
+    const anterior = document.querySelector('.urban-toast');
+    if (anterior) anterior.remove();
+
+    const iconos  = { success: 'bi-check-circle-fill', error: 'bi-x-circle-fill', warning: 'bi-exclamation-triangle-fill', info: 'bi-info-circle-fill' };
+    const colores = { success: '#28a745', error: '#dc3545', warning: '#ffc107', info: '#3b82f6' };
+
+    const toast = document.createElement('div');
+    toast.className = 'urban-toast';
+    toast.innerHTML = `
+        <i class="bi ${iconos[tipo] || 'bi-info-circle-fill'}" style="font-size:1.1rem;color:${colores[tipo] || '#3b82f6'};flex-shrink:0;"></i>
+        <span>${mensaje}</span>
+    `;
+    toast.style.cssText = `
+        position:fixed; bottom:30px; right:30px; z-index:99999;
+        display:flex; align-items:center; gap:10px;
+        background:#1a2332; color:#ffffff;
+        padding:14px 20px; border-radius:10px;
+        border-left:4px solid ${colores[tipo] || '#3b82f6'};
+        box-shadow:0 8px 30px rgba(0,0,0,0.4);
+        font-family:'Segoe UI',sans-serif; font-size:0.9rem;
+        min-width:260px; max-width:360px;
+        opacity:0; transform:translateY(20px);
+        transition:opacity 0.3s ease, transform 0.3s ease;
+    `;
+
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateY(0)';
+    }));
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(20px)';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// ============================================================
+//  Dropdown con hover
+// ============================================================
+const dropdownUsuario = document.querySelector('.dropdown');
+const dropdownMenu = dropdownUsuario.querySelector('.dropdown-menu');
+
+dropdownUsuario.addEventListener('mouseenter', function () {
+    dropdownMenu.classList.add('show');
+});
+
+dropdownUsuario.addEventListener('mouseleave', function (e) {
+    const haciaMenu = dropdownMenu.contains(e.relatedTarget);
+    const haciaPuente = e.relatedTarget === dropdownUsuario;
+    if (!haciaMenu && !haciaPuente) {
+        dropdownMenu.classList.remove('show');
+    }
+});
+
+dropdownMenu.addEventListener('mouseleave', function (e) {
+    if (!dropdownUsuario.contains(e.relatedTarget)) {
+        dropdownMenu.classList.remove('show');
+    }
+});
+
+// ============================================================
 //  Variables globales — modal / carrito
 // ============================================================
 const modal = new bootstrap.Modal(document.getElementById('detalleModal'));
@@ -10,9 +76,6 @@ let idDetalleSeleccionado = null;
 //  DOMContentLoaded
 // ============================================================
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('Página cargada, buscando imágenes...');
-
-    // Clicks en imágenes → abrir modal de detalle
     const imagenes = document.querySelectorAll('.product-image');
     imagenes.forEach((imagen) => {
         imagen.addEventListener('click', function () {
@@ -24,8 +87,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     actualizarContadorCarrito();
     initScrollEffects();
-
-    // Marcar los productos que ya son favoritos al cargar la página
     verificarFavoritosAlCargar();
 });
 
@@ -56,7 +117,7 @@ function verDetalle(idProducto) {
         .then(response => response.ok ? response.json() : Promise.reject('Error en red'))
         .then(data => {
             if (data.error) {
-                alert('Error al cargar el detalle');
+                mostrarNotificacion('Error al cargar el detalle', 'error');
                 return;
             }
 
@@ -76,7 +137,7 @@ function verDetalle(idProducto) {
             if (data.detalles && data.detalles.length > 0) {
                 data.detalles.forEach(detalle => {
                     const cajaTalla = document.createElement('div');
-                    cajaTalla.className  = 'talla-item';
+                    cajaTalla.className   = 'talla-item';
                     cajaTalla.textContent = detalle.talla;
 
                     cajaTalla.onclick = function () {
@@ -84,7 +145,6 @@ function verDetalle(idProducto) {
                         this.classList.add('selected');
                         tallaSeleccionada     = detalle.talla;
                         idDetalleSeleccionado = detalle.id_detalle_producto;
-                        console.log('Seleccionado:', tallaSeleccionada);
                     };
                     tallasContainer.appendChild(cajaTalla);
                 });
@@ -96,7 +156,7 @@ function verDetalle(idProducto) {
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error al cargar el producto');
+            mostrarNotificacion('Error al cargar el producto', 'error');
         });
 }
 
@@ -105,11 +165,11 @@ function verDetalle(idProducto) {
 // ============================================================
 function agregarAlCarrito() {
     if (!productoActual) {
-        alert('Error: No hay producto seleccionado');
+        mostrarNotificacion('Error: No hay producto seleccionado', 'error');
         return;
     }
     if (!idDetalleSeleccionado) {
-        alert('Por favor selecciona una talla');
+        mostrarNotificacion('Por favor selecciona una talla', 'warning');
         return;
     }
 
@@ -120,38 +180,32 @@ function agregarAlCarrito() {
         precio:              productoActual.precio
     };
 
-    console.log('📦 Enviando al carrito:', datos);
-
     fetch('/carrito/agregar', {
         method: 'POST',
         headers: {
-            'Content-Type':  'application/json',
-            'X-CSRF-TOKEN':  document.querySelector('meta[name="csrf-token"]')?.content || ''
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
         },
         body: JSON.stringify(datos)
     })
-    .then(response => {
-        console.log('📥 Respuesta recibida:', response.status);
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-        console.log('📥 Datos:', data);
         if (data.redirect) {
-            alert(data.mensaje);
-            window.location.href = data.redirect;
+            mostrarNotificacion(data.mensaje, 'warning');
+            setTimeout(() => window.location.href = data.redirect, 1500);
             return;
         }
         if (data.success) {
-            alert('✅ ' + data.mensaje);
+            mostrarNotificacion('✅ ' + data.mensaje, 'success');
             modal.hide();
             actualizarContadorCarrito();
         } else {
-            alert('❌ ' + (data.mensaje || 'No se pudo agregar'));
+            mostrarNotificacion(data.mensaje || 'No se pudo agregar', 'error');
         }
     })
     .catch(error => {
-        console.error('❌ Error:', error);
-        alert('Error de conexión');
+        console.error('Error:', error);
+        mostrarNotificacion('Error de conexión', 'error');
     });
 }
 
@@ -159,7 +213,6 @@ function actualizarContadorCarrito() {
     fetch('/carrito/contador')
         .then(response => response.json())
         .then(data => {
-            console.log('🔢 Contador:', data);
             const iconoCarrito = document.querySelector('.bi-bag');
             if (!iconoCarrito) return;
 
@@ -168,8 +221,8 @@ function actualizarContadorCarrito() {
 
             if (data.cantidad > 0) {
                 if (!badge) {
-                    badge              = document.createElement('span');
-                    badge.className    = 'badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle';
+                    badge = document.createElement('span');
+                    badge.className  = 'badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle';
                     badge.style.fontSize = '0.7rem';
                     parent.style.position = 'relative';
                     parent.appendChild(badge);
@@ -185,58 +238,34 @@ function actualizarContadorCarrito() {
 // ============================================================
 //  FAVORITOS
 // ============================================================
-
-/**
- * Al cargar la página, consulta por cada producto si ya es favorito
- * y pinta los corazones que correspondan.
- * Solo corre si hay sesión activa (el botón existe en el DOM).
- */
 function verificarFavoritosAlCargar() {
     const botones = document.querySelectorAll('.btn-favorito');
     if (!botones.length) return;
 
     botones.forEach(btn => {
         const idProducto = btn.getAttribute('data-id');
-
-        fetch(`/favoritos/verificar/${idProducto}`, {
-            headers: { 'Accept': 'application/json' }
-        })
+        fetch(`/favoritos/verificar/${idProducto}`, { headers: { 'Accept': 'application/json' } })
         .then(res => {
-            // Si devuelve 401 el cliente no está logueado → silencioso
             if (res.status === 401) return null;
             return res.json();
         })
         .then(data => {
-            if (data && data.esFavorito) {
-                marcarComoFavorito(btn);
-            }
+            if (data && data.esFavorito) marcarComoFavorito(btn);
         })
-        .catch(() => { /* silencioso, no interrumpe la página */ });
+        .catch(() => {});
     });
 }
 
-/**
- * Toggle favorito al hacer clic en el corazón.
- * - Si NO es favorito → lo agrega
- * - Si YA es favorito → lo quita  (redirige a favoritos para eliminarlo
- *   ya que necesitamos el id_favorito, no el id_producto)
- *
- * @param {number}      idProducto
- * @param {HTMLElement} btnEl
- */
 function toggleFavorito(idProducto, btnEl) {
-    // Evitar que el click propague al product-image y abra el modal
     event.stopPropagation();
 
     const esFavorito = btnEl.classList.contains('is-favorito');
 
     if (esFavorito) {
-        // Redirige a la vista de favoritos para que el usuario lo quite
         window.location.href = '/favoritos';
         return;
     }
 
-    // ── Agregar favorito ──────────────────────────────────────────
     btnEl.disabled = true;
 
     fetch('/favoritos/agregar', {
@@ -250,7 +279,6 @@ function toggleFavorito(idProducto, btnEl) {
     })
     .then(res => {
         if (res.status === 401) {
-            // No logueado → redirigir al login
             window.location.href = '/login';
             return null;
         }
@@ -262,34 +290,26 @@ function toggleFavorito(idProducto, btnEl) {
         if (data.ok) {
             marcarComoFavorito(btnEl);
         } else {
-            // Si ya existía como favorito, marcarlo igual visualmente
             if (data.mensaje && data.mensaje.toLowerCase().includes('ya está')) {
                 marcarComoFavorito(btnEl);
             } else {
-                alert(data.mensaje || 'No se pudo agregar a favoritos.');
+                mostrarNotificacion(data.mensaje || 'No se pudo agregar a favoritos.', 'error');
                 btnEl.disabled = false;
             }
         }
     })
     .catch(() => {
-        alert('Error de conexión. Inténtalo de nuevo.');
+        mostrarNotificacion('Error de conexión. Inténtalo de nuevo.', 'error');
         btnEl.disabled = false;
     });
 }
 
-/**
- * Aplica el estado visual de "favorito activo" al botón
- * y lanza la animación de pulso.
- *
- * @param {HTMLElement} btnEl
- */
 function marcarComoFavorito(btnEl) {
     btnEl.classList.add('is-favorito');
     btnEl.querySelector('i').className = 'bi bi-heart-fill';
     btnEl.title    = 'Guardado en favoritos';
     btnEl.disabled = false;
 
-    // Animación de pulso
     btnEl.classList.add('pop');
     btnEl.addEventListener('animationend', () => btnEl.classList.remove('pop'), { once: true });
 }

@@ -1,25 +1,92 @@
+/* ====================================
+   NAVBAR (igual al de inicio)
+   ==================================== */
+
+#mainNavbar {
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s ease;
+}
+
 .logo-urbano {
     font-family: 'Anton', sans-serif;
-    font-size: 1rem;
+    font-size: 1.3rem;
     text-transform: uppercase;
+    color: #000;
+    letter-spacing: 3px;
+    font-weight: 900;
+    text-decoration: none;
+    transition: opacity 0.4s ease;
+}
+
+.logo-urbano:hover {
     color: #000;
 }
 
-.nav-logo-link {
-    text-decoration: none;
-    color: inherit;
+.icon-wrapper {
+    cursor: pointer;
+    transition: opacity 0.2s ease;
 }
 
-.nav-logo-link:hover,
-.nav-logo-link:focus,
-.nav-logo-link:active {
-    text-decoration: none;
-    color: inherit;
+.icon-wrapper:hover {
+    opacity: 0.6;
 }
+
+.icon-wrapper i {
+    color: #000;
+}
+
+/* Dropdown con hover */
+.dropdown-menu {
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    pointer-events: none;
+    transform: translateX(-40%);
+    margin-top: 0 !important;
+    border: 1px solid #e5e5e5;
+    background-color: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+}
+
+.dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.dropdown::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 10px;
+}
+
+.dropdown-item {
+    font-size: 0.9rem;
+    color: #000;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #000;
+}
+
+/* ====================================
+   BODY Y LAYOUT
+   ==================================== */
 
 body {
     font-family: 'Poppins', sans-serif;
+    padding-top: 70px;
 }
+
+/* ====================================
+   PERFIL
+   ==================================== */
 
 .perfil-container {
     padding: 40px 60px;

@@ -47,8 +47,20 @@
                             <i class="bi bi-person fs-5"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
-                            <li><a class="dropdown-item py-2" href="{{ url('cuenta') }}">Perfil</a></li>
-                            <li><a class="dropdown-item py-2" href="{{ route('registro') }}">Registro</a></li>
+                            @if(Session::has('token'))
+                                {{-- Sesión iniciada --}}
+                                <li><a class="dropdown-item py-2" href="{{ url('cuenta') }}">Perfil</a></li>
+                                <li>
+                                    <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item py-2">Cerrar sesión</button>
+                                    </form>
+                                </li>
+                            @else
+                                {{-- Sin sesión --}}
+                                <li><a class="dropdown-item py-2" href="{{ route('login') }}">Iniciar sesión</a></li>
+                                <li><a class="dropdown-item py-2" href="{{ route('registro') }}">Registrarse</a></li>
+                            @endif
                         </ul>
                     </div>
 

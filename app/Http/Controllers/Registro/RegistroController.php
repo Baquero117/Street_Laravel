@@ -18,18 +18,18 @@ class RegistroController extends Controller
 
     public function mostrar()
     {
-        return view('registro.registro'); // resources/views/registro/registro.blade.php
+        return view('registro.registro');
     }
 
     public function procesar(Request $request)
     {
         $request->validate([
-            'nombre' => 'required|string|max:255',
-            'apellido' => 'required|string|max:255',
-            'direccion' => 'required|string|max:255',
-            'telefono' => 'required|string|max:20',
+            'nombre'             => 'required|string|max:255',
+            'apellido'           => 'required|string|max:255',
+            'direccion'          => 'required|string|max:255',
+            'telefono'           => 'required|string|max:20',
             'correo_electronico' => 'required|email|max:255',
-            'contrasena' => 'required|string|max:255'
+            'contrasena'         => 'required|string|max:255'
         ]);
 
         $resultado = $this->registroService->registrarUsuario(
@@ -46,7 +46,9 @@ class RegistroController extends Controller
             return redirect()->route('registro');
         }
 
-        Session::flash('mensaje', 'Usuario registrado correctamente.');
-        return redirect()->route('login');
+        // 👇 Redirigir a verificación con el correo en la sesión
+        Session::put('correo_verificacion', $request->correo_electronico);
+        Session::flash('mensaje', 'Cuenta creada. Revisa tu correo e ingresa el código de verificación.');
+        return redirect()->route('verificacion.mostrar');
     }
 }

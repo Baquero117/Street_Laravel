@@ -14,46 +14,66 @@
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top my-0">
-        <div class="container-fluid bg-white shadow-sm fixed-top py-2 d-flex align-items-center">
+    <!-- NAVBAR igual al de inicio -->
+    <nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
+        <div class="container-fluid px-4 py-2">
+            <div class="row w-100 align-items-center g-0">
 
-            <a href="{{ url('/inicio') }}" class="navbar-brand fw-bold logo-urbano px-5">
-                Urban Street
-            </a>
-
-            <div class="d-flex align-items-center gap-3 position-absolute end-0 me-3">
-
-                <div class="dropdown">
-                    <a href="#" class="text-dark fs-5 dropdown-toggle" data-bs-toggle="dropdown">
-                        <i class="bi bi-person-circle"></i>
+                <!-- Logo izquierda -->
+                <div class="col-auto">
+                    <a href="{{ url('/inicio') }}" class="navbar-brand logo-urbano mb-0">
+                        URBAN STREET
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                            <a class="dropdown-item" href="{{ url('cuenta') }}">Ver Perfil</a>
-                        </li>
-                        <li>
-                            <form action="{{ route('logout') }}" method="POST" class="m-0">
-                                @csrf
-                                <button type="submit" class="dropdown-item">Cerrar sesión</button>
-                            </form>
-                        </li>
-                    </ul>
                 </div>
 
-                <a href="{{ url('/carrito') }}" class="text-dark fs-5">
-                    <i class="bi bi-cart3"></i>
-                </a>
-            </div>
+                <!-- Espacio central -->
+                <div class="col"></div>
 
+                <!-- Iconos derecha -->
+                <div class="col-auto d-flex align-items-center gap-3">
+
+                    <div class="icon-wrapper">
+                        <i class="bi bi-search fs-5"></i>
+                    </div>
+
+                    <div class="dropdown icon-wrapper">
+                        <a href="#" class="text-dark">
+                            <i class="bi bi-person fs-5"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
+                            @if(Session::has('token'))
+                                <li><a class="dropdown-item py-2" href="{{ url('cuenta') }}">Perfil</a></li>
+                                <li>
+                                    <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item py-2">Cerrar sesión</button>
+                                    </form>
+                                </li>
+                            @else
+                                <li><a class="dropdown-item py-2" href="{{ route('login') }}">Iniciar sesión</a></li>
+                                <li><a class="dropdown-item py-2" href="{{ route('registro') }}">Registrarse</a></li>
+                            @endif
+                        </ul>
+                    </div>
+
+                    <a href="{{ url('/carrito') }}" class="text-dark icon-wrapper position-relative">
+                        <i class="bi bi-bag fs-5"></i>
+                    </a>
+
+                    <a href="{{ route('favoritos') }}" class="text-dark icon-wrapper position-relative">
+                        <i class="bi bi-heart fs-5"></i>
+                    </a>
+
+                </div>
+            </div>
         </div>
     </nav>
 
     <div class="container pedidos-container mt-5 pt-5">
         <div class="row">
 
-            {{-- Sidebar izquierda --}}
+            <!-- Sidebar izquierda -->
             <div class="col-md-6 col-lg-5">
-
                 <h2 class="pedidos-titulo">Mis Pedidos</h2>
 
                 <a href="{{ route('perfil') }}" class="text-decoration-none text-dark">
@@ -62,7 +82,7 @@
                         <div class="cuenta-card-sub">Mi información personal</div>
                     </div>
                 </a>
-                
+
                 <a href="{{ route('mis-pedidos') }}" class="text-decoration-none text-dark">
                     <div class="cuenta-card active">
                         <div class="cuenta-card-title">Pedidos</div>
@@ -70,7 +90,6 @@
                     </div>
                 </a>
 
-                {{-- Favoritos activo --}}
                 <a href="{{ route('favoritos') }}" class="text-decoration-none text-dark">
                     <div class="cuenta-card">
                         <div class="cuenta-card-title">Favoritos</div>
@@ -87,10 +106,9 @@
                         </div>
                     </button>
                 </form>
-
             </div>
 
-            {{-- Contenido derecha --}}
+            <!-- Contenido derecha -->
             <div class="col-md-6 col-lg-7">
 
                 @if(empty($pedidos))
@@ -106,7 +124,6 @@
                         @foreach($pedidos as $pedido)
                         <div class="pedido-card">
 
-                            {{-- Header --}}
                             <div class="pedido-card-header">
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="bi bi-receipt"></i>
@@ -117,9 +134,7 @@
                                 </span>
                             </div>
 
-                            {{-- Datos --}}
                             <div class="pedido-card-body">
-
                                 <div class="pedido-dato">
                                     <i class="bi bi-calendar3 pedido-icono"></i>
                                     <div>
@@ -145,17 +160,14 @@
                                         <p class="dato-valor mb-0">{{ $pedido['metodo_pago'] ?? '-' }}</p>
                                     </div>
                                 </div>
-
                             </div>
 
-                            {{-- Acciones --}}
                             <div class="pedido-card-footer">
                                 @if(!empty($pedido['ruta_factura']))
                                     <a href="{{ route('mis-pedidos.factura.ver', $pedido['id_pedido']) }}"
                                         target="_blank" class="btn btn-ver-factura">
                                         <i class="bi bi-eye me-1"></i> Ver factura
                                     </a>
-
                                     <a href="{{ route('mis-pedidos.factura.descargar', $pedido['id_pedido']) }}"
                                         class="btn btn-guardar">
                                         <i class="bi bi-download me-1"></i> Descargar
@@ -176,7 +188,7 @@
         </div>
     </div>
 
-    {{-- FOOTER --}}
+    <!-- FOOTER -->
     <footer class="container-fluid bg-black text-white pt-5 pb-3 mt-5">
         <div class="container">
             <div class="text-center mb-4">
@@ -216,6 +228,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/PuntoInicio/Cliente/Pedidos.js') }}"></script>
-
 </body>
 </html>

@@ -20,12 +20,19 @@ use App\Http\Controllers\PuntoInicio\FavoritoController;
 use App\Http\Controllers\PublicoController;
 use App\Http\Controllers\Administrador\ReporteController;
 use App\Http\Controllers\PuntoInicio\PedidosController;
+use App\Http\Controllers\Registro\VerificacionController;
 
+// Ruta de inicio (welcome)
+Route::redirect('/', '/inicio');
 
 Route::get('/admin/Reportes', [ReporteController::class, 'index'])
     ->name('admin.Reportes');
 
+// Pagina De Inicio
+Route::get('/inicio', [PublicoController::class, 'index'])->name('inicio');
+Route::get('/productos/{id}/detalle', [PublicoController::class, 'detalle'])->name('productos.detalle');
 
+// Rutas de autenticación
 Route::get('/login', [LoginController::class, 'mostrar'])->name('login');
 Route::post('/login', [LoginController::class, 'procesar'])->name('login.procesar');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -35,8 +42,15 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/registro', [RegistroController::class, 'mostrar'])->name('registro');
 Route::post('/registro', [RegistroController::class, 'procesar'])->name('registro.procesar');
 
-Route::get('/inicio', [PublicoController::class, 'index'])->name('inicio');
-Route::get('/productos/{id}/detalle', [PublicoController::class, 'detalle'])->name('productos.detalle');
+// Verificación de cuenta
+Route::get('/verificar-cuenta', [VerificacionController::class, 'mostrar'])
+    ->name('verificacion.mostrar');
+
+Route::post('/verificar-cuenta', [VerificacionController::class, 'validar'])
+    ->name('verificacion.validar');
+
+Route::post('/verificar-cuenta/reenviar', [VerificacionController::class, 'reenviar'])
+    ->name('verificacion.reenviar');
 
 
 // Recuperación de contraseña

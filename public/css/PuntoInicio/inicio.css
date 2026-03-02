@@ -93,6 +93,39 @@ body {
 }
 
 /* ====================================
+   Pefil de usuario en navbar
+   ==================================== */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    pointer-events: none;
+    transform: translateX(-40%);
+    margin-top: 0 !important; /* 👈 elimina el gap */
+}
+
+.dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+/* Puente invisible entre el icono y el menú */
+.dropdown::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 10px; /* cubre el gap */
+}
+
+/* ====================================
    CARRUSEL
    ==================================== */
 

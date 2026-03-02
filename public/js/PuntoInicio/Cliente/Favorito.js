@@ -1,9 +1,108 @@
-/**
- * Favorito.js — Urban Street
- * Maneja: quitar favoritos + modal de detalle de producto
- */
+const dropdownUsuario = document.querySelector('.dropdown');
+const dropdownMenu = dropdownUsuario?.querySelector('.dropdown-menu');
+if (dropdownUsuario && dropdownMenu) {
+    dropdownUsuario.addEventListener('mouseenter', () => dropdownMenu.classList.add('show'));
+    dropdownUsuario.addEventListener('mouseleave', (e) => {
+        if (!dropdownMenu.contains(e.relatedTarget)) dropdownMenu.classList.remove('show');
+    });
+    dropdownMenu.addEventListener('mouseleave', (e) => {
+        if (!dropdownUsuario.contains(e.relatedTarget)) dropdownMenu.classList.remove('show');
+    });
+}
+// ── Toast personalizado ──────────────────────────────────────
+function mostrarNotificacion(mensaje, tipo) {
+    const anterior = document.querySelector('.urban-toast');
+    if (anterior) anterior.remove();
 
-// ── Variables globales modal ─────────────────────────────────
+    const iconos  = { success: 'bi-check-circle-fill', error: 'bi-x-circle-fill', warning: 'bi-exclamation-triangle-fill' };
+    const colores = { success: '#28a745', error: '#dc3545', warning: '#ffc107' };
+
+    const toast = document.createElement('div');
+    toast.className = 'urban-toast';
+    toast.innerHTML = `
+        <i class="bi ${iconos[tipo] || 'bi-info-circle-fill'}" style="font-size:1.1rem;color:${colores[tipo] || '#3b82f6'};flex-shrink:0;"></i>
+        <span>${mensaje}</span>
+    `;
+    toast.style.cssText = `
+        position:fixed; bottom:30px; right:30px; z-index:99999;
+        display:flex; align-items:center; gap:10px;
+        background:#1a2332; color:#ffffff;
+        padding:14px 20px; border-radius:10px;
+        border-left:4px solid ${colores[tipo] || '#3b82f6'};
+        box-shadow:0 8px 30px rgba(0,0,0,0.4);
+        font-family:'Segoe UI',sans-serif; font-size:0.9rem;
+        min-width:260px; max-width:360px;
+        opacity:0; transform:translateY(20px);
+        transition:opacity 0.3s ease, transform 0.3s ease;
+    `;
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateY(0)';
+    }));
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(20px)';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// ── Modal de confirmación ─────────────────────────────────────
+function mostrarConfirmacion(mensaje, onAceptar) {
+    const anterior = document.querySelector('.urban-modal-overlay');
+    if (anterior) anterior.remove();
+
+    const overlay = document.createElement('div');
+    overlay.className = 'urban-modal-overlay';
+    overlay.style.cssText = `
+        position:fixed; inset:0; z-index:99999;
+        background:rgba(0,0,0,0.6);
+        display:flex; align-items:center; justify-content:center;
+        opacity:0; transition:opacity 0.25s ease;
+        backdrop-filter:blur(4px);
+    `;
+    overlay.innerHTML = `
+        <div style="
+            background:#1a2332; border-radius:14px;
+            padding:32px 28px 24px; max-width:380px; width:90%;
+            box-shadow:0 20px 60px rgba(0,0,0,0.5);
+            transform:translateY(20px); transition:transform 0.25s ease;
+            border:1px solid #2a3a4a; font-family:'Segoe UI',sans-serif;
+        ">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+                <i class="bi bi-exclamation-triangle-fill" style="color:#ffc107;font-size:1.4rem;"></i>
+                <p style="color:#c8d6e5; font-size:0.95rem; margin:0; line-height:1.5;">${mensaje}</p>
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                <button class="urban-btn-cancelar" style="
+                    background:transparent; color:#8a9ab0;
+                    border:1px solid #2a3a4a; border-radius:8px;
+                    padding:9px 20px; cursor:pointer; font-size:0.88rem;
+                ">Cancelar</button>
+                <button class="urban-btn-aceptar" style="
+                    background:#3b82f6; color:#fff;
+                    border:none; border-radius:8px;
+                    padding:9px 20px; cursor:pointer; font-size:0.88rem;
+                ">Aceptar</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    const box = overlay.querySelector('div');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+        overlay.style.opacity = '1';
+        box.style.transform = 'translateY(0)';
+    }));
+    const cerrar = () => {
+        overlay.style.opacity = '0';
+        setTimeout(() => overlay.remove(), 250);
+    };
+    overlay.querySelector('.urban-btn-cancelar').addEventListener('click', cerrar);
+    overlay.querySelector('.urban-btn-aceptar').addEventListener('click', () => { cerrar(); onAceptar(); });
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) cerrar(); });
+}
+
+// ── Variables globales modal ──────────────────────────────────
 let modalDetalle          = null;
 let tallaSeleccionada     = null;
 let productoActual        = null;
@@ -11,97 +110,80 @@ let idDetalleSeleccionado = null;
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Inicializar modal Bootstrap
     modalDetalle = new bootstrap.Modal(document.getElementById('detalleModal'));
 
     const csrfToken = () => document.querySelector('meta[name="csrf-token"]')?.content ?? '';
 
-    // ════════════════════════════════════════════════════════════════
-    // QUITAR FAVORITO
-    // ════════════════════════════════════════════════════════════════
+    // ── Quitar favorito ──────────────────────────────────────
     document.querySelectorAll('.btn-quitar-favorito').forEach(btn => {
         btn.addEventListener('click', function () {
             const idFavorito = this.dataset.id;
             const card       = document.getElementById(`card-favorito-${idFavorito}`);
+            const btnEl      = this;
 
-            if (!confirm('¿Deseas quitar este producto de tus favoritos?')) return;
+            mostrarConfirmacion('¿Deseas quitar este producto de tus favoritos?', () => {
+                btnEl.disabled  = true;
+                btnEl.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
 
-            this.disabled  = true;
-            this.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
-
-            fetch(`/favoritos/${idFavorito}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken(),
-                    'Accept':       'application/json',
-                },
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.ok) {
-                    card.style.transition = 'opacity 0.3s, transform 0.3s';
-                    card.style.opacity    = '0';
-                    card.style.transform  = 'translateX(20px)';
-                    setTimeout(() => {
-                        card.remove();
-                        actualizarContador();
-                    }, 300);
-                } else {
-                    alert('Error al quitar favorito: ' + data.mensaje);
-                    this.disabled  = false;
-                    this.innerHTML = '<i class="bi bi-heart-fill me-1"></i> Quitar';
-                }
-            })
-            .catch(() => {
-                alert('Error de conexión. Inténtalo de nuevo.');
-                this.disabled  = false;
-                this.innerHTML = '<i class="bi bi-heart-fill me-1"></i> Quitar';
+                fetch(`/favoritos/${idFavorito}`, {
+                    method: 'DELETE',
+                    headers: { 'X-CSRF-TOKEN': csrfToken(), 'Accept': 'application/json' },
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.ok) {
+                        card.style.transition = 'opacity 0.3s, transform 0.3s';
+                        card.style.opacity    = '0';
+                        card.style.transform  = 'translateX(20px)';
+                        setTimeout(() => {
+                            card.remove();
+                            actualizarContador();
+                        }, 300);
+                        mostrarNotificacion('Producto quitado de favoritos', 'success');
+                    } else {
+                        mostrarNotificacion('Error al quitar favorito: ' + data.mensaje, 'error');
+                        btnEl.disabled  = false;
+                        btnEl.innerHTML = '<i class="bi bi-heart-fill me-1"></i> Quitar';
+                    }
+                })
+                .catch(() => {
+                    mostrarNotificacion('Error de conexión. Inténtalo de nuevo.', 'error');
+                    btnEl.disabled  = false;
+                    btnEl.innerHTML = '<i class="bi bi-heart-fill me-1"></i> Quitar';
+                });
             });
         });
     });
 
-    // ── Contador ─────────────────────────────────────────────────
     function actualizarContador() {
         const listaFavoritos = document.getElementById('lista-favoritos');
         const contadorEl     = document.querySelector('.favoritos-contador');
-
         if (!listaFavoritos) return;
 
         const total = listaFavoritos.querySelectorAll('.favorito-card').length;
-
         if (contadorEl) {
             contadorEl.innerHTML = `<i class="bi bi-heart-fill text-danger me-1"></i>
                 ${total} ${total === 1 ? 'producto guardado' : 'productos guardados'}`;
         }
-
         if (total === 0) {
             listaFavoritos.innerHTML = `
                 <div class="formulario-contenedor text-center py-5">
-                    <i class="bi bi-heart" style="font-size: 3.5rem; color: #ccc;"></i>
+                    <i class="bi bi-heart" style="font-size:3.5rem;color:#ccc;"></i>
                     <h5 class="mt-4 fw-semibold">Aún no tienes favoritos</h5>
-                    <p class="text-muted" style="font-size: 14px;">
-                        Cuando marques un producto con ♥, aparecerá aquí.
-                    </p>
+                    <p class="text-muted" style="font-size:14px;">Cuando marques un producto con ♥, aparecerá aquí.</p>
                     <a href="/inicio" class="btn btn-guardar mt-2">Ir a la tienda</a>
                 </div>`;
             if (contadorEl) contadorEl.remove();
         }
     }
-
 });
 
-// ════════════════════════════════════════════════════════════════
-// MODAL DETALLE — igual que Inicio.js
-// ════════════════════════════════════════════════════════════════
-
+// ── Modal detalle ─────────────────────────────────────────────
 function verDetalleFavorito(idProducto) {
     fetch(`/productos/${idProducto}/detalle`)
         .then(response => response.ok ? response.json() : Promise.reject('Error en red'))
         .then(data => {
-            if (data.error) {
-                alert('Error al cargar el detalle');
-                return;
-            }
+            if (data.error) { mostrarNotificacion('Error al cargar el detalle', 'error'); return; }
 
             productoActual        = data;
             tallaSeleccionada     = null;
@@ -121,7 +203,6 @@ function verDetalleFavorito(idProducto) {
                     const cajaTalla       = document.createElement('div');
                     cajaTalla.className   = 'talla-item';
                     cajaTalla.textContent = detalle.talla;
-
                     cajaTalla.onclick = function () {
                         document.querySelectorAll('.talla-item').forEach(t => t.classList.remove('selected'));
                         this.classList.add('selected');
@@ -136,29 +217,12 @@ function verDetalleFavorito(idProducto) {
 
             modalDetalle.show();
         })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error al cargar el producto');
-        });
+        .catch(() => mostrarNotificacion('Error al cargar el producto', 'error'));
 }
 
-// ── Agregar al carrito desde el modal ────────────────────────
 function agregarAlCarrito() {
-    if (!productoActual) {
-        alert('Error: No hay producto seleccionado');
-        return;
-    }
-    if (!idDetalleSeleccionado) {
-        alert('Por favor selecciona una talla');
-        return;
-    }
-
-    const datos = {
-        id_detalle_producto: idDetalleSeleccionado,
-        talla:               tallaSeleccionada,
-        cantidad:            1,
-        precio:              productoActual.precio
-    };
+    if (!productoActual)        { mostrarNotificacion('Error: No hay producto seleccionado', 'error'); return; }
+    if (!idDetalleSeleccionado) { mostrarNotificacion('Por favor selecciona una talla', 'warning'); return; }
 
     fetch('/carrito/agregar', {
         method: 'POST',
@@ -166,21 +230,26 @@ function agregarAlCarrito() {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
         },
-        body: JSON.stringify(datos)
+        body: JSON.stringify({
+            id_detalle_producto: idDetalleSeleccionado,
+            talla:               tallaSeleccionada,
+            cantidad:            1,
+            precio:              productoActual.precio
+        })
     })
     .then(response => response.json())
     .then(data => {
         if (data.redirect) {
-            alert(data.mensaje);
-            window.location.href = data.redirect;
+            mostrarNotificacion(data.mensaje, 'warning');
+            setTimeout(() => window.location.href = data.redirect, 1500);
             return;
         }
         if (data.success) {
-            alert('✅ ' + data.mensaje);
+            mostrarNotificacion('Producto agregado al carrito', 'success');
             modalDetalle.hide();
         } else {
-            alert('❌ ' + (data.mensaje || 'No se pudo agregar'));
+            mostrarNotificacion(data.mensaje || 'No se pudo agregar', 'error');
         }
     })
-    .catch(() => alert('Error de conexión'));
+    .catch(() => mostrarNotificacion('Error de conexión', 'error'));
 }

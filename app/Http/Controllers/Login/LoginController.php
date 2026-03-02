@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Http\Controllers\Login;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Models\Login\LoginService;
-
 
 class LoginController extends Controller
 {
@@ -23,20 +23,25 @@ class LoginController extends Controller
 
     public function procesar(Request $request)
     {
-        // Validación
         $request->validate([
             'correo_electronico' => 'required|email',
-            'contrasena' => 'required'
+            'contrasena'         => 'required'
         ]);
 
-        $correo = $request->input('correo_electronico');
+        $correo    = $request->input('correo_electronico');
         $contrasena = $request->input('contrasena');
 
-        
         $resultado = $this->loginService->autenticar($correo, $contrasena);
 
+        // 👇 Cuenta existe pero no está verificada
+        if ($resultado && isset($resultado['no_verificada'])) {
+            Session::put('correo_verificacion', $resultado['correo']);
+            Session::flash('error', 'Debes verificar tu correo antes de iniciar sesión. Te hemos reenviado el código.');
+            return redirect()->route('verificacion.mostrar');
+        }
+
+        // Login exitoso
         if ($resultado) {
-           
             Session::put('token', $resultado['token']);
             Session::put('usuario_id', $resultado['datos']['id_' . ($resultado['tipo'] === 'cliente' ? 'cliente' : 'vendedor')]);
             Session::put('usuario_nombre', $resultado['datos']['nombre']);
@@ -44,7 +49,7 @@ class LoginController extends Controller
             Session::put('usuario_correo', $resultado['datos']['correo_electronico']);
 
             if ($resultado['tipo'] === 'administrador') {
-                return redirect()->route('admin.Reportes'); 
+                return redirect()->route('admin.Reportes');
             }
 
             if ($resultado['tipo'] === 'cliente') {
@@ -52,12 +57,9 @@ class LoginController extends Controller
             }
         }
 
-      
-        return redirect()->route('login')
-            ->with('error', 'Credenciales inválidas');
+        return redirect()->route('login')->with('error', 'Credenciales inválidas');
     }
 
-   
     public function logout()
     {
         Session::flush();

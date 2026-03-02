@@ -14,47 +14,67 @@
 
 <body>
 
-    {{-- NAVBAR --}}
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top my-0">
-        <div class="container-fluid bg-white shadow-sm fixed-top py-2 d-flex align-items-center">
+    <!-- NAVBAR igual al de inicio -->
+    <nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
+        <div class="container-fluid px-4 py-2">
+            <div class="row w-100 align-items-center g-0">
 
-            <a href="{{ url('/inicio') }}" class="navbar-brand fw-bold logo-urbano px-5">
-                Urban Street
-            </a>
-
-            <div class="d-flex align-items-center gap-3 position-absolute end-0 me-3">
-                <div class="dropdown">
-                    <a href="#" class="text-dark fs-5 dropdown-toggle" data-bs-toggle="dropdown">
-                        <i class="bi bi-person-circle"></i>
+                <!-- Logo izquierda -->
+                <div class="col-auto">
+                    <a href="{{ url('/inicio') }}" class="navbar-brand logo-urbano mb-0">
+                        URBAN STREET
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                            <a class="dropdown-item" href="{{ url('cuenta') }}">Ver Perfil</a>
-                        </li>
-                        <li>
-                            <form action="{{ route('logout') }}" method="POST" class="m-0">
-                                @csrf
-                                <button type="submit" class="dropdown-item">Cerrar sesión</button>
-                            </form>
-                        </li>
-                    </ul>
                 </div>
 
-                <a href="{{ url('/carrito') }}" class="text-dark fs-5">
-                    <i class="bi bi-cart3"></i>
-                </a>
-            </div>
+                <!-- Espacio central -->
+                <div class="col"></div>
 
+                <!-- Iconos derecha -->
+                <div class="col-auto d-flex align-items-center gap-3">
+
+                    <div class="icon-wrapper">
+                        <i class="bi bi-search fs-5"></i>
+                    </div>
+
+                    <div class="dropdown icon-wrapper">
+                        <a href="#" class="text-dark">
+                            <i class="bi bi-person fs-5"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
+                            @if(Session::has('token'))
+                                <li><a class="dropdown-item py-2" href="{{ url('cuenta') }}">Perfil</a></li>
+                                <li>
+                                    <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item py-2">Cerrar sesión</button>
+                                    </form>
+                                </li>
+                            @else
+                                <li><a class="dropdown-item py-2" href="{{ route('login') }}">Iniciar sesión</a></li>
+                                <li><a class="dropdown-item py-2" href="{{ route('registro') }}">Registrarse</a></li>
+                            @endif
+                        </ul>
+                    </div>
+
+                    <a href="{{ url('/carrito') }}" class="text-dark icon-wrapper position-relative">
+                        <i class="bi bi-bag fs-5"></i>
+                    </a>
+
+                    <a href="{{ route('favoritos') }}" class="text-dark icon-wrapper position-relative">
+                        <i class="bi bi-heart fs-5"></i>
+                    </a>
+
+                </div>
+            </div>
         </div>
     </nav>
 
-    {{-- CONTENIDO PRINCIPAL --}}
+    <!-- CONTENIDO PRINCIPAL -->
     <div class="container favoritos-container mt-5 pt-5">
         <div class="row">
 
-            {{-- ── Sidebar izquierda ── --}}
+            <!-- Sidebar izquierda -->
             <div class="col-md-6 col-lg-5">
-
                 <h2 class="favoritos-titulo">Mis Favoritos</h2>
 
                 <a href="{{ route('perfil') }}" class="text-decoration-none text-dark">
@@ -71,8 +91,6 @@
                     </div>
                 </a>
 
-
-                {{-- Favoritos activo --}}
                 <a href="{{ route('favoritos') }}" class="text-decoration-none text-dark">
                     <div class="cuenta-card active">
                         <div class="cuenta-card-title">Favoritos</div>
@@ -89,14 +107,12 @@
                         </div>
                     </button>
                 </form>
-
             </div>
 
-            {{-- ── Contenido derecha ── --}}
+            <!-- Contenido derecha -->
             <div class="col-md-6 col-lg-7">
 
                 @if(empty($favoritos))
-                    {{-- Estado vacío --}}
                     <div class="formulario-contenedor text-center py-5">
                         <i class="bi bi-heart" style="font-size: 3.5rem; color: #ccc;"></i>
                         <h5 class="mt-4 fw-semibold">Aún no tienes favoritos</h5>
@@ -107,7 +123,6 @@
                     </div>
 
                 @else
-                    {{-- Contador --}}
                     <p class="favoritos-contador mb-3">
                         <i class="bi bi-heart-fill text-danger me-1"></i>
                         {{ count($favoritos) }} {{ count($favoritos) === 1 ? 'producto guardado' : 'productos guardados' }}
@@ -117,16 +132,13 @@
                         @foreach($favoritos as $item)
                         <div class="favorito-card" id="card-favorito-{{ $item['id_favorito'] }}">
 
-                            {{-- Imagen --}}
                             <div class="favorito-imagen-wrap">
                                 <img src="{{ asset('storage/' . $item['imagen']) }}"
                                     alt="{{ $item['nombre'] }}"
                                     class="favorito-imagen">
                             </div>
 
-                            {{-- Info --}}
                             <div class="favorito-info">
-
                                 <div class="favorito-header">
                                     <span class="favorito-nombre">{{ $item['nombre'] }}</span>
                                     <span class="favorito-estado estado-{{ strtolower($item['estado'] ?? 'activo') }}">
@@ -158,49 +170,38 @@
                                         </button>
                                     </div>
                                 </div>
-
                             </div>
 
                         </div>
                         @endforeach
                     </div>
-
                 @endif
 
             </div>
         </div>
     </div>
 
-    {{-- MODAL DETALLE PRODUCTO — igual que Inicio --}}
+    <!-- MODAL DETALLE PRODUCTO -->
     <div class="modal fade" id="detalleModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content border-0 rounded-0 overflow-hidden">
                 <button type="button" class="btn-close custom-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
                 <div class="modal-body p-0">
                     <div class="row g-0">
-
-                        {{-- Imagen --}}
                         <div class="col-md-7 d-flex align-items-center bg-light">
                             <img id="modalImagen" src="" class="img-fluid w-100 img-product-detail" alt="">
                         </div>
-
-                        {{-- Info --}}
                         <div class="col-md-5 d-flex flex-column p-4 p-lg-5" style="max-height: 90vh; overflow-y: auto;">
                             <h2 id="modalNombre" class="fw-bold mb-1 text-uppercase"></h2>
                             <p id="modalColor" class="text-muted small mb-3"></p>
-
                             <h3 class="fw-light mb-4 text-dark">$<span id="modalPrecio"></span></h3>
-
                             <div class="mb-4">
                                 <p id="modalDescripcion" class="text-secondary small" style="line-height: 1.6;"></p>
                             </div>
-
                             <div class="mb-4">
                                 <label class="fw-bold small mb-2 text-uppercase" style="letter-spacing: 1px;">Seleccionar Talla</label>
                                 <div id="modalTallas" class="d-flex flex-wrap gap-2"></div>
                             </div>
-
                             <div class="mt-auto border-top pt-4">
                                 <button class="btn btn-dark w-100 rounded-0 py-3 mb-2 text-uppercase fw-bold"
                                         onclick="agregarAlCarrito()">
@@ -208,14 +209,13 @@
                                 </button>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- FOOTER --}}
+    <!-- FOOTER -->
     <footer class="container-fluid bg-black text-white pt-5 pb-3 mt-5">
         <div class="container">
             <div class="text-center mb-4">
@@ -255,6 +255,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/PuntoInicio/Cliente/Favorito.js') }}"></script>
-
 </body>
 </html>

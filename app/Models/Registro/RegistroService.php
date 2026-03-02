@@ -11,12 +11,12 @@ class RegistroService
     public function registrarUsuario($nombre, $apellido, $direccion, $telefono, $correo_electronico, $contrasena)
 {
     $response = Http::post($this->baseUrl, [
-        "nombre"              => $nombre,
-        "apellido"            => $apellido,
-        "direccion"           => $direccion,
-        "telefono"            => $telefono,
-        "correo_electronico"  => $correo_electronico,
-        "contrasena"          => $contrasena
+        "nombre"             => $nombre,
+        "apellido"           => $apellido,
+        "direccion"          => $direccion,
+        "telefono"           => $telefono,
+        "correo_electronico" => $correo_electronico,
+        "contrasena"         => $contrasena
     ]);
 
     if ($response->successful()) {
