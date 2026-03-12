@@ -36,7 +36,7 @@
             </div>
         @endif
 
-        <form action="{{ route('recuperacion.procesar-restablecimiento') }}" method="POST">
+        <form action="{{ route('recuperacion.procesar-restablecimiento') }}" method="POST" id="restablecerForm">
             @csrf
 
             {{-- Token oculto que viene en la URL --}}
@@ -52,6 +52,12 @@
                         <i class="bi bi-eye"></i>
                     </span>
                 </div>
+                <!-- Indicadores de requisitos de contraseña -->
+                <div class="mt-2" id="passwordRequirements">
+                    <small class="d-block"><i class="bi bi-circle-fill" id="letrasIcon"></i> Mínimo 5 letras</small>
+                    <small class="d-block"><i class="bi bi-circle-fill" id="numerosIcon"></i> Mínimo 2 números</small>
+                    <small class="d-block"><i class="bi bi-circle-fill" id="especiaIcon"></i> Mínimo 1 carácter especial ( "_", "-", "*", "!" )</small>
+                </div>
             </div>
 
             <div class="mb-4">
@@ -66,7 +72,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100 rounded-3 mb-3">
+            <button type="submit" id="restablecerBtn" class="btn btn-primary w-100 rounded-3 mb-3">
                 <i class="bi bi-check2-circle me-2"></i>Restablecer Contraseña
             </button>
         </form>
