@@ -292,7 +292,7 @@ async function confirmarPedido() {
     console.log('Datos del pedido:', datosPedido);
 
     try {
-        const response = await fetch('http://34.225.197.89/pedido', {
+        const response = await fetch('http://34.225.197.89:8080/pedido', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(datosPedido)
@@ -341,7 +341,7 @@ async function descargarFactura() {
     }
 
     try {
-        const response = await fetch(`http://34.225.197.89/pedido/${idPedidoCreado}/factura`, {
+        const response = await fetch(`http://34.225.197.89:8080/pedido/${idPedidoCreado}/factura`, {
             headers: {
                 'Authorization': 'Bearer ' + token
             }
@@ -395,7 +395,7 @@ async function verFacturaEnNavegador() {
 
     try {
         // Descargar el PDF como blob
-        const response = await fetch(`http://34.225.197.89/pedido/${idPedidoCreado}/factura/ver`, {
+        const response = await fetch(`http://34.225.197.89:8080/pedido/${idPedidoCreado}/factura/ver`, {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + token
@@ -447,7 +447,7 @@ async function descargarYMostrarFactura() {
     }
 
     try {
-        const response = await fetch(`http://34.225.197.89/pedido/${idPedidoCreado}/factura/ver`, {
+        const response = await fetch(`http://34.225.197.89:8080/pedido/${idPedidoCreado}/factura/ver`, {
             headers: {
                 'Authorization': 'Bearer ' + token
             }
@@ -488,7 +488,7 @@ function generarNumeroFactura() {
 
 async function obtenerUltimoPedido(token) {
     try {
-        const response = await fetch('http://34.225.197.89/pedido', {
+        const response = await fetch('http:34.225.197.89:8080/pedido', {
             headers: {
                 'Authorization': 'Bearer ' + token  // 👈 AGREGAR TOKEN
             }
