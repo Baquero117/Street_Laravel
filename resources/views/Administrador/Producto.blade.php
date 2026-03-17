@@ -4,7 +4,10 @@
 
 {{-- MENSAJES --}}
 @if (!empty($mensaje))
-    <div class="alert alert-info text-center">{{ $mensaje }}</div>
+    <div id="alertaMensaje" class="alert alert-info text-center alert-dismissible fade show">
+        {{ $mensaje }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
 @endif
 
 @if ($errors->any())
@@ -415,7 +418,19 @@ document.getElementById('buscadorProducto').addEventListener('input', function()
         filas.forEach(fila => fila.style.display = "");
     }
 });
+
+// ALERTA AUTOMÁTICA (6 segundos)
+setTimeout(function() {
+    let alerta = document.getElementById('alertaMensaje');
+    if(alerta){
+        alerta.classList.remove('show');
+        alerta.classList.add('fade');
+        setTimeout(() => alerta.remove(), 500);
+    }
+}, 6000);
+
 </script>
+
 
 {{-- ======================== CSS PARA MODO OSCURO ======================== --}}
 <style>

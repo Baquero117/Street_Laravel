@@ -13,19 +13,7 @@
     <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Gestión de Categorías</h5>
 
-        <div>
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarCategoria">
-                <i class="fas fa-plus"></i> Agregar
-            </button>
-
-            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalActualizarCategoria">
-                <i class="fas fa-edit"></i> Actualizar
-            </button>
-
-            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminarCategoria">
-                <i class="fas fa-trash"></i> Eliminar
-            </button>
-        </div>
+       
     </div>
 
     <div class="card-body p-0">
