@@ -12,7 +12,7 @@ class CarritoService
 
     public function __construct()
     {
-        $this->apiUrl = "http://localhost:8080/carrito";
+        $this->apiUrl = "http://34.225.197.89/carrito";
     }
 
     private function obtenerToken()
