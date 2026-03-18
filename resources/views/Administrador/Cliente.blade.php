@@ -47,7 +47,6 @@
                     <th>Correo</th>
                     <th>Teléfono</th>
                     <th>Dirección</th>
-                    <th class="text-center">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -60,29 +59,7 @@
                             <td>{{ $cliente['correo_electronico'] }}</td>
                             <td>{{ $cliente['telefono'] }}</td>
                             <td>{{ $cliente['direccion'] }}</td>
-                            <td class="text-center">
-                                <button type="button" 
-                                        class="btn btn-warning btn-sm btn-editar" 
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#modalActualizarCliente"
-                                        data-id="{{ $cliente['id_cliente'] }}"
-                                        data-nombre="{{ $cliente['nombre'] }}"
-                                        data-apellido="{{ $cliente['apellido'] }}"
-                                        data-correo="{{ $cliente['correo_electronico'] }}"
-                                        data-telefono="{{ $cliente['telefono'] }}"
-                                        data-direccion="{{ $cliente['direccion'] }}">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                
-                                <button type="button" 
-                                        class="btn btn-danger btn-sm btn-eliminar" 
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#modalEliminarCliente"
-                                        data-id="{{ $cliente['id_cliente'] }}"
-                                        data-nombre="{{ $cliente['nombre'] }} {{ $cliente['apellido'] }}">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
+                           
                         </tr>
                     @endforeach
                 @else

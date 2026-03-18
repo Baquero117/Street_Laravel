@@ -11,11 +11,6 @@
     <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Gestión de Vendedores</h5>
 
-        <div>
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarVendedor">
-                <i class="fas fa-plus"></i> Agregar
-            </button>
-        </div>
     </div>
 
     <div class="card-body p-0">
@@ -27,7 +22,6 @@
                     <th>Apellido</th>
                     <th>Correo</th>
                     <th>Teléfono</th>
-                    <th class="text-center">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -39,28 +33,6 @@
                             <td>{{ $vendedor['apellido'] }}</td>
                             <td>{{ $vendedor['correo_electronico'] }}</td>
                             <td>{{ $vendedor['telefono'] }}</td>
-                            <td class="text-center">
-                                <button type="button" 
-                                        class="btn btn-warning btn-sm btn-editar" 
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#modalActualizarVendedor"
-                                        data-id="{{ $vendedor['id_vendedor'] }}"
-                                        data-nombre="{{ $vendedor['nombre'] }}"
-                                        data-apellido="{{ $vendedor['apellido'] }}"
-                                        data-correo="{{ rawurlencode($vendedor['correo_electronico']) }}"
-                                        data-telefono="{{ $vendedor['telefono'] }}">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                
-                                <button type="button" 
-                                        class="btn btn-danger btn-sm btn-eliminar" 
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#modalEliminarVendedor"
-                                        data-id="{{ $vendedor['id_vendedor'] }}"
-                                        data-nombre="{{ $vendedor['nombre'] }} {{ $vendedor['apellido'] }}">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
                         </tr>
                     @endforeach
                 @else

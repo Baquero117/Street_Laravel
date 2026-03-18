@@ -8,7 +8,10 @@ $estados = ['Pendiente', 'Procesando', 'Enviado', 'Completado', 'Cancelado'];
 
 {{-- MENSAJE --}}
 @if (!empty($mensaje))
-    <div class="alert alert-info text-center">{{ $mensaje }}</div>
+    <div id="alertaMensaje" class="alert alert-info text-center alert-dismissible fade show">
+        {{ $mensaje }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
 @endif
 
 <div class="card mt-3">
@@ -209,6 +212,16 @@ function buscarManualPedido() {
     let valor = document.getElementById('buscadorPedido').value;
     filtrarTablaPedido(valor);
 }
+
+// ALERTA AUTOMÁTICA (6 segundos)
+setTimeout(function() {
+    let alerta = document.getElementById('alertaMensaje');
+    if(alerta){
+        alerta.classList.remove('show');
+        alerta.classList.add('fade');
+        setTimeout(() => alerta.remove(), 500);
+    }
+}, 6000);
 </script>
 
 @endsection

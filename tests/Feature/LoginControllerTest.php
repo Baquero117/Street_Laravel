@@ -3,9 +3,9 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use Mockery;
 use Illuminate\Support\Facades\Session;
 use App\Models\Login\LoginService;
+use Mockery;
 
 class LoginControllerTest extends TestCase
 {
@@ -16,7 +16,7 @@ class LoginControllerTest extends TestCase
     }
 
     /** @test */
-    public function muestra_la_vista_de_login()
+    public function muestra_vista_login()
     {
         $response = $this->get(route('login'));
 
@@ -25,52 +25,22 @@ class LoginControllerTest extends TestCase
     }
 
     /** @test */
-    public function login_exitoso_cliente()
+    public function login_exitoso_como_administrador()
     {
-        // 🔹 Mock del servicio
         $mock = Mockery::mock(LoginService::class);
-        $mock->shouldReceive('autenticar')
-            ->once()
-            ->andReturn([
-                'token' => 'fake-jwt',
-                'tipo' => 'cliente',
-                'datos' => [
-                    'id_cliente' => 1,
-                    'nombre' => 'Juan',
-                    'correo_electronico' => 'juan@test.com'
-                ]
-            ]);
-
         $this->app->instance(LoginService::class, $mock);
 
-        $response = $this->post(route('login.procesar'), [
-            'correo_electronico' => 'juan@test.com',
-            'contrasena' => '123456'
-        ]);
-
-        $response->assertRedirect(route('inicio'));
-
-        $this->assertEquals('fake-jwt', Session::get('token'));
-        $this->assertEquals('cliente', Session::get('usuario_tipo'));
-    }
-
-    /** @test */
-    public function login_exitoso_administrador()
-    {
-        $mock = Mockery::mock(LoginService::class);
         $mock->shouldReceive('autenticar')
             ->once()
             ->andReturn([
-                'token' => 'fake-jwt',
+                'token' => 'abc123',
                 'tipo' => 'administrador',
                 'datos' => [
-                    'id_vendedor' => 5,
+                    'id_vendedor' => 1,
                     'nombre' => 'Admin',
                     'correo_electronico' => 'admin@test.com'
                 ]
             ]);
-
-        $this->app->instance(LoginService::class, $mock);
 
         $response = $this->post(route('login.procesar'), [
             'correo_electronico' => 'admin@test.com',
@@ -78,39 +48,65 @@ class LoginControllerTest extends TestCase
         ]);
 
         $response->assertRedirect(route('admin.Reportes'));
+        $this->assertEquals('abc123', Session::get('token'));
+        $this->assertEquals('administrador', Session::get('usuario_tipo'));
+    }
+
+    /** @test */
+    public function login_exitoso_como_cliente()
+    {
+        $mock = Mockery::mock(LoginService::class);
+        $this->app->instance(LoginService::class, $mock);
+
+        $mock->shouldReceive('autenticar')
+            ->once()
+            ->andReturn([
+                'token' => 'xyz789',
+                'tipo' => 'cliente',
+                'datos' => [
+                    'id_cliente' => 5,
+                    'nombre' => 'Alexandra',
+                    'correo_electronico' => 'alex@test.com'
+                ]
+            ]);
+
+        $response = $this->post(route('login.procesar'), [
+            'correo_electronico' => 'alex@test.com',
+            'contrasena' => '123456'
+        ]);
+
+        $response->assertRedirect(route('inicio'));
+        $this->assertEquals('xyz789', Session::get('token'));
+        $this->assertEquals('cliente', Session::get('usuario_tipo'));
     }
 
     /** @test */
     public function login_fallido_redirige_con_error()
     {
         $mock = Mockery::mock(LoginService::class);
-        $mock->shouldReceive('autenticar')
-            ->once()
-            ->andReturn(false);
-
         $this->app->instance(LoginService::class, $mock);
 
-        $response = $this->from(route('login'))
-            ->post(route('login.procesar'), [
-                'correo_electronico' => 'fail@test.com',
-                'contrasena' => 'wrong'
-            ]);
+        $mock->shouldReceive('autenticar')
+            ->once()
+            ->andReturn(null);
+
+        $response = $this->post(route('login.procesar'), [
+            'correo_electronico' => 'wrong@test.com',
+            'contrasena' => 'incorrecta'
+        ]);
 
         $response->assertRedirect(route('login'));
         $response->assertSessionHas('error');
     }
 
     /** @test */
-    public function logout_limpia_la_sesion()
+    public function logout_limpia_sesion_y_redirige()
     {
-        Session::put('token', 'abc');
+        Session::put('token', 'abc123');
 
         $response = $this->post(route('logout'));
 
         $response->assertRedirect(route('inicio'));
         $this->assertNull(Session::get('token'));
     }
-}
-
-
-/** php artisan test --filter=LoginControllerTest */
+}  //php artisan test --filter=LoginControllerTest
