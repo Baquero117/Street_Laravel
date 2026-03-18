@@ -292,8 +292,8 @@ async function confirmarPedido() {
     console.log('Datos del pedido:', datosPedido);
 
     try {
-        const response = await fetch('http://34.225.197.89:8080/pedido', {
-            method: 'POST',
+        const response = await fetch('http://34.225.197.89:8080/pedido/confirmar', {
+        method: 'POST',
             headers: headers,
             body: JSON.stringify(datosPedido)
         });
