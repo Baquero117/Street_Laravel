@@ -14,58 +14,76 @@
 
 <body>
 
-    <!-- NAVBAR igual al de inicio -->
+    <!-- NAVBAR RESPONSIVO -->
     <nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
-        <div class="container-fluid px-4 py-2">
-            <div class="row w-100 align-items-center g-0">
+        <div class="container-fluid px-3 py-2">
 
-                <!-- Logo izquierda -->
-                <div class="col-auto">
-                    <a href="{{ url('/inicio') }}" class="navbar-brand logo-urbano mb-0">
-                        URBAN STREET
-                    </a>
-                </div>
+            <!-- Logo -->
+            <a href="{{ url('/inicio') }}" class="navbar-brand logo-urbano mb-0">
+                URBAN STREET
+            </a>
 
-                <!-- Espacio central -->
-                <div class="col"></div>
+            <!-- Iconos móvil (carrito + favoritos visibles antes del toggler) -->
+            <div class="d-flex align-items-center gap-2 d-lg-none ms-auto me-2">
+                <a href="{{ url('/carrito') }}" class="text-dark icon-wrapper position-relative">
+                    <i class="bi bi-bag fs-5"></i>
+                </a>
+                <a href="{{ route('favoritos') }}" class="text-dark icon-wrapper position-relative">
+                    <i class="bi bi-heart fs-5"></i>
+                </a>
+            </div>
 
-                <!-- Iconos derecha -->
-                <div class="col-auto d-flex align-items-center gap-3">
+            <!-- Toggler hamburguesa -->
+            <button class="navbar-toggler border-0 shadow-none" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navbarFavMenu"
+                aria-controls="navbarFavMenu" aria-expanded="false">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Menú colapsable -->
+            <div class="collapse navbar-collapse" id="navbarFavMenu">
+                <!-- Espacio central vacío en desktop -->
+                <div class="flex-grow-1"></div>
+
+                <!-- Iconos desktop -->
+                <div class="d-flex align-items-center gap-3 py-2 py-lg-0">
 
                     <div class="icon-wrapper">
                         <i class="bi bi-search fs-5"></i>
                     </div>
 
-                    <div class="dropdown icon-wrapper">
-                        <a href="#" class="text-dark">
+                    <!-- Dropdown usuario — solo click -->
+                    <div class="icon-wrapper position-relative" id="dropdownUsuario">
+                        <a href="#" class="text-dark" id="userDropdownToggle" aria-expanded="false">
                             <i class="bi bi-person fs-5"></i>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
+                        <ul class="fav-dropdown-menu" id="userDropdownMenu">
                             @if(Session::has('token'))
-                                <li><a class="dropdown-item py-2" href="{{ url('cuenta') }}">Perfil</a></li>
+                                <li><a class="fav-dropdown-item" href="{{ url('cuenta') }}">Perfil</a></li>
                                 <li>
                                     <form action="{{ route('logout') }}" method="POST" class="m-0">
                                         @csrf
-                                        <button type="submit" class="dropdown-item py-2">Cerrar sesión</button>
+                                        <button type="submit" class="fav-dropdown-item w-100 text-start border-0 bg-transparent">Cerrar sesión</button>
                                     </form>
                                 </li>
                             @else
-                                <li><a class="dropdown-item py-2" href="{{ route('login') }}">Iniciar sesión</a></li>
-                                <li><a class="dropdown-item py-2" href="{{ route('registro') }}">Registrarse</a></li>
+                                <li><a class="fav-dropdown-item" href="{{ route('login') }}">Iniciar sesión</a></li>
+                                <li><a class="fav-dropdown-item" href="{{ route('registro') }}">Registrarse</a></li>
                             @endif
                         </ul>
                     </div>
 
-                    <a href="{{ url('/carrito') }}" class="text-dark icon-wrapper position-relative">
+                    <!-- Carrito y favoritos: solo desktop -->
+                    <a href="{{ url('/carrito') }}" class="text-dark icon-wrapper position-relative d-none d-lg-inline-flex">
                         <i class="bi bi-bag fs-5"></i>
                     </a>
-
-                    <a href="{{ route('favoritos') }}" class="text-dark icon-wrapper position-relative">
+                    <a href="{{ route('favoritos') }}" class="text-dark icon-wrapper position-relative d-none d-lg-inline-flex">
                         <i class="bi bi-heart fs-5"></i>
                     </a>
 
                 </div>
             </div>
+
         </div>
     </nav>
 
@@ -123,14 +141,16 @@
                     </div>
 
                 @else
-                    <p class="favoritos-contador mb-3">
+                    <p class="favoritos-contador mb-3" id="favoritos-contador">
                         <i class="bi bi-heart-fill text-danger me-1"></i>
                         {{ count($favoritos) }} {{ count($favoritos) === 1 ? 'producto guardado' : 'productos guardados' }}
                     </p>
 
                     <div class="d-flex flex-column gap-3" id="lista-favoritos">
-                        @foreach($favoritos as $item)
-                        <div class="favorito-card" id="card-favorito-{{ $item['id_favorito'] }}">
+                        @foreach($favoritos as $index => $item)
+                        <div class="favorito-card {{ $index >= 4 ? 'favorito-oculto' : '' }}"
+                             id="card-favorito-{{ $item['id_favorito'] }}"
+                             data-index="{{ $index }}">
 
                             <div class="favorito-imagen-wrap">
                                 <img src="{{ asset('storage/' . $item['imagen']) }}"
@@ -175,45 +195,66 @@
                         </div>
                         @endforeach
                     </div>
+
+                    @if(count($favoritos) > 4)
+                    <div class="text-center mt-4" id="ver-mas-wrap">
+                        <button class="btn-ver-mas" id="btnVerMas" onclick="toggleVerMas()">
+                            <i class="bi bi-chevron-down me-1" id="iconVerMas"></i>
+                            Ver {{ count($favoritos) - 4 }} productos más
+                        </button>
+                    </div>
+                    @endif
+
                 @endif
 
             </div>
         </div>
     </div>
 
-    <!-- MODAL DETALLE PRODUCTO -->
+
+    <!-- MODAL DETALLE PRODUCTO — responsivo -->
     <div class="modal fade" id="detalleModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
             <div class="modal-content border-0 rounded-0 overflow-hidden">
                 <button type="button" class="btn-close custom-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
                 <div class="modal-body p-0">
-                    <div class="row g-0">
-                        <div class="col-md-7 d-flex align-items-center bg-light">
+                    <div class="row g-0 flex-column flex-md-row">
+
+                        <!-- Imagen -->
+                        <div class="col-12 col-md-7 d-flex align-items-center bg-light modal-img-col">
                             <img id="modalImagen" src="" class="img-fluid w-100 img-product-detail" alt="">
                         </div>
-                        <div class="col-md-5 d-flex flex-column p-4 p-lg-5" style="max-height: 90vh; overflow-y: auto;">
-                            <h2 id="modalNombre" class="fw-bold mb-1 text-uppercase"></h2>
+
+                        <!-- Info -->
+                        <div class="col-12 col-md-5 d-flex flex-column p-4" style="overflow-y: auto;">
+                            <h2 id="modalNombre" class="fw-bold mb-1 text-uppercase" style="font-size: clamp(1rem, 4vw, 1.5rem);"></h2>
                             <p id="modalColor" class="text-muted small mb-3"></p>
-                            <h3 class="fw-light mb-4 text-dark">$<span id="modalPrecio"></span></h3>
+                            <h3 class="fw-light mb-4 text-dark" style="font-size: clamp(1.1rem, 4vw, 1.5rem);">$<span id="modalPrecio"></span></h3>
+
                             <div class="mb-4">
                                 <p id="modalDescripcion" class="text-secondary small" style="line-height: 1.6;"></p>
                             </div>
+
                             <div class="mb-4">
                                 <label class="fw-bold small mb-2 text-uppercase" style="letter-spacing: 1px;">Seleccionar Talla</label>
                                 <div id="modalTallas" class="d-flex flex-wrap gap-2"></div>
                             </div>
-                            <div class="mt-auto border-top pt-4">
+
+                            <div class="border-top pt-4 mt-auto">
                                 <button class="btn btn-dark w-100 rounded-0 py-3 mb-2 text-uppercase fw-bold"
                                         onclick="agregarAlCarrito()">
                                     Añadir al carrito
                                 </button>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 
     <!-- FOOTER -->
     <footer class="container-fluid bg-black text-white pt-5 pb-3 mt-5">
@@ -229,7 +270,7 @@
                 </div>
             </div>
             <div class="row justify-content-center mt-4">
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <h6 class="fw-bold">Acerca de Street Urban</h6>
                     <ul class="list-unstyled">
                         <li><a href="#" class="text-white text-decoration-none">Compra segura</a></li>
@@ -237,12 +278,12 @@
                         <li><a href="#" class="text-white text-decoration-none">Formas de pago</a></li>
                     </ul>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <h6 class="fw-bold">Información adicional</h6>
                     <ul class="list-unstyled">
                         <li><a href="#" class="text-white text-decoration-none">Registro</a></li>
                         <li><a href="#" class="text-white text-decoration-none">Contáctanos</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Política de protección de datos</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Política de datos</a></li>
                     </ul>
                 </div>
             </div>

@@ -1,15 +1,31 @@
-const dropdownUsuario = document.querySelector('.dropdown');
-const dropdownMenu = dropdownUsuario?.querySelector('.dropdown-menu');
-if (dropdownUsuario && dropdownMenu) {
-    dropdownUsuario.addEventListener('mouseenter', () => dropdownMenu.classList.add('show'));
-    dropdownUsuario.addEventListener('mouseleave', (e) => {
-        if (!dropdownMenu.contains(e.relatedTarget)) dropdownMenu.classList.remove('show');
+// ============================================================
+//  Dropdown usuario — solo CLICK, con animación CSS
+// ============================================================
+function initDropdownUsuario() {
+    const toggle = document.getElementById('userDropdownToggle');
+    const menu   = document.getElementById('userDropdownMenu');
+    if (!toggle || !menu) return;
+
+    toggle.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const abierto = menu.classList.contains('show');
+        abierto ? cerrarDropdown() : abrirDropdown();
     });
-    dropdownMenu.addEventListener('mouseleave', (e) => {
-        if (!dropdownUsuario.contains(e.relatedTarget)) dropdownMenu.classList.remove('show');
+
+    document.addEventListener('click', function (e) {
+        if (!toggle.contains(e.target) && !menu.contains(e.target)) {
+            cerrarDropdown();
+        }
     });
+
+    function abrirDropdown()  { menu.classList.add('show');    toggle.setAttribute('aria-expanded', 'true');  }
+    function cerrarDropdown() { menu.classList.remove('show'); toggle.setAttribute('aria-expanded', 'false'); }
 }
-// ── Toast personalizado ──────────────────────────────────────
+
+// ============================================================
+//  Toast personalizado
+// ============================================================
 function mostrarNotificacion(mensaje, tipo) {
     const anterior = document.querySelector('.urban-toast');
     if (anterior) anterior.remove();
@@ -47,7 +63,9 @@ function mostrarNotificacion(mensaje, tipo) {
     }, 3000);
 }
 
-// ── Modal de confirmación ─────────────────────────────────────
+// ============================================================
+//  Modal de confirmación
+// ============================================================
 function mostrarConfirmacion(mensaje, onAceptar) {
     const anterior = document.querySelector('.urban-modal-overlay');
     if (anterior) anterior.remove();
@@ -102,14 +120,54 @@ function mostrarConfirmacion(mensaje, onAceptar) {
     overlay.addEventListener('click', (e) => { if (e.target === overlay) cerrar(); });
 }
 
-// ── Variables globales modal ──────────────────────────────────
+// ============================================================
+//  Ver más / Ver menos
+// ============================================================
+let expandido = false;
+
+function toggleVerMas() {
+    const btn        = document.getElementById('btnVerMas');
+    const ocultas    = document.querySelectorAll('.favorito-oculto');
+    const total      = ocultas.length;
+
+    if (!expandido) {
+        // Mostrar con animación escalonada
+        ocultas.forEach((card, i) => {
+            card.classList.add('mostrando');
+            card.style.animationDelay = `${i * 60}ms`;
+        });
+        btn.classList.add('expandido');
+        btn.innerHTML = '<i class="bi bi-chevron-up me-1" id="iconVerMas"></i> Ver menos';
+        expandido = true;
+    } else {
+        // Ocultar
+        ocultas.forEach(card => {
+            card.classList.remove('mostrando');
+            card.style.animationDelay = '';
+        });
+        btn.classList.remove('expandido');
+        btn.innerHTML = `<i class="bi bi-chevron-down me-1" id="iconVerMas"></i> Ver ${total} productos más`;
+        expandido = false;
+
+        // Scroll suave de vuelta al inicio de la lista
+        document.getElementById('lista-favoritos')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+// ============================================================
+//  Variables globales — modal
+// ============================================================
 let modalDetalle          = null;
 let tallaSeleccionada     = null;
 let productoActual        = null;
 let idDetalleSeleccionado = null;
 
+// ============================================================
+//  DOMContentLoaded
+// ============================================================
 document.addEventListener('DOMContentLoaded', () => {
 
+    initDropdownUsuario();
     modalDetalle = new bootstrap.Modal(document.getElementById('detalleModal'));
 
     const csrfToken = () => document.querySelector('meta[name="csrf-token"]')?.content ?? '';
@@ -138,6 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         setTimeout(() => {
                             card.remove();
                             actualizarContador();
+                            recalcularVerMas();
                         }, 300);
                         mostrarNotificacion('Producto quitado de favoritos', 'success');
                     } else {
@@ -155,9 +214,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Actualiza contador y estado vacío
     function actualizarContador() {
         const listaFavoritos = document.getElementById('lista-favoritos');
-        const contadorEl     = document.querySelector('.favoritos-contador');
+        const contadorEl     = document.getElementById('favoritos-contador');
         if (!listaFavoritos) return;
 
         const total = listaFavoritos.querySelectorAll('.favorito-card').length;
@@ -174,11 +234,46 @@ document.addEventListener('DOMContentLoaded', () => {
                     <a href="/inicio" class="btn btn-guardar mt-2">Ir a la tienda</a>
                 </div>`;
             if (contadorEl) contadorEl.remove();
+            const verMasWrap = document.getElementById('ver-mas-wrap');
+            if (verMasWrap) verMasWrap.remove();
+        }
+    }
+
+    // Recalcula cuáles cards deben tener la clase .favorito-oculto tras eliminar una
+    function recalcularVerMas() {
+        const lista    = document.getElementById('lista-favoritos');
+        const verMasWrap = document.getElementById('ver-mas-wrap');
+        if (!lista) return;
+
+        const cards = Array.from(lista.querySelectorAll('.favorito-card'));
+        const total = cards.length;
+
+        cards.forEach((card, i) => {
+            if (i >= 4) {
+                if (!expandido) {
+                    card.classList.add('favorito-oculto');
+                    card.classList.remove('mostrando');
+                }
+            } else {
+                card.classList.remove('favorito-oculto', 'mostrando');
+            }
+        });
+
+        // Actualizar o eliminar el botón "ver más"
+        if (total <= 4 && verMasWrap) {
+            verMasWrap.remove();
+        } else if (total > 4 && verMasWrap) {
+            const btn = document.getElementById('btnVerMas');
+            if (btn && !expandido) {
+                btn.innerHTML = `<i class="bi bi-chevron-down me-1"></i> Ver ${total - 4} productos más`;
+            }
         }
     }
 });
 
-// ── Modal detalle ─────────────────────────────────────────────
+// ============================================================
+//  Modal detalle
+// ============================================================
 function verDetalleFavorito(idProducto) {
     fetch(`/productos/${idProducto}/detalle`)
         .then(response => response.ok ? response.json() : Promise.reject('Error en red'))
@@ -220,6 +315,9 @@ function verDetalleFavorito(idProducto) {
         .catch(() => mostrarNotificacion('Error al cargar el producto', 'error'));
 }
 
+// ============================================================
+//  Agregar al carrito desde modal
+// ============================================================
 function agregarAlCarrito() {
     if (!productoActual)        { mostrarNotificacion('Error: No hay producto seleccionado', 'error'); return; }
     if (!idDetalleSeleccionado) { mostrarNotificacion('Por favor selecciona una talla', 'warning'); return; }
@@ -245,7 +343,7 @@ function agregarAlCarrito() {
             return;
         }
         if (data.success) {
-            mostrarNotificacion('Producto agregado al carrito', 'success');
+            mostrarNotificacion('Producto agregado al carrito ✅', 'success');
             modalDetalle.hide();
         } else {
             mostrarNotificacion(data.mensaje || 'No se pudo agregar', 'error');

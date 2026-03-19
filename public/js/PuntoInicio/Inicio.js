@@ -41,28 +41,31 @@ function mostrarNotificacion(mensaje, tipo) {
 }
 
 // ============================================================
-//  Dropdown con hover
+//  Dropdown usuario — desktop Y móvil por separado
 // ============================================================
-const dropdownUsuario = document.querySelector('.dropdown');
-const dropdownMenu = dropdownUsuario.querySelector('.dropdown-menu');
+function initDropdownUsuario() {
+    function setupDropdown(toggleId, menuId) {
+        const toggle = document.getElementById(toggleId);
+        const menu   = document.getElementById(menuId);
+        if (!toggle || !menu) return;
 
-dropdownUsuario.addEventListener('mouseenter', function () {
-    dropdownMenu.classList.add('show');
-});
+        toggle.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            menu.classList.contains('show') ? cerrar() : abrir();
+        });
 
-dropdownUsuario.addEventListener('mouseleave', function (e) {
-    const haciaMenu = dropdownMenu.contains(e.relatedTarget);
-    const haciaPuente = e.relatedTarget === dropdownUsuario;
-    if (!haciaMenu && !haciaPuente) {
-        dropdownMenu.classList.remove('show');
+        document.addEventListener('click', function (e) {
+            if (!toggle.contains(e.target) && !menu.contains(e.target)) cerrar();
+        });
+
+        function abrir()  { menu.classList.add('show');    toggle.setAttribute('aria-expanded', 'true');  }
+        function cerrar() { menu.classList.remove('show'); toggle.setAttribute('aria-expanded', 'false'); }
     }
-});
 
-dropdownMenu.addEventListener('mouseleave', function (e) {
-    if (!dropdownUsuario.contains(e.relatedTarget)) {
-        dropdownMenu.classList.remove('show');
-    }
-});
+    setupDropdown('userDropdownToggle',       'userDropdownMenu');       // desktop
+    setupDropdown('userDropdownToggleMobile', 'userDropdownMenuMobile'); // móvil
+}
 
 // ============================================================
 //  Variables globales — modal / carrito
@@ -76,6 +79,8 @@ let idDetalleSeleccionado = null;
 //  DOMContentLoaded
 // ============================================================
 document.addEventListener('DOMContentLoaded', function () {
+    initDropdownUsuario();
+
     const imagenes = document.querySelectorAll('.product-image');
     imagenes.forEach((imagen) => {
         imagen.addEventListener('click', function () {
@@ -84,6 +89,21 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         imagen.style.cursor = 'pointer';
     });
+
+    // En móvil: toda la card es clickeable (no solo la imagen)
+    if (window.innerWidth < 768) {
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('click', function (e) {
+                // No abrir modal si se hizo click en el botón favorito
+                if (e.target.closest('.btn-favorito')) return;
+                const img = this.querySelector('.product-image');
+                if (img) {
+                    const idProducto = img.getAttribute('data-id');
+                    verDetalle(idProducto);
+                }
+            });
+        });
+    }
 
     actualizarContadorCarrito();
     initScrollEffects();
