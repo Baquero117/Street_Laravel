@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Http;
 
 class DetalleProductoService
 {
-    private $baseUrl = "http://localhost:8080/detalle_producto";
+    private $baseUrl = "http://34.225.197.89:8080/detalle_producto";
     private $token;
 
     public function __construct()
