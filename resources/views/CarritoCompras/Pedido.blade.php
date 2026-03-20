@@ -275,5 +275,6 @@
     
     <!-- JS Personalizado -->
     <script src="{{ asset('js/CarritoCompras/Pedido.js') }}"></script>
+    
 </body>
 </html>
