@@ -8,7 +8,7 @@ class LoginService
 
     public function __construct()
     {
-        $this->apiUrl = "http://localhost:8080/auth/login";
+        $this->apiUrl = "http://34.225.197.89:8080/auth/login";
     }
 
     public function autenticar($correo, $contrasena)
