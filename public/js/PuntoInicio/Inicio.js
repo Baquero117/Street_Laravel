@@ -26,13 +26,11 @@ function mostrarNotificacion(mensaje, tipo) {
         opacity:0; transform:translateY(20px);
         transition:opacity 0.3s ease, transform 0.3s ease;
     `;
-
     document.body.appendChild(toast);
     requestAnimationFrame(() => requestAnimationFrame(() => {
         toast.style.opacity = '1';
         toast.style.transform = 'translateY(0)';
     }));
-
     setTimeout(() => {
         toast.style.opacity = '0';
         toast.style.transform = 'translateY(20px)';
@@ -42,35 +40,83 @@ function mostrarNotificacion(mensaje, tipo) {
 
 // ============================================================
 //  Dropdown usuario — desktop Y móvil por separado
+//  + navbar vuelve a blanco mientras el dropdown está abierto
 // ============================================================
 function initDropdownUsuario() {
+    const navbar = document.getElementById('mainNavbar');
+    // Contador de dropdowns abiertos
+    let abiertos = 0;
+
     function setupDropdown(toggleId, menuId) {
         const toggle = document.getElementById(toggleId);
         const menu   = document.getElementById(menuId);
         if (!toggle || !menu) return;
 
+        let estaAbierto = false;
+
         toggle.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            menu.classList.contains('show') ? cerrar() : abrir();
+            estaAbierto ? cerrar() : abrir();
         });
 
         document.addEventListener('click', function (e) {
-            if (!toggle.contains(e.target) && !menu.contains(e.target)) cerrar();
+            if (estaAbierto && !toggle.contains(e.target) && !menu.contains(e.target)) {
+                cerrar();
+            }
         });
 
-        function abrir()  { menu.classList.add('show');    toggle.setAttribute('aria-expanded', 'true');  }
-        function cerrar() { menu.classList.remove('show'); toggle.setAttribute('aria-expanded', 'false'); }
+        function abrir() {
+            if (estaAbierto) return;
+            estaAbierto = true;
+            abiertos++;
+            menu.classList.add('show');
+            toggle.setAttribute('aria-expanded', 'true');
+            // Fuerza navbar blanco
+            navbar.classList.remove('scrolled');
+            navbar.classList.add('dropdown-open');
+        }
+
+        function cerrar() {
+            if (!estaAbierto) return;
+            estaAbierto = false;
+            abiertos = Math.max(0, abiertos - 1);
+            menu.classList.remove('show');
+            toggle.setAttribute('aria-expanded', 'false');
+            // Solo quita el blanco si no quedan dropdowns abiertos
+            if (abiertos === 0) {
+                navbar.classList.remove('dropdown-open');
+                // Restaura transparencia si corresponde
+                if (window.pageYOffset > 50) {
+                    navbar.classList.add('scrolled');
+                }
+            }
+        }
     }
 
-    setupDropdown('userDropdownToggle',       'userDropdownMenu');       // desktop
-    setupDropdown('userDropdownToggleMobile', 'userDropdownMenuMobile'); // móvil
+    setupDropdown('userDropdownToggle',       'userDropdownMenu');
+    setupDropdown('userDropdownToggleMobile', 'userDropdownMenuMobile');
+}
+
+// ============================================================
+//  Filtros — placeholder para implementación futura
+// ============================================================
+function initFiltros() {
+    const btnMobile  = document.getElementById('btnFiltrosMobile');
+    const btnDesktop = document.getElementById('btnFiltrosDesktop');
+
+    function abrirFiltros() {
+        mostrarNotificacion('Filtros próximamente disponibles', 'info');
+    }
+
+    if (btnMobile)  btnMobile.addEventListener('click', abrirFiltros);
+    if (btnDesktop) btnDesktop.addEventListener('click', abrirFiltros);
 }
 
 // ============================================================
 //  Variables globales — modal / carrito
 // ============================================================
-const modal = new bootstrap.Modal(document.getElementById('detalleModal'));
+let modal                 = null;
 let tallaSeleccionada     = null;
 let productoActual        = null;
 let idDetalleSeleccionado = null;
@@ -79,28 +125,25 @@ let idDetalleSeleccionado = null;
 //  DOMContentLoaded
 // ============================================================
 document.addEventListener('DOMContentLoaded', function () {
-    initDropdownUsuario();
+    modal = new bootstrap.Modal(document.getElementById('detalleModal'));
 
-    const imagenes = document.querySelectorAll('.product-image');
-    imagenes.forEach((imagen) => {
+    initDropdownUsuario();
+    initFiltros();
+
+    document.querySelectorAll('.product-image').forEach(imagen => {
         imagen.addEventListener('click', function () {
-            const idProducto = this.getAttribute('data-id');
-            verDetalle(idProducto);
+            verDetalle(this.getAttribute('data-id'));
         });
         imagen.style.cursor = 'pointer';
     });
 
-    // En móvil: toda la card es clickeable (no solo la imagen)
+    // En móvil: toda la card es clickeable
     if (window.innerWidth < 768) {
         document.querySelectorAll('.product-card').forEach(card => {
             card.addEventListener('click', function (e) {
-                // No abrir modal si se hizo click en el botón favorito
                 if (e.target.closest('.btn-favorito')) return;
                 const img = this.querySelector('.product-image');
-                if (img) {
-                    const idProducto = img.getAttribute('data-id');
-                    verDetalle(idProducto);
-                }
+                if (img) verDetalle(img.getAttribute('data-id'));
             });
         });
     }
@@ -114,19 +157,7 @@ document.addEventListener('DOMContentLoaded', function () {
 //  Scroll del navbar
 // ============================================================
 function initScrollEffects() {
-    const brandLogo = document.getElementById('brandLogo');
-    const navbar    = document.getElementById('mainNavbar');
-
-    window.addEventListener('scroll', function () {
-        const currentScroll = window.pageYOffset;
-        if (currentScroll > 50) {
-            brandLogo.classList.add('fade-out');
-            navbar.classList.add('scrolled');
-        } else {
-            brandLogo.classList.remove('fade-out');
-            navbar.classList.remove('scrolled');
-        }
-    });
+    // Scroll fade eliminado — navbar siempre blanco
 }
 
 // ============================================================
@@ -136,10 +167,7 @@ function verDetalle(idProducto) {
     fetch(`/productos/${idProducto}/detalle`)
         .then(response => response.ok ? response.json() : Promise.reject('Error en red'))
         .then(data => {
-            if (data.error) {
-                mostrarNotificacion('Error al cargar el detalle', 'error');
-                return;
-            }
+            if (data.error) { mostrarNotificacion('Error al cargar el detalle', 'error'); return; }
 
             productoActual        = data;
             tallaSeleccionada     = null;
@@ -159,7 +187,6 @@ function verDetalle(idProducto) {
                     const cajaTalla = document.createElement('div');
                     cajaTalla.className   = 'talla-item';
                     cajaTalla.textContent = detalle.talla;
-
                     cajaTalla.onclick = function () {
                         document.querySelectorAll('.talla-item').forEach(t => t.classList.remove('selected'));
                         this.classList.add('selected');
@@ -184,21 +211,8 @@ function verDetalle(idProducto) {
 //  Carrito
 // ============================================================
 function agregarAlCarrito() {
-    if (!productoActual) {
-        mostrarNotificacion('Error: No hay producto seleccionado', 'error');
-        return;
-    }
-    if (!idDetalleSeleccionado) {
-        mostrarNotificacion('Por favor selecciona una talla', 'warning');
-        return;
-    }
-
-    const datos = {
-        id_detalle_producto: idDetalleSeleccionado,
-        talla:               tallaSeleccionada,
-        cantidad:            1,
-        precio:              productoActual.precio
-    };
+    if (!productoActual)        { mostrarNotificacion('Error: No hay producto seleccionado', 'error'); return; }
+    if (!idDetalleSeleccionado) { mostrarNotificacion('Por favor selecciona una talla', 'warning'); return; }
 
     fetch('/carrito/agregar', {
         method: 'POST',
@@ -206,12 +220,28 @@ function agregarAlCarrito() {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
         },
-        body: JSON.stringify(datos)
+        body: JSON.stringify({
+            id_detalle_producto: idDetalleSeleccionado,
+            talla:               tallaSeleccionada,
+            cantidad:            1,
+            precio:              productoActual.precio
+        })
     })
-    .then(response => response.json())
+    .then(response => {
+        // Si redirige al login (HTML), no es JSON
+        const contentType = response.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) {
+            // Probablemente sesión expirada
+            mostrarNotificacion('Sesión expirada, inicia sesión de nuevo', 'warning');
+            setTimeout(() => window.location.href = '/login', 1500);
+            return null;
+        }
+        return response.json();
+    })
     .then(data => {
+        if (!data) return;
         if (data.redirect) {
-            mostrarNotificacion(data.mensaje, 'warning');
+            mostrarNotificacion(data.mensaje || 'Inicia sesión para continuar', 'warning');
             setTimeout(() => window.location.href = data.redirect, 1500);
             return;
         }
@@ -224,8 +254,8 @@ function agregarAlCarrito() {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        mostrarNotificacion('Error de conexión', 'error');
+        console.error('Error carrito:', error);
+        mostrarNotificacion('Error de conexión al agregar', 'error');
     });
 }
 
@@ -235,10 +265,8 @@ function actualizarContadorCarrito() {
         .then(data => {
             const iconoCarrito = document.querySelector('.bi-bag');
             if (!iconoCarrito) return;
-
             const parent = iconoCarrito.parentElement;
             let badge    = parent.querySelector('.badge');
-
             if (data.cantidad > 0) {
                 if (!badge) {
                     badge = document.createElement('span');
@@ -265,13 +293,8 @@ function verificarFavoritosAlCargar() {
     botones.forEach(btn => {
         const idProducto = btn.getAttribute('data-id');
         fetch(`/favoritos/verificar/${idProducto}`, { headers: { 'Accept': 'application/json' } })
-        .then(res => {
-            if (res.status === 401) return null;
-            return res.json();
-        })
-        .then(data => {
-            if (data && data.esFavorito) marcarComoFavorito(btn);
-        })
+        .then(res => res.status === 401 ? null : res.json())
+        .then(data => { if (data && data.esFavorito) marcarComoFavorito(btn); })
         .catch(() => {});
     });
 }
@@ -279,9 +302,7 @@ function verificarFavoritosAlCargar() {
 function toggleFavorito(idProducto, btnEl) {
     event.stopPropagation();
 
-    const esFavorito = btnEl.classList.contains('is-favorito');
-
-    if (esFavorito) {
+    if (btnEl.classList.contains('is-favorito')) {
         window.location.href = '/favoritos';
         return;
     }
@@ -298,24 +319,16 @@ function toggleFavorito(idProducto, btnEl) {
         body: JSON.stringify({ id_producto: idProducto }),
     })
     .then(res => {
-        if (res.status === 401) {
-            window.location.href = '/login';
-            return null;
-        }
+        if (res.status === 401) { window.location.href = '/login'; return null; }
         return res.json();
     })
     .then(data => {
         if (!data) return;
-
-        if (data.ok) {
+        if (data.ok || (data.mensaje && data.mensaje.toLowerCase().includes('ya está'))) {
             marcarComoFavorito(btnEl);
         } else {
-            if (data.mensaje && data.mensaje.toLowerCase().includes('ya está')) {
-                marcarComoFavorito(btnEl);
-            } else {
-                mostrarNotificacion(data.mensaje || 'No se pudo agregar a favoritos.', 'error');
-                btnEl.disabled = false;
-            }
+            mostrarNotificacion(data.mensaje || 'No se pudo agregar a favoritos.', 'error');
+            btnEl.disabled = false;
         }
     })
     .catch(() => {
@@ -329,7 +342,6 @@ function marcarComoFavorito(btnEl) {
     btnEl.querySelector('i').className = 'bi bi-heart-fill';
     btnEl.title    = 'Guardado en favoritos';
     btnEl.disabled = false;
-
     btnEl.classList.add('pop');
     btnEl.addEventListener('animationend', () => btnEl.classList.remove('pop'), { once: true });
 }

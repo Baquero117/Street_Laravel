@@ -10,10 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/OtrasVistas/mujer.css') }}">
 </head>
-
 <body>
 
-    <!-- NAVBAR RESPONSIVO -->
+    <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
         <div class="container-fluid px-3 py-2">
 
@@ -22,13 +21,35 @@
                 URBAN STREET
             </a>
 
-            <!-- Iconos móvil -->
+            <!-- Iconos móvil: filtros → perfil → carrito -->
             <div class="d-flex align-items-center gap-2 d-lg-none ms-auto me-2">
+
+                <div class="icon-wrapper" id="btnFiltrosMobile">
+                    <i class="bi bi-sliders fs-5"></i>
+                </div>
+
+                <div class="icon-wrapper position-relative" id="dropdownUsuarioMobile">
+                    <a href="#" class="text-dark" id="userDropdownToggleMobile" aria-expanded="false">
+                        <i class="bi bi-person fs-5"></i>
+                    </a>
+                    <ul class="mujer-dropdown-menu" id="userDropdownMenuMobile">
+                        @if(Session::has('token'))
+                            <li><a class="mujer-dropdown-item" href="{{ url('cuenta') }}">Perfil</a></li>
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                    @csrf
+                                    <button type="submit" class="mujer-dropdown-item w-100 text-start border-0 bg-transparent">Cerrar sesión</button>
+                                </form>
+                            </li>
+                        @else
+                            <li><a class="mujer-dropdown-item" href="{{ route('login') }}">Iniciar sesión</a></li>
+                            <li><a class="mujer-dropdown-item" href="{{ route('registro') }}">Registrarse</a></li>
+                        @endif
+                    </ul>
+                </div>
+
                 <a href="{{ url('/carrito') }}" class="text-dark icon-wrapper position-relative">
                     <i class="bi bi-bag fs-5"></i>
-                </a>
-                <a href="{{ route('favoritos') }}" class="text-dark icon-wrapper position-relative">
-                    <i class="bi bi-heart fs-5"></i>
                 </a>
             </div>
 
@@ -42,21 +63,19 @@
             <!-- Menú colapsable -->
             <div class="collapse navbar-collapse" id="navbarMujerMenu">
 
-                <!-- Links centrados en desktop -->
                 <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-lg-center flex-grow-1 gap-2 gap-lg-4 py-3 py-lg-0">
                     <a href="{{ url('/hombre') }}" class="nav-link-custom">HOMBRE</a>
                     <a href="{{ url('/mujer') }}" class="nav-link-custom active-page">MUJER</a>
                     <a href="{{ url('/moda') }}" class="nav-link-custom">LO MEJOR DE LA MODA</a>
                 </div>
 
-                <!-- Iconos desktop -->
-                <div class="d-flex align-items-center gap-3 py-2 py-lg-0">
+                <!-- Iconos desktop: filtros → perfil → carrito -->
+                <div class="d-none d-lg-flex align-items-center gap-3">
 
-                    <div class="icon-wrapper">
-                        <i class="bi bi-search fs-5"></i>
+                    <div class="icon-wrapper" id="btnFiltrosDesktop">
+                        <i class="bi bi-sliders fs-5"></i>
                     </div>
 
-                    <!-- Dropdown usuario — solo click -->
                     <div class="icon-wrapper position-relative" id="dropdownUsuario">
                         <a href="#" class="text-dark" id="userDropdownToggle" aria-expanded="false">
                             <i class="bi bi-person fs-5"></i>
@@ -77,12 +96,8 @@
                         </ul>
                     </div>
 
-                    <!-- Carrito y favoritos: solo desktop -->
-                    <a href="{{ url('/carrito') }}" class="text-dark icon-wrapper position-relative d-none d-lg-inline-flex">
+                    <a href="{{ url('/carrito') }}" class="text-dark icon-wrapper position-relative">
                         <i class="bi bi-bag fs-5"></i>
-                    </a>
-                    <a href="{{ route('favoritos') }}" class="text-dark icon-wrapper position-relative d-none d-lg-inline-flex">
-                        <i class="bi bi-heart fs-5"></i>
                     </a>
 
                 </div>
@@ -92,7 +107,7 @@
     </nav>
 
 
-    <!-- CARRUSEL -->
+    <!-- CARRUSEL — 3 imágenes desktop, 1 móvil, sin flechas -->
     <div class="carousel-section">
         <div id="carruselProductos" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
             <div class="carousel-inner">
@@ -114,13 +129,7 @@
                 </div>
 
             </div>
-
-            <button class="carousel-control-prev" type="button" data-bs-target="#carruselProductos" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carruselProductos" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </button>
+            <!-- sin flechas -->
         </div>
     </div>
 
@@ -129,7 +138,6 @@
     <div class="container-fluid bg-light text-dark py-5 mt-2">
         <div class="container">
             <h2 class="text-center mb-4">La moda la puedes inventar tú.</h2>
-
             <div class="row g-4">
                 @forelse($productos as $producto)
                     <div class="col-6 col-md-4 col-lg-3">
@@ -140,18 +148,12 @@
                                      alt="{{ $producto['nombre'] }}"
                                      data-id="{{ $producto['id_producto'] }}"
                                      onerror="this.src='https://via.placeholder.com/400x400?text=Sin+Imagen'">
-
                                 <div class="product-logo">夜</div>
-
-                                <button
-                                    class="btn-favorito"
-                                    data-id="{{ $producto['id_producto'] }}"
-                                    onclick="toggleFavorito(this)"
-                                    title="Añadir a favoritos">
+                                <button class="btn-favorito" data-id="{{ $producto['id_producto'] }}"
+                                    onclick="toggleFavorito(this)" title="Añadir a favoritos">
                                     <i class="bi bi-heart"></i>
                                 </button>
                             </div>
-
                             <div class="card-body px-0 pt-3 pb-2">
                                 <h6 class="card-title mb-1 text-dark fw-normal" style="font-size: 0.9rem;">
                                     {{ $producto['nombre'] }}
@@ -177,39 +179,30 @@
     <!-- MODAL -->
     <div class="modal fade" id="detalleModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
-            <div class="modal-content border-0 rounded-0 overflow-hidden">
+            <div class="modal-content border-0 overflow-hidden">
                 <button type="button" class="btn-close custom-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
                 <div class="modal-body p-0">
                     <div class="row g-0 flex-column flex-md-row">
-
-                        <!-- Imagen -->
                         <div class="col-12 col-md-7 d-flex align-items-center bg-light modal-img-col">
                             <img id="modalImagen" src="" class="img-fluid w-100 img-product-detail" alt="">
                         </div>
-
-                        <!-- Info -->
                         <div class="col-12 col-md-5 d-flex flex-column p-4" style="overflow-y: auto;">
                             <h2 id="modalNombre" class="fw-bold mb-1 text-uppercase" style="font-size: clamp(1rem, 4vw, 1.5rem);"></h2>
                             <p id="modalColor" class="text-muted small mb-3"></p>
                             <h3 class="fw-light mb-4 text-dark" style="font-size: clamp(1.1rem, 4vw, 1.5rem);">$<span id="modalPrecio"></span></h3>
-
                             <div class="mb-4">
                                 <p id="modalDescripcion" class="text-secondary small" style="line-height: 1.6;"></p>
                             </div>
-
                             <div class="mb-4">
                                 <label class="fw-bold small mb-2 text-uppercase" style="letter-spacing: 1px;">Seleccionar Talla</label>
                                 <div id="modalTallas" class="d-flex flex-wrap gap-2"></div>
                             </div>
-
                             <div class="border-top pt-4 mt-auto">
                                 <button class="btn btn-dark w-100 rounded-0 py-3 mb-2 text-uppercase fw-bold" onclick="agregarAlCarrito()">
                                     Añadir al carrito
                                 </button>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -230,7 +223,6 @@
                     <a href="#" class="text-white fs-4"><i class="bi bi-tiktok"></i></a>
                 </div>
             </div>
-
             <div class="row justify-content-center mt-4">
                 <div class="col-6 col-md-3 mb-3">
                     <h6 class="fw-bold">Acerca de Street Urban</h6>
@@ -249,7 +241,6 @@
                     </ul>
                 </div>
             </div>
-
             <div class="text-center mt-4 border-top pt-3">
                 <p class="mb-1">Con fines educativos únicamente</p>
                 <small>&copy; Derechos de autor pertenecen a Koaj, Pull & Bear y Bershka</small>

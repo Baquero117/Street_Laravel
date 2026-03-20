@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Tienda Online</title>
+    <title>Urban Street</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rubik:wght@300;400;500;700&family=Permanent+Marker&display=swap" rel="stylesheet">
@@ -21,8 +21,13 @@
                 URBAN STREET
             </a>
 
-            <!-- Iconos móvil: persona + carrito + favoritos (fijos, siempre visibles) -->
+            <!-- Iconos móvil: filtros + perfil + carrito (siempre visibles) -->
             <div class="d-flex align-items-center gap-2 d-lg-none ms-auto me-2">
+
+                <!-- Filtros -->
+                <div class="icon-wrapper" id="btnFiltrosMobile">
+                    <i class="bi bi-sliders fs-5"></i>
+                </div>
 
                 <!-- Dropdown usuario móvil -->
                 <div class="icon-wrapper position-relative" id="dropdownUsuarioMobile">
@@ -45,11 +50,9 @@
                     </ul>
                 </div>
 
+                <!-- Carrito -->
                 <a href="{{ url('/carrito') }}" class="text-dark icon-wrapper position-relative">
                     <i class="bi bi-bag fs-5"></i>
-                </a>
-                <a href="{{ route('favoritos') }}" class="text-dark icon-wrapper position-relative">
-                    <i class="bi bi-heart fs-5"></i>
                 </a>
             </div>
 
@@ -58,7 +61,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <!-- Menú colapsable — solo links + iconos desktop -->
+            <!-- Menú colapsable — links + iconos desktop -->
             <div class="collapse navbar-collapse" id="navbarMenu">
 
                 <!-- Links centrados -->
@@ -68,11 +71,12 @@
                     <a href="{{ url('/moda') }}" class="nav-link-custom">LO MEJOR DE LA MODA</a>
                 </div>
 
-                <!-- Iconos solo desktop -->
+                <!-- Iconos solo desktop: Filtros → Perfil → Carrito -->
                 <div class="d-none d-lg-flex align-items-center gap-3">
 
-                    <div class="icon-wrapper">
-                        <i class="bi bi-search fs-5"></i>
+                    <!-- Filtros -->
+                    <div class="icon-wrapper" id="btnFiltrosDesktop">
+                        <i class="bi bi-sliders fs-5"></i>
                     </div>
 
                     <!-- Dropdown usuario desktop -->
@@ -96,11 +100,9 @@
                         </ul>
                     </div>
 
+                    <!-- Carrito -->
                     <a href="{{ url('/carrito') }}" class="text-dark icon-wrapper position-relative">
                         <i class="bi bi-bag fs-5"></i>
-                    </a>
-                    <a href="{{ route('favoritos') }}" class="text-dark icon-wrapper position-relative">
-                        <i class="bi bi-heart fs-5"></i>
                     </a>
 
                 </div>
@@ -110,7 +112,7 @@
     </nav>
 
 
-    <!-- CARRUSEL -->
+    <!-- CARRUSEL — 3 imágenes en desktop, 1 en móvil -->
     <div class="carousel-section">
         <div id="carruselProductos" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
             <div class="carousel-inner">
@@ -140,13 +142,7 @@
                 </div>
 
             </div>
-
-            <button class="carousel-control-prev" type="button" data-bs-target="#carruselProductos" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carruselProductos" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </button>
+            <!-- sin flechas -->
         </div>
     </div>
 
@@ -217,12 +213,10 @@
                 <div class="modal-body p-0">
                     <div class="row g-0 flex-column flex-md-row">
 
-                        <!-- Imagen -->
                         <div class="col-12 col-md-7 d-flex align-items-center bg-light modal-img-col">
                             <img id="modalImagen" src="" class="img-fluid w-100 img-product-detail" alt="">
                         </div>
 
-                        <!-- Info -->
                         <div class="col-12 col-md-5 d-flex flex-column p-4" style="overflow-y: auto;">
                             <h2 id="modalNombre" class="fw-bold mb-1 text-uppercase" style="font-size: clamp(1rem, 4vw, 1.5rem);"></h2>
                             <p id="modalColor" class="text-muted small mb-3"></p>

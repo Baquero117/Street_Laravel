@@ -1,11 +1,15 @@
 /* ====================================
-   NAVBAR (igual al de inicio)
+   NAVBAR — siempre blanco
    ==================================== */
 
 #mainNavbar {
     background-color: white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    transition: all 0.4s ease;
+}
+
+#mainNavbar .navbar-collapse.show {
+    background-color: white;
+    padding: 0 8px 12px;
 }
 
 .logo-urbano {
@@ -16,62 +20,97 @@
     letter-spacing: 3px;
     font-weight: 900;
     text-decoration: none;
-    transition: opacity 0.4s ease;
 }
 
-.logo-urbano:hover {
+.logo-urbano:hover { color: #000; }
+
+.nav-link-custom {
+    text-decoration: none;
     color: #000;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+    padding: 6px 0;
 }
+
+.nav-link-custom:hover { color: #666; }
 
 .icon-wrapper {
     cursor: pointer;
     transition: opacity 0.2s ease;
+    display: inline-flex;
+    align-items: center;
 }
 
-.icon-wrapper:hover {
-    opacity: 0.6;
-}
+.icon-wrapper:hover { opacity: 0.6; }
+.icon-wrapper i { color: #000; }
 
-.icon-wrapper i {
-    color: #000;
-}
+/* ====================================
+   Dropdown — CLICK + animación sin salto
+   ==================================== */
 
-.dropdown-menu {
-    display: block;
+.pedidos-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    margin-left: -80px;
+    transform-origin: top center;
+    z-index: 9999;
+    list-style: none !important;
+    padding: 6px 0 !important;
+    margin-top: 0;
+    min-width: 160px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.07);
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.2s ease, visibility 0.2s ease;
     pointer-events: none;
-    transform: translateX(-40%);
-    margin-top: 0 !important;
-    border: 1px solid #e5e5e5;
-    background-color: rgba(255, 255, 255, 0.98);
-    backdrop-filter: blur(10px);
+    transform: scaleY(0.92);
+    transition:
+        opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        visibility 0.2s;
 }
 
-.dropdown-menu.show {
+.pedidos-dropdown-menu.show {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
+    transform: scaleY(1);
 }
 
-.dropdown::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 0;
+.pedidos-dropdown-menu li {
+    list-style: none !important;
+    padding: 0; margin: 0;
+}
+
+.pedidos-dropdown-item {
+    display: block;
     width: 100%;
-    height: 10px;
+    font-size: 0.88rem;
+    color: #111;
+    padding: 10px 18px;
+    text-decoration: none !important;
+    letter-spacing: 0.2px;
+    transition: background 0.15s ease, padding-left 0.15s ease;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+    text-align: left;
 }
 
-.dropdown-item {
-    font-size: 0.9rem;
+.pedidos-dropdown-item:hover {
+    background-color: #f5f5f5;
+    padding-left: 22px;
     color: #000;
 }
 
-.dropdown-item:hover {
-    background-color: #f8f9fa;
-    color: #000;
+.pedidos-dropdown-menu li + li {
+    border-top: 1px solid #f0f0f0;
 }
 
 /* ====================================
@@ -83,9 +122,7 @@ body {
     padding-top: 70px;
 }
 
-.pedidos-container {
-    padding: 40px 60px;
-}
+.pedidos-container { padding: 40px 60px; }
 
 .pedidos-titulo {
     font-size: 28px;
@@ -131,11 +168,26 @@ body {
     border-radius: 10px;
     background: white;
     overflow: hidden;
-    transition: box-shadow 0.2s ease;
+    transition: box-shadow 0.2s ease, opacity 0.35s ease, transform 0.35s ease;
 }
 
-.pedido-card:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+.pedido-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+
+/* Pedidos ocultos (más allá de los primeros 4) */
+.pedido-oculto {
+    display: none;
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.pedido-oculto.mostrando {
+    display: block;
+    animation: fadeSlideIn 0.3s ease forwards;
+}
+
+@keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 .pedido-card-header {
@@ -193,16 +245,14 @@ body {
    BOTONES
    ==================================== */
 
-.btn {
-    padding: 8px 20px;
-    border-radius: 6px;
-    font-weight: 500;
-    font-size: 13px;
-    transition: all 0.2s;
-    border: none;
+.btn-guardar {
+    background-color: #007bff; color: white;
+    border-radius: 6px; padding: 8px 20px;
+    font-size: 13px; font-weight: 500;
+    border: none; transition: all 0.2s;
+    display: inline-flex; align-items: center;
 }
 
-.btn-guardar { background-color: #007bff; color: white; }
 .btn-guardar:hover { background-color: #0056b3; color: white; }
 
 .btn-ver-factura {
@@ -220,6 +270,34 @@ body {
 }
 
 .btn-ver-factura:hover { background-color: #007bff; color: white; }
+
+/* Botón "Ver más" */
+.btn-ver-mas {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 1.5px solid #333;
+    border-radius: 30px;
+    padding: 10px 28px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-ver-mas:hover { background: #333; color: #fff; transform: translateY(-1px); }
+.btn-ver-mas.expandido i { transform: rotate(180deg); }
+
+.btn-ver-mas i { transition: transform 0.3s ease; }
+
+.formulario-contenedor {
+    border: 1px solid #e6e6e6;
+    border-radius: 10px;
+    padding: 40px 30px;
+    background: white;
+}
 
 /* ====================================
    BADGES DE ESTADO
@@ -241,11 +319,13 @@ body {
    RESPONSIVE
    ==================================== */
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
+    body { padding-top: 60px; }
     .pedidos-container { padding: 20px 15px; }
     .pedidos-titulo    { font-size: 22px; }
     .pedido-card-body  { flex-direction: column; }
     .pedido-dato       { border-right: none; border-bottom: 1px solid #f0f0f0; }
     .pedido-card-footer { flex-wrap: wrap; }
-    .btn, .btn-ver-factura { width: 100%; justify-content: center; }
+    .btn-guardar,
+    .btn-ver-factura   { width: 100%; justify-content: center; }
 }

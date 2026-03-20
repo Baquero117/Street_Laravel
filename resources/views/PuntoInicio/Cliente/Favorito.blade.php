@@ -14,7 +14,7 @@
 
 <body>
 
-    <!-- NAVBAR RESPONSIVO -->
+    <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
         <div class="container-fluid px-3 py-2">
 
@@ -23,13 +23,31 @@
                 URBAN STREET
             </a>
 
-            <!-- Iconos móvil (carrito + favoritos visibles antes del toggler) -->
+            <!-- Iconos móvil: perfil → carrito -->
             <div class="d-flex align-items-center gap-2 d-lg-none ms-auto me-2">
+
+                <div class="icon-wrapper position-relative" id="dropdownUsuarioMobile">
+                    <a href="#" class="text-dark" id="userDropdownToggleMobile" aria-expanded="false">
+                        <i class="bi bi-person fs-5"></i>
+                    </a>
+                    <ul class="fav-dropdown-menu" id="userDropdownMenuMobile">
+                        @if(Session::has('token'))
+                            <li><a class="fav-dropdown-item" href="{{ url('cuenta') }}">Perfil</a></li>
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                    @csrf
+                                    <button type="submit" class="fav-dropdown-item w-100 text-start border-0 bg-transparent">Cerrar sesión</button>
+                                </form>
+                            </li>
+                        @else
+                            <li><a class="fav-dropdown-item" href="{{ route('login') }}">Iniciar sesión</a></li>
+                            <li><a class="fav-dropdown-item" href="{{ route('registro') }}">Registrarse</a></li>
+                        @endif
+                    </ul>
+                </div>
+
                 <a href="{{ url('/carrito') }}" class="text-dark icon-wrapper position-relative">
                     <i class="bi bi-bag fs-5"></i>
-                </a>
-                <a href="{{ route('favoritos') }}" class="text-dark icon-wrapper position-relative">
-                    <i class="bi bi-heart fs-5"></i>
                 </a>
             </div>
 
@@ -42,17 +60,17 @@
 
             <!-- Menú colapsable -->
             <div class="collapse navbar-collapse" id="navbarFavMenu">
-                <!-- Espacio central vacío en desktop -->
-                <div class="flex-grow-1"></div>
 
-                <!-- Iconos desktop -->
-                <div class="d-flex align-items-center gap-3 py-2 py-lg-0">
+                <!-- Links centrados -->
+                <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-lg-center flex-grow-1 gap-2 gap-lg-4 py-3 py-lg-0">
+                    <a href="{{ url('/hombre') }}" class="nav-link-custom">HOMBRE</a>
+                    <a href="{{ url('/mujer') }}" class="nav-link-custom">MUJER</a>
+                    <a href="{{ url('/moda') }}" class="nav-link-custom">LO MEJOR DE LA MODA</a>
+                </div>
 
-                    <div class="icon-wrapper">
-                        <i class="bi bi-search fs-5"></i>
-                    </div>
+                <!-- Iconos desktop: perfil → carrito -->
+                <div class="d-none d-lg-flex align-items-center gap-3">
 
-                    <!-- Dropdown usuario — solo click -->
                     <div class="icon-wrapper position-relative" id="dropdownUsuario">
                         <a href="#" class="text-dark" id="userDropdownToggle" aria-expanded="false">
                             <i class="bi bi-person fs-5"></i>
@@ -73,12 +91,8 @@
                         </ul>
                     </div>
 
-                    <!-- Carrito y favoritos: solo desktop -->
-                    <a href="{{ url('/carrito') }}" class="text-dark icon-wrapper position-relative d-none d-lg-inline-flex">
+                    <a href="{{ url('/carrito') }}" class="text-dark icon-wrapper position-relative">
                         <i class="bi bi-bag fs-5"></i>
-                    </a>
-                    <a href="{{ route('favoritos') }}" class="text-dark icon-wrapper position-relative d-none d-lg-inline-flex">
-                        <i class="bi bi-heart fs-5"></i>
                     </a>
 
                 </div>
@@ -199,12 +213,11 @@
                     @if(count($favoritos) > 4)
                     <div class="text-center mt-4" id="ver-mas-wrap">
                         <button class="btn-ver-mas" id="btnVerMas" onclick="toggleVerMas()">
-                            <i class="bi bi-chevron-down me-1" id="iconVerMas"></i>
+                            <i class="bi bi-chevron-down me-1"></i>
                             Ver {{ count($favoritos) - 4 }} productos más
                         </button>
                     </div>
                     @endif
-
                 @endif
 
             </div>
@@ -212,43 +225,33 @@
     </div>
 
 
-    <!-- MODAL DETALLE PRODUCTO — responsivo -->
+    <!-- MODAL -->
     <div class="modal fade" id="detalleModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
-            <div class="modal-content border-0 rounded-0 overflow-hidden">
+            <div class="modal-content border-0 overflow-hidden">
                 <button type="button" class="btn-close custom-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
                 <div class="modal-body p-0">
                     <div class="row g-0 flex-column flex-md-row">
-
-                        <!-- Imagen -->
                         <div class="col-12 col-md-7 d-flex align-items-center bg-light modal-img-col">
                             <img id="modalImagen" src="" class="img-fluid w-100 img-product-detail" alt="">
                         </div>
-
-                        <!-- Info -->
                         <div class="col-12 col-md-5 d-flex flex-column p-4" style="overflow-y: auto;">
                             <h2 id="modalNombre" class="fw-bold mb-1 text-uppercase" style="font-size: clamp(1rem, 4vw, 1.5rem);"></h2>
                             <p id="modalColor" class="text-muted small mb-3"></p>
                             <h3 class="fw-light mb-4 text-dark" style="font-size: clamp(1.1rem, 4vw, 1.5rem);">$<span id="modalPrecio"></span></h3>
-
                             <div class="mb-4">
                                 <p id="modalDescripcion" class="text-secondary small" style="line-height: 1.6;"></p>
                             </div>
-
                             <div class="mb-4">
                                 <label class="fw-bold small mb-2 text-uppercase" style="letter-spacing: 1px;">Seleccionar Talla</label>
                                 <div id="modalTallas" class="d-flex flex-wrap gap-2"></div>
                             </div>
-
                             <div class="border-top pt-4 mt-auto">
-                                <button class="btn btn-dark w-100 rounded-0 py-3 mb-2 text-uppercase fw-bold"
-                                        onclick="agregarAlCarrito()">
+                                <button class="btn btn-dark w-100 rounded-0 py-3 mb-2 text-uppercase fw-bold" onclick="agregarAlCarrito()">
                                     Añadir al carrito
                                 </button>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>

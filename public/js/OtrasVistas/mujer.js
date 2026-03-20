@@ -39,31 +39,67 @@ function mostrarNotificacion(mensaje, tipo) {
 }
 
 // ============================================================
-//  Dropdown usuario — solo CLICK, con animación CSS
+//  Dropdown usuario — desktop Y móvil con contador
 // ============================================================
 function initDropdownUsuario() {
-    const toggle = document.getElementById('userDropdownToggle');
-    const menu   = document.getElementById('userDropdownMenu');
-    if (!toggle || !menu) return;
+    const navbar = document.getElementById('mainNavbar');
+    let abiertos = 0;
 
-    toggle.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        menu.classList.contains('show') ? cerrarDropdown() : abrirDropdown();
-    });
+    function setupDropdown(toggleId, menuId) {
+        const toggle = document.getElementById(toggleId);
+        const menu   = document.getElementById(menuId);
+        if (!toggle || !menu) return;
 
-    document.addEventListener('click', function (e) {
-        if (!toggle.contains(e.target) && !menu.contains(e.target)) cerrarDropdown();
-    });
+        let estaAbierto = false;
 
-    function abrirDropdown()  { menu.classList.add('show');    toggle.setAttribute('aria-expanded', 'true');  }
-    function cerrarDropdown() { menu.classList.remove('show'); toggle.setAttribute('aria-expanded', 'false'); }
+        toggle.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            estaAbierto ? cerrar() : abrir();
+        });
+
+        document.addEventListener('click', function (e) {
+            if (estaAbierto && !toggle.contains(e.target) && !menu.contains(e.target)) cerrar();
+        });
+
+        function abrir() {
+            if (estaAbierto) return;
+            estaAbierto = true;
+            abiertos++;
+            menu.classList.add('show');
+            toggle.setAttribute('aria-expanded', 'true');
+            navbar.classList.add('dropdown-open');
+        }
+
+        function cerrar() {
+            if (!estaAbierto) return;
+            estaAbierto = false;
+            abiertos = Math.max(0, abiertos - 1);
+            menu.classList.remove('show');
+            toggle.setAttribute('aria-expanded', 'false');
+            if (abiertos === 0) navbar.classList.remove('dropdown-open');
+        }
+    }
+
+    setupDropdown('userDropdownToggle',       'userDropdownMenu');
+    setupDropdown('userDropdownToggleMobile', 'userDropdownMenuMobile');
 }
 
 // ============================================================
-//  Variables globales — modal / carrito
+//  Filtros — placeholder
 // ============================================================
-const modal = new bootstrap.Modal(document.getElementById('detalleModal'));
+function initFiltros() {
+    const btnMobile  = document.getElementById('btnFiltrosMobile');
+    const btnDesktop = document.getElementById('btnFiltrosDesktop');
+    function abrirFiltros() { mostrarNotificacion('Filtros próximamente disponibles', 'info'); }
+    if (btnMobile)  btnMobile.addEventListener('click', abrirFiltros);
+    if (btnDesktop) btnDesktop.addEventListener('click', abrirFiltros);
+}
+
+// ============================================================
+//  Variables globales
+// ============================================================
+let modal                 = null;
 let tallaSeleccionada     = null;
 let productoActual        = null;
 let idDetalleSeleccionado = null;
@@ -72,9 +108,11 @@ let idDetalleSeleccionado = null;
 //  DOMContentLoaded
 // ============================================================
 document.addEventListener('DOMContentLoaded', function () {
-    initDropdownUsuario();
+    modal = new bootstrap.Modal(document.getElementById('detalleModal'));
 
-    // Click en imagen abre modal
+    initDropdownUsuario();
+    initFiltros();
+
     document.querySelectorAll('.product-image').forEach(imagen => {
         imagen.addEventListener('click', function () {
             verDetalle(this.getAttribute('data-id'));
@@ -82,7 +120,6 @@ document.addEventListener('DOMContentLoaded', function () {
         imagen.style.cursor = 'pointer';
     });
 
-    // En móvil: toda la card es clickeable
     if (window.innerWidth < 768) {
         document.querySelectorAll('.product-card').forEach(card => {
             card.addEventListener('click', function (e) {
@@ -94,29 +131,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     actualizarContadorCarrito();
-    initScrollEffects();
     verificarFavoritosAlCargar();
 });
 
 // ============================================================
-//  Scroll del navbar
-// ============================================================
-function initScrollEffects() {
-    const brandLogo = document.getElementById('brandLogo');
-    const navbar    = document.getElementById('mainNavbar');
-    window.addEventListener('scroll', function () {
-        if (window.pageYOffset > 50) {
-            brandLogo.classList.add('fade-out');
-            navbar.classList.add('scrolled');
-        } else {
-            brandLogo.classList.remove('fade-out');
-            navbar.classList.remove('scrolled');
-        }
-    });
-}
-
-// ============================================================
-//  Modal de detalle de producto
+//  Modal detalle
 // ============================================================
 function verDetalle(idProducto) {
     fetch(`/mujer/productos/${idProducto}/detalle`)
@@ -163,7 +182,7 @@ function verDetalle(idProducto) {
 }
 
 // ============================================================
-//  Carrito
+//  Carrito — robusto ante respuestas no-JSON
 // ============================================================
 function agregarAlCarrito() {
     if (!productoActual)        { mostrarNotificacion('Error: No hay producto seleccionado', 'error'); return; }
@@ -182,10 +201,19 @@ function agregarAlCarrito() {
             precio:              productoActual.precio
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        const contentType = response.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) {
+            mostrarNotificacion('Sesión expirada, inicia sesión de nuevo', 'warning');
+            setTimeout(() => window.location.href = '/login', 1500);
+            return null;
+        }
+        return response.json();
+    })
     .then(data => {
+        if (!data) return;
         if (data.redirect) {
-            mostrarNotificacion(data.mensaje, 'warning');
+            mostrarNotificacion(data.mensaje || 'Inicia sesión para continuar', 'warning');
             setTimeout(() => window.location.href = data.redirect, 1500);
             return;
         }
@@ -198,8 +226,8 @@ function agregarAlCarrito() {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        mostrarNotificacion('Error de conexión', 'error');
+        console.error('Error carrito:', error);
+        mostrarNotificacion('Error de conexión al agregar', 'error');
     });
 }
 
@@ -224,7 +252,7 @@ function actualizarContadorCarrito() {
                 badge.remove();
             }
         })
-        .catch(error => console.error('Error al actualizar contador:', error));
+        .catch(error => console.error('Error contador:', error));
 }
 
 // ============================================================

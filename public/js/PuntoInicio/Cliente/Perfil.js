@@ -1,31 +1,70 @@
-const dropdownUsuario = document.querySelector('.dropdown');
-const dropdownMenu = dropdownUsuario?.querySelector('.dropdown-menu');
-if (dropdownUsuario && dropdownMenu) {
-dropdownUsuario.addEventListener('mouseenter', () => dropdownMenu.classList.add('show'));
-dropdownUsuario.addEventListener('mouseleave', (e) => {
-if (!dropdownMenu.contains(e.relatedTarget)) dropdownMenu.classList.remove('show');
-});
-dropdownMenu.addEventListener('mouseleave', (e) => {
-if (!dropdownUsuario.contains(e.relatedTarget)) dropdownMenu.classList.remove('show');
-});
+// ============================================================
+//  Dropdown usuario — desktop Y móvil con contador
+// ============================================================
+function initDropdownUsuario() {
+    const navbar = document.getElementById('mainNavbar');
+    let abiertos = 0;
+
+    function setupDropdown(toggleId, menuId) {
+        const toggle = document.getElementById(toggleId);
+        const menu   = document.getElementById(menuId);
+        if (!toggle || !menu) return;
+
+        let estaAbierto = false;
+
+        toggle.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            estaAbierto ? cerrar() : abrir();
+        });
+
+        document.addEventListener('click', function (e) {
+            if (estaAbierto && !toggle.contains(e.target) && !menu.contains(e.target)) cerrar();
+        });
+
+        function abrir() {
+            if (estaAbierto) return;
+            estaAbierto = true;
+            abiertos++;
+            menu.classList.add('show');
+            toggle.setAttribute('aria-expanded', 'true');
+            if (navbar) navbar.classList.add('dropdown-open');
+        }
+
+        function cerrar() {
+            if (!estaAbierto) return;
+            estaAbierto = false;
+            abiertos = Math.max(0, abiertos - 1);
+            menu.classList.remove('show');
+            toggle.setAttribute('aria-expanded', 'false');
+            if (abiertos === 0 && navbar) navbar.classList.remove('dropdown-open');
+        }
+    }
+
+    setupDropdown('userDropdownToggle',       'userDropdownMenu');
+    setupDropdown('userDropdownToggleMobile', 'userDropdownMenuMobile');
 }
-document.addEventListener('DOMContentLoaded', function() {
-    const formCuenta = document.getElementById('formCuenta');
-    const contrasena = document.getElementById('contrasena');
+
+// ============================================================
+//  DOMContentLoaded
+// ============================================================
+document.addEventListener('DOMContentLoaded', function () {
+    initDropdownUsuario();
+
+    const formCuenta             = document.getElementById('formCuenta');
+    const contrasena             = document.getElementById('contrasena');
     const contrasenaConfirmacion = document.getElementById('contrasena_confirmacion');
-    const telefono = document.getElementById('telefono');
-    const correoElectronico = document.getElementById('correo_electronico');
+    const telefono               = document.getElementById('telefono');
+    const correoElectronico      = document.getElementById('correo_electronico');
 
     // Validación al enviar el formulario
     if (formCuenta) {
-        formCuenta.addEventListener('submit', function(e) {
+        formCuenta.addEventListener('submit', function (e) {
             let isValid = true;
             let mensajesError = [];
 
             // Limpiar errores previos
-            document.querySelectorAll('.is-invalid').forEach(el => {
-                el.classList.remove('is-invalid');
-            });
+            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
 
             // Validar contraseñas si se están cambiando
             if (contrasena.value !== '' || contrasenaConfirmacion.value !== '') {
@@ -49,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 correoElectronico.classList.add('is-invalid');
             }
 
-            // Validar formato de teléfono (solo números, espacios, guiones y paréntesis)
+            // Validar formato de teléfono
             const telefonoRegex = /^[0-9\s\-+()]+$/;
             if (!telefonoRegex.test(telefono.value) || telefono.value.length < 7) {
                 isValid = false;
@@ -57,31 +96,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 telefono.classList.add('is-invalid');
             }
 
-            // Mostrar errores si los hay
             if (!isValid) {
                 e.preventDefault();
                 mostrarAlerta(mensajesError.join('<br>'), 'danger');
-                
-                // Scroll al primer error
                 const primerError = document.querySelector('.is-invalid');
-                if (primerError) {
-                    primerError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
+                if (primerError) primerError.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         });
     }
 
     // Remover clase de error al escribir
-    const inputs = document.querySelectorAll('.form-control');
-    inputs.forEach(input => {
-        input.addEventListener('input', function() {
+    document.querySelectorAll('.form-control').forEach(input => {
+        input.addEventListener('input', function () {
             this.classList.remove('is-invalid');
         });
     });
 
     // Validación en tiempo real de contraseñas
     if (contrasenaConfirmacion) {
-        contrasenaConfirmacion.addEventListener('input', function() {
+        contrasenaConfirmacion.addEventListener('input', function () {
             if (contrasena.value !== '' && this.value !== '') {
                 if (contrasena.value !== this.value) {
                     this.classList.add('is-invalid');
@@ -94,8 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Cerrar alertas automáticamente después de 5 segundos
-    const alertas = document.querySelectorAll('.alert');
-    alertas.forEach(alerta => {
+    document.querySelectorAll('.alert').forEach(alerta => {
         setTimeout(() => {
             const bsAlert = new bootstrap.Alert(alerta);
             bsAlert.close();
@@ -103,12 +135,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Función para mostrar alertas
+// ============================================================
+//  Mostrar alerta en el formulario
+// ============================================================
 function mostrarAlerta(mensaje, tipo) {
     const alertaExistente = document.querySelector('.alert-custom');
-    if (alertaExistente) {
-        alertaExistente.remove();
-    }
+    if (alertaExistente) alertaExistente.remove();
 
     const alerta = document.createElement('div');
     alerta.className = `alert alert-${tipo} alert-dismissible fade show alert-custom`;
@@ -116,14 +148,12 @@ function mostrarAlerta(mensaje, tipo) {
         ${mensaje}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     `;
-    
+
     const formularioContainer = document.querySelector('.formulario-contenedor');
     formularioContainer.insertBefore(alerta, formularioContainer.firstChild);
 
-    // Scroll suave hacia la alerta
     alerta.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-    // Auto cerrar después de 5 segundos
     setTimeout(() => {
         const bsAlert = new bootstrap.Alert(alerta);
         bsAlert.close();

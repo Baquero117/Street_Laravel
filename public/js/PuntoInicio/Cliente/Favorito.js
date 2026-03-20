@@ -1,37 +1,12 @@
 // ============================================================
-//  Dropdown usuario — solo CLICK, con animación CSS
-// ============================================================
-function initDropdownUsuario() {
-    const toggle = document.getElementById('userDropdownToggle');
-    const menu   = document.getElementById('userDropdownMenu');
-    if (!toggle || !menu) return;
-
-    toggle.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        const abierto = menu.classList.contains('show');
-        abierto ? cerrarDropdown() : abrirDropdown();
-    });
-
-    document.addEventListener('click', function (e) {
-        if (!toggle.contains(e.target) && !menu.contains(e.target)) {
-            cerrarDropdown();
-        }
-    });
-
-    function abrirDropdown()  { menu.classList.add('show');    toggle.setAttribute('aria-expanded', 'true');  }
-    function cerrarDropdown() { menu.classList.remove('show'); toggle.setAttribute('aria-expanded', 'false'); }
-}
-
-// ============================================================
-//  Toast personalizado
+//  TOAST PERSONALIZADO
 // ============================================================
 function mostrarNotificacion(mensaje, tipo) {
     const anterior = document.querySelector('.urban-toast');
     if (anterior) anterior.remove();
 
-    const iconos  = { success: 'bi-check-circle-fill', error: 'bi-x-circle-fill', warning: 'bi-exclamation-triangle-fill' };
-    const colores = { success: '#28a745', error: '#dc3545', warning: '#ffc107' };
+    const iconos  = { success: 'bi-check-circle-fill', error: 'bi-x-circle-fill', warning: 'bi-exclamation-triangle-fill', info: 'bi-info-circle-fill' };
+    const colores = { success: '#28a745', error: '#dc3545', warning: '#ffc107', info: '#3b82f6' };
 
     const toast = document.createElement('div');
     toast.className = 'urban-toast';
@@ -61,6 +36,53 @@ function mostrarNotificacion(mensaje, tipo) {
         toast.style.transform = 'translateY(20px)';
         setTimeout(() => toast.remove(), 300);
     }, 3000);
+}
+
+// ============================================================
+//  Dropdown usuario — desktop Y móvil con contador
+// ============================================================
+function initDropdownUsuario() {
+    const navbar = document.getElementById('mainNavbar');
+    let abiertos = 0;
+
+    function setupDropdown(toggleId, menuId) {
+        const toggle = document.getElementById(toggleId);
+        const menu   = document.getElementById(menuId);
+        if (!toggle || !menu) return;
+
+        let estaAbierto = false;
+
+        toggle.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            estaAbierto ? cerrar() : abrir();
+        });
+
+        document.addEventListener('click', function (e) {
+            if (estaAbierto && !toggle.contains(e.target) && !menu.contains(e.target)) cerrar();
+        });
+
+        function abrir() {
+            if (estaAbierto) return;
+            estaAbierto = true;
+            abiertos++;
+            menu.classList.add('show');
+            toggle.setAttribute('aria-expanded', 'true');
+            if (navbar) navbar.classList.add('dropdown-open');
+        }
+
+        function cerrar() {
+            if (!estaAbierto) return;
+            estaAbierto = false;
+            abiertos = Math.max(0, abiertos - 1);
+            menu.classList.remove('show');
+            toggle.setAttribute('aria-expanded', 'false');
+            if (abiertos === 0 && navbar) navbar.classList.remove('dropdown-open');
+        }
+    }
+
+    setupDropdown('userDropdownToggle',       'userDropdownMenu');
+    setupDropdown('userDropdownToggleMobile', 'userDropdownMenuMobile');
 }
 
 // ============================================================
@@ -126,36 +148,32 @@ function mostrarConfirmacion(mensaje, onAceptar) {
 let expandido = false;
 
 function toggleVerMas() {
-    const btn        = document.getElementById('btnVerMas');
-    const ocultas    = document.querySelectorAll('.favorito-oculto');
-    const total      = ocultas.length;
+    const btn     = document.getElementById('btnVerMas');
+    const ocultas = document.querySelectorAll('.favorito-oculto');
+    const total   = ocultas.length;
 
     if (!expandido) {
-        // Mostrar con animación escalonada
         ocultas.forEach((card, i) => {
             card.classList.add('mostrando');
             card.style.animationDelay = `${i * 60}ms`;
         });
         btn.classList.add('expandido');
-        btn.innerHTML = '<i class="bi bi-chevron-up me-1" id="iconVerMas"></i> Ver menos';
+        btn.innerHTML = '<i class="bi bi-chevron-up me-1"></i> Ver menos';
         expandido = true;
     } else {
-        // Ocultar
         ocultas.forEach(card => {
             card.classList.remove('mostrando');
             card.style.animationDelay = '';
         });
         btn.classList.remove('expandido');
-        btn.innerHTML = `<i class="bi bi-chevron-down me-1" id="iconVerMas"></i> Ver ${total} productos más`;
+        btn.innerHTML = `<i class="bi bi-chevron-down me-1"></i> Ver ${total} productos más`;
         expandido = false;
-
-        // Scroll suave de vuelta al inicio de la lista
         document.getElementById('lista-favoritos')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 }
 
 // ============================================================
-//  Variables globales — modal
+//  Variables globales
 // ============================================================
 let modalDetalle          = null;
 let tallaSeleccionada     = null;
@@ -166,13 +184,12 @@ let idDetalleSeleccionado = null;
 //  DOMContentLoaded
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
-
     initDropdownUsuario();
     modalDetalle = new bootstrap.Modal(document.getElementById('detalleModal'));
 
     const csrfToken = () => document.querySelector('meta[name="csrf-token"]')?.content ?? '';
 
-    // ── Quitar favorito ──────────────────────────────────────
+    // Quitar favorito
     document.querySelectorAll('.btn-quitar-favorito').forEach(btn => {
         btn.addEventListener('click', function () {
             const idFavorito = this.dataset.id;
@@ -193,11 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         card.style.transition = 'opacity 0.3s, transform 0.3s';
                         card.style.opacity    = '0';
                         card.style.transform  = 'translateX(20px)';
-                        setTimeout(() => {
-                            card.remove();
-                            actualizarContador();
-                            recalcularVerMas();
-                        }, 300);
+                        setTimeout(() => { card.remove(); actualizarContador(); recalcularVerMas(); }, 300);
                         mostrarNotificacion('Producto quitado de favoritos', 'success');
                     } else {
                         mostrarNotificacion('Error al quitar favorito: ' + data.mensaje, 'error');
@@ -214,19 +227,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Actualiza contador y estado vacío
     function actualizarContador() {
-        const listaFavoritos = document.getElementById('lista-favoritos');
-        const contadorEl     = document.getElementById('favoritos-contador');
-        if (!listaFavoritos) return;
+        const lista      = document.getElementById('lista-favoritos');
+        const contadorEl = document.getElementById('favoritos-contador');
+        if (!lista) return;
 
-        const total = listaFavoritos.querySelectorAll('.favorito-card').length;
+        const total = lista.querySelectorAll('.favorito-card').length;
         if (contadorEl) {
             contadorEl.innerHTML = `<i class="bi bi-heart-fill text-danger me-1"></i>
                 ${total} ${total === 1 ? 'producto guardado' : 'productos guardados'}`;
         }
         if (total === 0) {
-            listaFavoritos.innerHTML = `
+            lista.innerHTML = `
                 <div class="formulario-contenedor text-center py-5">
                     <i class="bi bi-heart" style="font-size:3.5rem;color:#ccc;"></i>
                     <h5 class="mt-4 fw-semibold">Aún no tienes favoritos</h5>
@@ -234,14 +246,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     <a href="/inicio" class="btn btn-guardar mt-2">Ir a la tienda</a>
                 </div>`;
             if (contadorEl) contadorEl.remove();
-            const verMasWrap = document.getElementById('ver-mas-wrap');
-            if (verMasWrap) verMasWrap.remove();
+            document.getElementById('ver-mas-wrap')?.remove();
         }
     }
 
-    // Recalcula cuáles cards deben tener la clase .favorito-oculto tras eliminar una
     function recalcularVerMas() {
-        const lista    = document.getElementById('lista-favoritos');
+        const lista      = document.getElementById('lista-favoritos');
         const verMasWrap = document.getElementById('ver-mas-wrap');
         if (!lista) return;
 
@@ -249,24 +259,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const total = cards.length;
 
         cards.forEach((card, i) => {
-            if (i >= 4) {
-                if (!expandido) {
-                    card.classList.add('favorito-oculto');
-                    card.classList.remove('mostrando');
-                }
+            if (i >= 4 && !expandido) {
+                card.classList.add('favorito-oculto');
+                card.classList.remove('mostrando');
             } else {
                 card.classList.remove('favorito-oculto', 'mostrando');
             }
         });
 
-        // Actualizar o eliminar el botón "ver más"
         if (total <= 4 && verMasWrap) {
             verMasWrap.remove();
         } else if (total > 4 && verMasWrap) {
             const btn = document.getElementById('btnVerMas');
-            if (btn && !expandido) {
-                btn.innerHTML = `<i class="bi bi-chevron-down me-1"></i> Ver ${total - 4} productos más`;
-            }
+            if (btn && !expandido) btn.innerHTML = `<i class="bi bi-chevron-down me-1"></i> Ver ${total - 4} productos más`;
         }
     }
 });
@@ -316,7 +321,7 @@ function verDetalleFavorito(idProducto) {
 }
 
 // ============================================================
-//  Agregar al carrito desde modal
+//  Carrito — robusto ante respuestas no-JSON
 // ============================================================
 function agregarAlCarrito() {
     if (!productoActual)        { mostrarNotificacion('Error: No hay producto seleccionado', 'error'); return; }
@@ -335,19 +340,31 @@ function agregarAlCarrito() {
             precio:              productoActual.precio
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        const contentType = response.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) {
+            mostrarNotificacion('Sesión expirada, inicia sesión de nuevo', 'warning');
+            setTimeout(() => window.location.href = '/login', 1500);
+            return null;
+        }
+        return response.json();
+    })
     .then(data => {
+        if (!data) return;
         if (data.redirect) {
-            mostrarNotificacion(data.mensaje, 'warning');
+            mostrarNotificacion(data.mensaje || 'Inicia sesión para continuar', 'warning');
             setTimeout(() => window.location.href = data.redirect, 1500);
             return;
         }
         if (data.success) {
-            mostrarNotificacion('Producto agregado al carrito ✅', 'success');
+            mostrarNotificacion('✅ Producto agregado al carrito', 'success');
             modalDetalle.hide();
         } else {
             mostrarNotificacion(data.mensaje || 'No se pudo agregar', 'error');
         }
     })
-    .catch(() => mostrarNotificacion('Error de conexión', 'error'));
+    .catch(error => {
+        console.error('Error carrito:', error);
+        mostrarNotificacion('Error de conexión al agregar', 'error');
+    });
 }

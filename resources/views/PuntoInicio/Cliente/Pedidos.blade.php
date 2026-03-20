@@ -14,44 +14,79 @@
 
 <body>
 
-    <!-- NAVBAR igual al de inicio -->
+    <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
-        <div class="container-fluid px-4 py-2">
-            <div class="row w-100 align-items-center g-0">
+        <div class="container-fluid px-3 py-2">
 
-                <!-- Logo izquierda -->
-                <div class="col-auto">
-                    <a href="{{ url('/inicio') }}" class="navbar-brand logo-urbano mb-0">
-                        URBAN STREET
+            <!-- Logo -->
+            <a href="{{ url('/inicio') }}" class="navbar-brand logo-urbano mb-0">
+                URBAN STREET
+            </a>
+
+            <!-- Iconos móvil: perfil → carrito -->
+            <div class="d-flex align-items-center gap-2 d-lg-none ms-auto me-2">
+
+                <div class="icon-wrapper position-relative" id="dropdownUsuarioMobile">
+                    <a href="#" class="text-dark" id="userDropdownToggleMobile" aria-expanded="false">
+                        <i class="bi bi-person fs-5"></i>
                     </a>
+                    <ul class="pedidos-dropdown-menu" id="userDropdownMenuMobile">
+                        @if(Session::has('token'))
+                            <li><a class="pedidos-dropdown-item" href="{{ url('cuenta') }}">Perfil</a></li>
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                    @csrf
+                                    <button type="submit" class="pedidos-dropdown-item w-100 text-start border-0 bg-transparent">Cerrar sesión</button>
+                                </form>
+                            </li>
+                        @else
+                            <li><a class="pedidos-dropdown-item" href="{{ route('login') }}">Iniciar sesión</a></li>
+                            <li><a class="pedidos-dropdown-item" href="{{ route('registro') }}">Registrarse</a></li>
+                        @endif
+                    </ul>
                 </div>
 
-                <!-- Espacio central -->
-                <div class="col"></div>
+                <a href="{{ url('/carrito') }}" class="text-dark icon-wrapper position-relative">
+                    <i class="bi bi-bag fs-5"></i>
+                </a>
+            </div>
 
-                <!-- Iconos derecha -->
-                <div class="col-auto d-flex align-items-center gap-3">
+            <!-- Toggler hamburguesa -->
+            <button class="navbar-toggler border-0 shadow-none" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navbarPedidosMenu"
+                aria-controls="navbarPedidosMenu" aria-expanded="false">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-                    <div class="icon-wrapper">
-                        <i class="bi bi-search fs-5"></i>
-                    </div>
+            <!-- Menú colapsable -->
+            <div class="collapse navbar-collapse" id="navbarPedidosMenu">
 
-                    <div class="dropdown icon-wrapper">
-                        <a href="#" class="text-dark">
+                <!-- Links centrados -->
+                <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-lg-center flex-grow-1 gap-2 gap-lg-4 py-3 py-lg-0">
+                    <a href="{{ url('/hombre') }}" class="nav-link-custom">HOMBRE</a>
+                    <a href="{{ url('/mujer') }}" class="nav-link-custom">MUJER</a>
+                    <a href="{{ url('/moda') }}" class="nav-link-custom">LO MEJOR DE LA MODA</a>
+                </div>
+
+                <!-- Iconos desktop: perfil → carrito -->
+                <div class="d-none d-lg-flex align-items-center gap-3">
+
+                    <div class="icon-wrapper position-relative" id="dropdownUsuario">
+                        <a href="#" class="text-dark" id="userDropdownToggle" aria-expanded="false">
                             <i class="bi bi-person fs-5"></i>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
+                        <ul class="pedidos-dropdown-menu" id="userDropdownMenu">
                             @if(Session::has('token'))
-                                <li><a class="dropdown-item py-2" href="{{ url('cuenta') }}">Perfil</a></li>
+                                <li><a class="pedidos-dropdown-item" href="{{ url('cuenta') }}">Perfil</a></li>
                                 <li>
                                     <form action="{{ route('logout') }}" method="POST" class="m-0">
                                         @csrf
-                                        <button type="submit" class="dropdown-item py-2">Cerrar sesión</button>
+                                        <button type="submit" class="pedidos-dropdown-item w-100 text-start border-0 bg-transparent">Cerrar sesión</button>
                                     </form>
                                 </li>
                             @else
-                                <li><a class="dropdown-item py-2" href="{{ route('login') }}">Iniciar sesión</a></li>
-                                <li><a class="dropdown-item py-2" href="{{ route('registro') }}">Registrarse</a></li>
+                                <li><a class="pedidos-dropdown-item" href="{{ route('login') }}">Iniciar sesión</a></li>
+                                <li><a class="pedidos-dropdown-item" href="{{ route('registro') }}">Registrarse</a></li>
                             @endif
                         </ul>
                     </div>
@@ -60,15 +95,13 @@
                         <i class="bi bi-bag fs-5"></i>
                     </a>
 
-                    <a href="{{ route('favoritos') }}" class="text-dark icon-wrapper position-relative">
-                        <i class="bi bi-heart fs-5"></i>
-                    </a>
-
                 </div>
             </div>
+
         </div>
     </nav>
 
+    <!-- CONTENIDO -->
     <div class="container pedidos-container mt-5 pt-5">
         <div class="row">
 
@@ -120,9 +153,10 @@
                     </div>
 
                 @else
-                    <div class="d-flex flex-column gap-3">
-                        @foreach($pedidos as $pedido)
-                        <div class="pedido-card">
+                    <div class="d-flex flex-column gap-3" id="lista-pedidos">
+                        @foreach($pedidos as $index => $pedido)
+                        <div class="pedido-card {{ $index >= 4 ? 'pedido-oculto' : '' }}"
+                             data-index="{{ $index }}">
 
                             <div class="pedido-card-header">
                                 <div class="d-flex align-items-center gap-2">
@@ -142,7 +176,6 @@
                                         <p class="dato-valor mb-0">{{ $pedido['fecha_pedido'] ?? '-' }}</p>
                                     </div>
                                 </div>
-
                                 <div class="pedido-dato">
                                     <i class="bi bi-cash-stack pedido-icono"></i>
                                     <div>
@@ -152,7 +185,6 @@
                                         </p>
                                     </div>
                                 </div>
-
                                 <div class="pedido-dato">
                                     <i class="bi bi-credit-card pedido-icono"></i>
                                     <div>
@@ -182,6 +214,15 @@
                         </div>
                         @endforeach
                     </div>
+
+                    @if(count($pedidos) > 4)
+                    <div class="text-center mt-4" id="ver-mas-wrap">
+                        <button class="btn-ver-mas" id="btnVerMas" onclick="toggleVerMas()">
+                            <i class="bi bi-chevron-down me-1"></i>
+                            Ver {{ count($pedidos) - 4 }} pedidos más
+                        </button>
+                    </div>
+                    @endif
                 @endif
 
             </div>
@@ -202,7 +243,7 @@
                 </div>
             </div>
             <div class="row justify-content-center mt-4">
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <h6 class="fw-bold">Acerca de Street Urban</h6>
                     <ul class="list-unstyled">
                         <li><a href="#" class="text-white text-decoration-none">Compra segura</a></li>
@@ -210,12 +251,12 @@
                         <li><a href="#" class="text-white text-decoration-none">Formas de pago</a></li>
                     </ul>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <h6 class="fw-bold">Información adicional</h6>
                     <ul class="list-unstyled">
                         <li><a href="#" class="text-white text-decoration-none">Registro</a></li>
                         <li><a href="#" class="text-white text-decoration-none">Contáctanos</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Política de protección de datos</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Política de datos</a></li>
                     </ul>
                 </div>
             </div>

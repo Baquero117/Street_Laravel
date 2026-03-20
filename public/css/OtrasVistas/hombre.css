@@ -1,29 +1,14 @@
-/* ====================================
-   TIPOGRAFÍA Y BRANDING
-   ==================================== */
-
 .logo-urbano {
     font-family: 'Anton', sans-serif;
     font-size: 1.3rem;
     text-transform: uppercase;
     color: #000;
     letter-spacing: 3px;
-    transition: opacity 0.4s ease, transform 0.4s ease;
     font-weight: 900;
     text-decoration: none;
 }
 
 .logo-urbano:hover { color: #000; }
-
-.logo-urbano.fade-out {
-    opacity: 0;
-    transform: translateY(-10px);
-    pointer-events: none;
-}
-
-/* ====================================
-   LAYOUT GENERAL Y BODY
-   ==================================== */
 
 body {
     background-image: url('/img/PuntoInicio/Urban.jpg') !important;
@@ -36,18 +21,12 @@ body {
 }
 
 /* ====================================
-   NAVBAR
+   NAVBAR — siempre blanco
    ==================================== */
 
 #mainNavbar {
     background-color: white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    transition: all 0.4s ease;
-}
-
-#mainNavbar.scrolled {
-    background-color: transparent !important;
-    box-shadow: none !important;
 }
 
 #mainNavbar .navbar-collapse.show {
@@ -85,37 +64,43 @@ body {
 .icon-wrapper i { color: #000; }
 
 /* ====================================
-   Dropdown usuario — CLICK + animación
+   Dropdown — CLICK + animación sin salto
    ==================================== */
 
 .hombre-dropdown-menu {
     position: absolute;
     top: calc(100% + 10px);
-    right: 0;
+    left: 50%;
+    margin-left: -80px;
+    transform-origin: top center;
     z-index: 9999;
-    list-style: none;
-    margin: 0;
-    padding: 6px 0;
-    min-width: 170px;
+    list-style: none !important;
+    padding: 6px 0 !important;
+    margin-top: 0;
+    min-width: 160px;
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.07);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: translateY(-8px) scale(0.97);
-    transform-origin: top right;
+    transform: scaleY(0.92);
     transition:
-        opacity 0.22s cubic-bezier(0.4, 0, 0.2, 1),
-        transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
-        visibility 0.22s;
+        opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        visibility 0.2s;
 }
 
 .hombre-dropdown-menu.show {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    transform: translateY(0) scale(1);
+    transform: scaleY(1);
+}
+
+.hombre-dropdown-menu li {
+    list-style: none !important;
+    padding: 0; margin: 0;
 }
 
 .hombre-dropdown-item {
@@ -124,10 +109,14 @@ body {
     font-size: 0.88rem;
     color: #111;
     padding: 10px 18px;
-    text-decoration: none;
+    text-decoration: none !important;
     letter-spacing: 0.2px;
     transition: background 0.15s ease, padding-left 0.15s ease;
     cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+    text-align: left;
 }
 
 .hombre-dropdown-item:hover {
@@ -168,10 +157,12 @@ body {
 
 .carousel-image {
     width: 28%;
-    height: auto;
+    height: 420px;
     object-fit: cover;
+    object-position: top center;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 6px;
 }
 
 .carousel-image:hover {
@@ -179,25 +170,8 @@ body {
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
 }
 
-.carousel-control-prev,
-.carousel-control-next {
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.carousel-section:hover .carousel-control-prev,
-.carousel-section:hover .carousel-control-next { opacity: 0.8; }
-
-.carousel-control-prev:hover,
-.carousel-control-next:hover { opacity: 1 !important; }
-
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
-}
-
 /* ====================================
-   CARDS DE PRODUCTOS
+   CARDS
    ==================================== */
 
 .product-card {
@@ -215,7 +189,7 @@ body {
     position: relative;
     background-color: #f5f5f5;
     width: 100%;
-    height: 300px;
+    height: 320px;
 }
 
 .product-image {
@@ -231,18 +205,13 @@ body {
 
 .product-logo {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 28px;
-    height: 28px;
+    top: 10px; right: 10px;
+    width: 28px; height: 28px;
     background-color: white;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 500;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     z-index: 2;
     transition: transform 0.2s ease;
 }
@@ -265,77 +234,97 @@ body {
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0);
+    background: rgba(0,0,0,0);
     transition: background 0.3s ease;
     pointer-events: none;
 }
 
-.product-card:hover .image-wrapper::after { background: rgba(0, 0, 0, 0.05); }
+.product-card:hover .image-wrapper::after { background: rgba(0,0,0,0.05); }
 
 /* ====================================
-   MODAL
+   MODAL — bordes curvos
    ==================================== */
 
 .modal-backdrop.show {
-    opacity: 0.85 !important;
+    opacity: 0.7 !important;
     background-color: #000 !important;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(6px);
 }
 
 .modal-backdrop.fade { opacity: 0; transition: opacity 0.3s linear; }
 
 #detalleModal .modal-content {
     max-height: 92vh;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border-radius: 20px !important;
+    overflow: hidden;
+    box-shadow: 0 32px 64px rgba(0,0,0,0.3);
 }
 
 @media (min-width: 992px) {
-    #detalleModal .modal-dialog { max-width: 80%; }
+    #detalleModal .modal-dialog { max-width: 78%; }
 }
 
-/* Desktop */
 @media (min-width: 768px) {
-    .modal-img-col { max-height: 90vh; }
+    #detalleModal .modal-body .row {
+        align-items: stretch !important;
+        min-height: 520px;
+    }
+    .modal-img-col {
+        border-radius: 20px 0 0 20px;
+        overflow: hidden;
+        background: #f0f0f0;
+    }
     .img-product-detail {
-        height: 80vh;
+        height: 100%;
+        min-height: 520px;
+        max-height: 88vh;
         width: 100%;
         object-fit: contain !important;
-        background-color: #f8f9fa;
+        background-color: #f0f0f0;
         display: block;
     }
 }
 
-/* Móvil */
 @media (max-width: 767px) {
+    .modal-img-col {
+        border-radius: 20px 20px 0 0;
+        overflow: hidden;
+        background: #f0f0f0;
+    }
     .img-product-detail {
-        height: 55vw;
-        max-height: 300px;
+        height: auto;
+        max-height: 65vw;
         width: 100%;
-        object-fit: cover !important;
-        background-color: #f8f9fa;
+        object-fit: contain !important;
+        background-color: #f0f0f0;
         display: block;
+        padding: 12px;
     }
     #detalleModal .modal-content { max-height: 95vh; overflow-y: auto; }
-    #detalleModal .modal-dialog  { margin: 10px auto; }
+    #detalleModal .modal-dialog  { margin: 16px auto; }
 }
 
 .custom-close {
     position: absolute;
-    right: 14px; top: 14px;
+    right: 16px; top: 16px;
     z-index: 1000;
-    background-color: white;
-    padding: 8px;
+    background-color: rgba(255,255,255,0.95);
+    padding: 6px;
     border-radius: 50%;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    border: none;
+    transition: transform 0.2s ease;
 }
 
+.custom-close:hover { transform: scale(1.1); }
+
 .modal.fade .modal-dialog {
-    transform: translateY(30px);
-    transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+    transform: translateY(40px) scale(0.97);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
     opacity: 0;
 }
 
-.modal.show .modal-dialog { transform: translateY(0); opacity: 1; }
+.modal.show .modal-dialog { transform: translateY(0) scale(1); opacity: 1; }
 
 /* ====================================
    TALLAS
@@ -360,7 +349,7 @@ body {
 }
 
 /* ====================================
-   BOTÓN FAVORITO EN CARD ❤
+   BOTÓN FAVORITO ❤
    ==================================== */
 
 .btn-favorito {
@@ -369,34 +358,19 @@ body {
     z-index: 3;
     width: 28px; height: 28px;
     background-color: white;
-    border: none;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border: none; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    opacity: 0;
-    transform: scale(0.8);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    opacity: 0; transform: scale(0.8);
     transition: opacity 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
     pointer-events: auto;
 }
 
 .product-card:hover .btn-favorito { opacity: 1; transform: scale(1); }
 
-.btn-favorito i {
-    font-size: 12px;
-    color: #555;
-    transition: color 0.2s ease;
-    pointer-events: none;
-}
-
-.btn-favorito.is-favorito {
-    opacity: 1;
-    transform: scale(1);
-    background-color: #fff0f0;
-}
-
+.btn-favorito i { font-size: 12px; color: #555; transition: color 0.2s ease; pointer-events: none; }
+.btn-favorito.is-favorito { opacity: 1; transform: scale(1); background-color: #fff0f0; }
 .btn-favorito.is-favorito i { color: #dc3545; }
 
 @keyframes heartPop {
@@ -409,43 +383,34 @@ body {
 .btn-favorito.pop { animation: heartPop 0.35s ease forwards; }
 
 /* ====================================
-   RESPONSIVE — BREAKPOINTS
+   RESPONSIVE
    ==================================== */
 
 @media (max-width: 991px) {
     .image-wrapper { height: 260px; }
-    .carousel-image { width: 45%; }
+    .carousel-image { width: 30%; height: 320px; }
 }
 
 @media (max-width: 767px) {
     body { padding-top: 60px; }
     .image-wrapper { height: 220px; }
 
-    /* Carrusel: 1 imagen centrada — sobreescribe Bootstrap */
-    #carruselProductos .carousel-item {
-        text-align: center;
-    }
-
+    #carruselProductos .carousel-item { text-align: center; }
     #carruselProductos .carousel-images-wrapper {
         display: block !important;
         text-align: center;
-        padding: 0;
-        width: 100%;
+        padding: 0; width: 100%;
     }
-
     #carruselProductos .carousel-image {
         display: inline-block !important;
         width: 82% !important;
-        max-width: 340px !important;
+        max-width: 320px !important;
+        height: 260px !important;
         margin: 0 auto !important;
         float: none !important;
     }
 
-    .carousel-control-prev,
-    .carousel-control-next { opacity: 0.7; }
-
     .btn-favorito { opacity: 1; transform: scale(1); }
-
     .card-title { font-size: 0.8rem !important; min-height: unset; }
 }
 
@@ -455,40 +420,25 @@ body {
 }
 
 /* ====================================
-   TOAST DE NOTIFICACIONES
+   TOAST
    ==================================== */
 
 .urban-toast {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
+    bottom: 30px; right: 30px;
     z-index: 99999;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: #1a2332;
-    color: #ffffff;
-    padding: 14px 20px;
-    border-radius: 10px;
-    border-left: 4px solid #3b82f6; /* fallback, JS sobreescribe con el color correcto */
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-    font-family: 'Segoe UI', sans-serif;
-    font-size: 0.9rem;
-    min-width: 260px;
-    max-width: 360px;
+    display: flex; align-items: center; gap: 10px;
+    background: #1a2332; color: #ffffff;
+    padding: 14px 20px; border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    font-family: 'Segoe UI', sans-serif; font-size: 0.9rem;
+    min-width: 260px; max-width: 360px;
     pointer-events: none;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 @media (max-width: 767px) {
     .urban-toast {
-        bottom: 16px;
-        right: 16px;
-        left: 16px;
-        max-width: unset;
-        min-width: unset;
-        font-size: 0.85rem;
+        bottom: 16px; right: 16px; left: 16px;
+        max-width: unset; min-width: unset; font-size: 0.85rem;
     }
 }
