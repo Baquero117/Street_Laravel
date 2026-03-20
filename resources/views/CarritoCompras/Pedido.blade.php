@@ -245,26 +245,24 @@
 <div class="modal fade" id="modalExito" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-body text-center p-5">
+            <div class="modal-body text-center">
                 <div class="success-icon">
                     <i class="bi bi-check-circle-fill"></i>
                 </div>
-                <h3 class="mt-4 mb-3">¡Pedido tomado con éxito!</h3>
+                <h3 class="mt-4 mb-2">¡Pedido tomado con éxito!</h3>
                 <p class="text-muted mb-4">Estaremos informándole sobre su pedido</p>
-                
-                <!-- 👇 BOTÓN PARA VER EN NAVEGADOR -->
-                <button class="btn-download" id="btnVerFactura" onclick="descargarYMostrarFactura()">
-                    <i class="bi bi-eye"></i> Ver Factura
-                </button>
-                
-                <!-- BOTÓN PARA DESCARGAR -->
-                <button class="btn-download" id="btnDescargarFactura">
-                    <i class="bi bi-download"></i> Descargar Factura
-                </button>
 
-                <button class="btn-close-modal mt-3" data-bs-dismiss="modal">
-                    Cerrar
-                </button>
+                <div class="modal-buttons">
+                    <button class="btn-download" id="btnVerFactura" onclick="descargarYMostrarFactura()">
+                        <i class="bi bi-eye"></i> Ver Factura
+                    </button>
+                    <button class="btn-download" id="btnDescargarFactura">
+                        <i class="bi bi-download"></i> Descargar Factura
+                    </button>
+                    <button class="btn-close-modal" data-bs-dismiss="modal">
+                        Cerrar
+                    </button>
+                </div>
             </div>
         </div>
     </div>

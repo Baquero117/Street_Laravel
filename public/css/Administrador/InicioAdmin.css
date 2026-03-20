@@ -47,41 +47,53 @@ html,body{height:100%;margin:0;font-family:Segoe UI, Roboto, Arial, sans-serif;}
   transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
-/* menu */
-.sidebar ul.menu{list-style:none;padding:0;margin:0;}
-.sidebar ul.menu li{padding:12px 16px;display:block;}
-.sidebar ul.menu li a{
-  color:inherit;text-decoration:none;display:flex;align-items:center;gap:12px;
-  padding:10px;border-radius:8px;transition:background 0.18s;
-}
-.sidebar ul.menu li i{min-width:24px;text-align:center;font-size:18px;}
-.sidebar ul.menu li:hover a,
-.sidebar ul.menu li.active a{
-  background: var(--sidebar-accent);
-  color:#fff;
-}
-/* hide ONLY text when collapsed */
-.sidebar.collapsed .header .title-text,
-.sidebar.collapsed .footer span,
-.sidebar.collapsed ul.menu li a span {
-  opacity: 0;
-  visibility: hidden;
-  width: 0;
-  display: none; /* mejor que inline-block */
+/* === MENU - menos espacio vertical === */
+.sidebar ul.menu li {
+    padding: 4px 16px; /* antes era 12px, ahora 4px */
 }
 
-/* footer */
-.sidebar .footer{
-  padding:16px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
+.sidebar ul.menu li a {
+    color: inherit;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px; /* antes era 10px, ahora 8px */
+    border-radius: 8px;
+    transition: background 0.18s;
 }
+
+/* === FOOTER - menos espacio === */
+.sidebar .footer {
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px; /* antes era 10px */
+}
+
 .sidebar .footer button,
-.sidebar .footer .toggle{
-  background:none;border:none;color:inherit;cursor:pointer;display:flex;align-items:center;gap:10px;
+.sidebar .footer .toggle {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    transition: background 0.18s;
+    width: 100%;
 }
-.sidebar .footer .toggle input{margin-left:auto;}
+
+.sidebar .footer button:hover,
+.sidebar .footer .toggle:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.sidebar .footer .toggle input {
+    margin-left: auto;
+}
 
 /* === CONTENT === */
 .content{
