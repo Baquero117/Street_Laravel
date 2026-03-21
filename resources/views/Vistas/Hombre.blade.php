@@ -114,25 +114,25 @@
 
                 <div class="carousel-item active">
                     <div class="carousel-images-wrapper">
-                        <img src="{{ asset('img/OtrasVistas/Hombre/camisa-gris2.jpg') }}" class="carousel-image rounded" alt="Producto 1">
-                        <img src="{{ asset('img/OtrasVistas/Hombre/camisa-gris.jpg') }}" class="carousel-image rounded d-none d-md-block" alt="Producto 2">
-                        <img src="{{ asset('img/OtrasVistas/Hombre/camisa-gris3.jpg') }}" class="carousel-image rounded d-none d-lg-block" alt="Producto 3">
+                        <img src="{{ asset('img/OtrasVistas/Hombre/Oufit1.jpg') }}" class="carousel-image rounded" alt="Producto 1">
+                        <img src="{{ asset('img/OtrasVistas/Hombre/Oufit2.jpg') }}" class="carousel-image rounded d-none d-md-block" alt="Producto 2">
+                        <img src="{{ asset('img/OtrasVistas/Hombre/Oufit3.jpg') }}" class="carousel-image rounded d-none d-lg-block" alt="Producto 3">
                     </div>
                 </div>
 
                 <div class="carousel-item">
                     <div class="carousel-images-wrapper">
-                        <img src="{{ asset('img/OtrasVistas/Hombre/camisa-negra2.jpg') }}" class="carousel-image rounded d-none d-md-block" alt="Producto 4">
-                        <img src="{{ asset('img/OtrasVistas/Hombre/camisa-negra.jpg') }}" class="carousel-image rounded" alt="Producto 5">
-                        <img src="{{ asset('img/OtrasVistas/Hombre/camisa-negra3.jpg') }}" class="carousel-image rounded d-none d-lg-block" alt="Producto 6">
+                        <img src="{{ asset('img/OtrasVistas/Hombre/Oufit4.jpg') }}" class="carousel-image rounded d-none d-md-block" alt="Producto 4">
+                        <img src="{{ asset('img/OtrasVistas/Hombre/Oufit6.jpg') }}" class="carousel-image rounded" alt="Producto 5">
+                        <img src="{{ asset('img/OtrasVistas/Hombre/Oufit5.jpg') }}" class="carousel-image rounded d-none d-lg-block" alt="Producto 6">
                     </div>
                 </div>
 
                 <div class="carousel-item">
                     <div class="carousel-images-wrapper">
-                        <img src="{{ asset('img/OtrasVistas/Hombre/oversize-negra.jpg') }}" class="carousel-image rounded" alt="Producto 7">
-                        <img src="{{ asset('img/OtrasVistas/Hombre/oversize-negra3.jpg') }}" class="carousel-image rounded d-none d-md-block" alt="Producto 8">
-                        <img src="{{ asset('img/OtrasVistas/Hombre/oversize-negra2.jpg') }}" class="carousel-image rounded d-none d-lg-block" alt="Producto 9">
+                        <img src="{{ asset('img/OtrasVistas/Hombre/Oufit7.jpg') }}" class="carousel-image rounded" alt="Producto 7">
+                        <img src="{{ asset('img/OtrasVistas/Hombre/Oufit8.jpg') }}" class="carousel-image rounded d-none d-md-block" alt="Producto 8">
+                        <img src="{{ asset('img/OtrasVistas/Hombre/Oufit9.jpg') }}" class="carousel-image rounded d-none d-lg-block" alt="Producto 9">
                     </div>
                 </div>
 
