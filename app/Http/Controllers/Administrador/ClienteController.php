@@ -11,83 +11,90 @@ class ClienteController extends Controller
 {
     private $clienteService;
 
-    public function __construct(ClienteService $clienteService)
-    {
-       
-        if (!session()->has('token')) {
-            redirect()->route('login')->send();
+        public function __construct(ClienteService $clienteService)
+        {
+        
+            if (!session()->has('token')) {
+                redirect()->route('login')->send();
+            }
+
+            $this->clienteService = $clienteService;
         }
 
-        $this->clienteService = $clienteService;
-    }
-public function index()
-{
-    $resultado = $this->clienteService->obtenerClientes();
-    $clientes = $resultado['success'] ? $resultado['data'] : [];
-    $mensaje = Session::get('mensaje', '');
+        public function index()
+        {
+            $resultado = $this->clienteService->obtenerClientes();
+            $clientes = $resultado['success'] ? $resultado['data'] : [];
+            $mensaje = Session::get('mensaje', '');
 
-    return view('Administrador.Cliente', compact('clientes', 'mensaje'));
-}
+            return view('Administrador.Cliente', compact('clientes', 'mensaje'));
+        }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'apellido' => 'required|string|max:255',
-            'contrasena' => 'required|string|max:255',
-            'direccion' => 'required|string|max:255',
-            'telefono' => 'required|string|max:20',
-            'correo_electronico' => 'required|email|max:255',
-        ]);
+        public function store(Request $request)
+        {
+            $request->validate([
+                'nombre'             => 'required|string|max:255',
+                'apellido'           => 'required|string|max:255',
+                'contrasena'         => 'required|string|max:255',
+                'departamento'       => 'required|string|max:100',
+                'municipio'          => 'required|string|max:100',
+                'direccion'          => 'required|string|max:255',
+                'telefono'           => 'required|string|max:20',
+                'correo_electronico' => 'required|email|max:255',
+            ]);
 
-        $resultado = $this->clienteService->agregarCliente(
-            $request->nombre,
-            $request->apellido,
-            $request->contrasena,
-            $request->direccion,
-            $request->telefono,
-            $request->correo_electronico
-        );
+            $resultado = $this->clienteService->agregarCliente(
+                $request->nombre,
+                $request->apellido,
+                $request->contrasena,
+                $request->departamento,
+                $request->municipio,
+                $request->direccion,
+                $request->telefono,
+                $request->correo_electronico
+            );
 
-        Session::flash('mensaje', $resultado['success']
-            ? "Cliente agregado correctamente."
-            : "Error: " . $resultado['error']
-        );
+            Session::flash('mensaje', $resultado['success']
+                ? "Cliente agregado correctamente."
+                : "Error: " . $resultado['error']
+            );
 
-        return redirect()->route('admin.Cliente');
-    }
+            return redirect()->route('admin.Cliente');
+        }
 
-    public function update(Request $request)
-    {
-        $request->validate([
-            'id_cliente' => 'required|numeric',
-            'nombre' => 'required|string|max:255',
-            'apellido' => 'required|string|max:255',
-            'contrasena' => 'required|string|max:255',
-            'direccion' => 'required|string|max:255',
-            'telefono' => 'required|string|max:20',
-            'correo_electronico' => 'required|email|max:255',
-        ]);
+        public function update(Request $request)
+        {
+            $request->validate([
+                'id_cliente'         => 'required|numeric',
+                'nombre'             => 'required|string|max:255',
+                'apellido'           => 'required|string|max:255',
+                'contrasena'         => 'required|string|max:255',
+                'departamento'       => 'required|string|max:100',
+                'municipio'          => 'required|string|max:100',
+                'direccion'          => 'required|string|max:255',
+                'telefono'           => 'required|string|max:20',
+                'correo_electronico' => 'required|email|max:255',
+            ]);
 
-        $id = $request->id_cliente;
+            $resultado = $this->clienteService->actualizarCliente(
+                $request->id_cliente,
+                $request->nombre,
+                $request->apellido,
+                $request->contrasena,
+                $request->departamento,
+                $request->municipio,
+                $request->direccion,
+                $request->telefono,
+                $request->correo_electronico
+            );
 
-        $resultado = $this->clienteService->actualizarCliente(
-            $id,
-            $request->nombre,
-            $request->apellido,
-            $request->contrasena, // Siempre viene el placeholder
-            $request->direccion,
-            $request->telefono,
-            $request->correo_electronico
-        );
+            Session::flash('mensaje', $resultado['success']
+                ? "Cliente actualizado correctamente."
+                : "Error: " . $resultado['error']
+            );
 
-        Session::flash('mensaje', $resultado['success']
-            ? "Cliente actualizado correctamente."
-            : "Error: " . $resultado['error']
-        );
-
-        return redirect()->route('admin.Cliente');
-    }
+            return redirect()->route('admin.Cliente');
+        }
 
     public function destroy(Request $request)
     {
@@ -104,11 +111,11 @@ public function index()
     }
 
     
-        public function buscar(Request $request)
-{
+    public function buscar(Request $request)
+    {
     $clientes = $this->clienteService->buscarCliente($request->dato);
 
     return response()->json($clientes);
-}
+    }
 
 }

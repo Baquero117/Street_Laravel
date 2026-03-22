@@ -182,7 +182,30 @@
                         <div class="mb-3">
                             <label for="telefono" class="form-label">Teléfono <span class="text-danger">*</span></label>
                             <input type="tel" class="form-control" id="telefono" name="telefono"
-                                   value="{{ old('telefono', $perfil['telefono'] ?? '') }}" required>
+                            value="{{ old('telefono', $perfil['telefono'] ?? '') }}"
+                            pattern="[0-9]{10}"
+                            minlength="10"
+                            maxlength="10"
+                            required>
+                        <div class="invalid-feedback">
+                            El número de teléfono debe tener exactamente 10 dígitos.
+                        </div>
+                                   
+                        </div>
+
+                        <!-- Departamento y Municipio — van después del bloque nombre/apellido -->
+                        <div class="mb-3">
+                            <label for="selectDepartamento" class="form-label">Departamento <span class="text-danger">*</span></label>
+                            <select class="form-select" id="selectDepartamento" name="departamento" required>
+                                <option value="">-- Selecciona un departamento --</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="selectMunicipio" class="form-label">Municipio / Ciudad <span class="text-danger">*</span></label>
+                            <select class="form-select" id="selectMunicipio" name="municipio" required>
+                                <option value="">-- Selecciona un municipio --</option>
+                            </select>
                         </div>
 
                         <div class="mb-3">
@@ -262,6 +285,13 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/PuntoInicio/Cliente/Perfil.js') }}"></script>
+    <script src="{{ asset('js/Registrarse/ubicacion.js') }}"></script>
+    <script>
+        initSelectUbicacion(
+            "{{ $perfil['departamento'] ?? '' }}",
+            "{{ $perfil['municipio'] ?? '' }}"
+        );
+    </script>
     
 </body>
 </html>

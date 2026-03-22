@@ -495,3 +495,13 @@ body {
         max-width: unset; min-width: unset; font-size: 0.85rem;
     }
 }
+
+.talla-item.sin-stock {
+    background-color: #fff5f5;
+    color: #c0392b;
+    border-color: #e74c3c;
+    cursor: not-allowed;
+    text-decoration: line-through;
+    pointer-events: none;
+    opacity: 0.7;
+}

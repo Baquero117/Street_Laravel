@@ -161,12 +161,19 @@ function verDetalle(idProducto) {
                     const cajaTalla       = document.createElement('div');
                     cajaTalla.className   = 'talla-item';
                     cajaTalla.textContent = detalle.talla;
-                    cajaTalla.onclick = function () {
-                        document.querySelectorAll('.talla-item').forEach(t => t.classList.remove('selected'));
-                        this.classList.add('selected');
-                        tallaSeleccionada     = detalle.talla;
-                        idDetalleSeleccionado = detalle.id_detalle_producto;
-                    };
+
+                    if (parseInt(detalle.cantidad) <= 0) {
+                        cajaTalla.classList.add('sin-stock');
+                        cajaTalla.title = 'Sin stock disponible';
+                    } else {
+                        cajaTalla.onclick = function () {
+                            document.querySelectorAll('.talla-item').forEach(t => t.classList.remove('selected'));
+                            this.classList.add('selected');
+                            tallaSeleccionada     = detalle.talla;
+                            idDetalleSeleccionado = detalle.id_detalle_producto;
+                        };
+                    }
+
                     tallasContainer.appendChild(cajaTalla);
                 });
             } else {
@@ -235,22 +242,22 @@ function actualizarContadorCarrito() {
     fetch('/carrito/contador')
         .then(response => response.json())
         .then(data => {
-            const iconoCarrito = document.querySelector('.bi-bag');
-            if (!iconoCarrito) return;
-            const parent = iconoCarrito.parentElement;
-            let badge    = parent.querySelector('.badge');
-            if (data.cantidad > 0) {
-                if (!badge) {
-                    badge = document.createElement('span');
-                    badge.className  = 'badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle';
-                    badge.style.fontSize = '0.7rem';
-                    parent.style.position = 'relative';
-                    parent.appendChild(badge);
+            document.querySelectorAll('.bi-bag').forEach(iconoCarrito => {
+                const parent = iconoCarrito.parentElement;
+                let badge    = parent.querySelector('.badge');
+                if (data.cantidad > 0) {
+                    if (!badge) {
+                        badge = document.createElement('span');
+                        badge.className  = 'badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle';
+                        badge.style.fontSize = '0.7rem';
+                        parent.style.position = 'relative';
+                        parent.appendChild(badge);
+                    }
+                    badge.textContent = data.cantidad;
+                } else if (badge) {
+                    badge.remove();
                 }
-                badge.textContent = data.cantidad;
-            } else if (badge) {
-                badge.remove();
-            }
+            });
         })
         .catch(error => console.error('Error contador:', error));
 }

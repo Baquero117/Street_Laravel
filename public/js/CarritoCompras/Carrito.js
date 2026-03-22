@@ -1,19 +1,47 @@
-// Diseño Navbar
-// Dropdown con hover
-document.addEventListener('DOMContentLoaded', () => {
-    const dropdownUsuario = document.querySelector('.dropdown');
-    const dropdownMenu = dropdownUsuario?.querySelector('.dropdown-menu');
+// ============================================================
+//  DROPDOWN USUARIO
+// ============================================================
+function initDropdownUsuario() {
+    const navbar = document.getElementById('mainNavbar');
+    let abiertos = 0;
 
-    if (dropdownUsuario && dropdownMenu) {
-        dropdownUsuario.addEventListener('mouseenter', () => dropdownMenu.classList.add('show'));
-        dropdownUsuario.addEventListener('mouseleave', (e) => {
-            if (!dropdownMenu.contains(e.relatedTarget)) dropdownMenu.classList.remove('show');
+    function setupDropdown(toggleId, menuId) {
+        const toggle = document.getElementById(toggleId);
+        const menu   = document.getElementById(menuId);
+        if (!toggle || !menu) return;
+
+        let estaAbierto = false;
+
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            estaAbierto ? cerrar() : abrir();
         });
-        dropdownMenu.addEventListener('mouseleave', (e) => {
-            if (!dropdownUsuario.contains(e.relatedTarget)) dropdownMenu.classList.remove('show');
+
+        document.addEventListener('click', function(e) {
+            if (estaAbierto && !toggle.contains(e.target) && !menu.contains(e.target)) cerrar();
         });
+
+        function abrir() {
+            if (estaAbierto) return;
+            estaAbierto = true;
+            abiertos++;
+            menu.classList.add('show');
+            toggle.setAttribute('aria-expanded', 'true');
+        }
+
+        function cerrar() {
+            if (!estaAbierto) return;
+            estaAbierto = false;
+            abiertos = Math.max(0, abiertos - 1);
+            menu.classList.remove('show');
+            toggle.setAttribute('aria-expanded', 'false');
+        }
     }
-});
+
+    setupDropdown('userDropdownToggle',       'userDropdownMenu');
+    setupDropdown('userDropdownToggleMobile', 'userDropdownMenuMobile');
+}
 
 // ============================================================
 //  MODAL DE CONFIRMACIÓN PERSONALIZADO
@@ -83,7 +111,6 @@ function mostrarConfirmacion(mensaje, onAceptar) {
         onAceptar();
     });
 
-    // Cerrar al hacer click fuera
     overlay.addEventListener('click', (e) => {
         if (e.target === overlay) cerrar();
     });
@@ -136,6 +163,8 @@ function mostrarNotificacion(mensaje, tipo) {
 //  DOMContentLoaded
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
+
+    initDropdownUsuario();
 
     // ========== INCREMENTAR CANTIDAD ==========
     document.querySelectorAll('.btn-incrementar').forEach(btn => {
@@ -309,7 +338,9 @@ function vaciarCarrito() {
 //  ACTUALIZAR CONTADOR NAVBAR
 // ============================================================
 function actualizarContadorNavbar(cantidad) {
-    const iconoCarrito = document.querySelector('.bi-cart3').parentElement;
+    const iconoCarrito = document.querySelector('.bi-bag')?.parentElement;
+    if (!iconoCarrito) return;
+
     let badge = iconoCarrito.querySelector('.badge');
 
     if (cantidad > 0) {
@@ -317,6 +348,7 @@ function actualizarContadorNavbar(cantidad) {
             badge = document.createElement('span');
             badge.className = 'badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle';
             badge.style.fontSize = '0.7rem';
+            iconoCarrito.style.position = 'relative';
             iconoCarrito.appendChild(badge);
         }
         badge.textContent = cantidad;

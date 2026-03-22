@@ -14,46 +14,34 @@
 
 <body class="bg-light">
 
-    <!-- NAVBAR igual al de inicio -->
-    <nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
-        <div class="container-fluid px-4 py-2">
-            <div class="row w-100 align-items-center g-0">
+        <nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
+            <div class="container-fluid px-3 py-2">
 
-                <!-- Logo izquierda -->
-                <div class="col-auto">
-                    <a href="{{ url('/inicio') }}" class="navbar-brand logo-urbano mb-0" id="brandLogo">
-                        URBAN STREET
-                    </a>
-                </div>
+                <!-- Logo -->
+                <a href="{{ url('/inicio') }}" class="navbar-brand logo-urbano mb-0">
+                    URBAN STREET
+                </a>
 
-                <!-- Espacio central -->
-                <div class="col"></div>
+                <!-- Iconos móvil: perfil + carrito + favoritos -->
+                <div class="d-flex align-items-center gap-2 d-lg-none ms-auto me-2">
 
-                <!-- Iconos derecha -->
-                <div class="col-auto d-flex align-items-center gap-3">
-
-                    <!-- Búsqueda -->
-                    <div class="icon-wrapper">
-                        <i class="bi bi-search fs-5"></i>
-                    </div>
-
-                    <!-- Usuario -->
-                    <div class="dropdown icon-wrapper">
-                        <a href="#" class="text-dark">
+                    <!-- Dropdown usuario móvil -->
+                    <div class="icon-wrapper position-relative" id="dropdownUsuarioMobile">
+                        <a href="#" class="text-dark" id="userDropdownToggleMobile" aria-expanded="false">
                             <i class="bi bi-person fs-5"></i>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
+                        <ul class="inicio-dropdown-menu" id="userDropdownMenuMobile">
                             @if(Session::has('token'))
-                                <li><a class="dropdown-item py-2" href="{{ url('cuenta') }}">Perfil</a></li>
+                                <li><a class="inicio-dropdown-item" href="{{ url('cuenta') }}">Perfil</a></li>
                                 <li>
                                     <form action="{{ route('logout') }}" method="POST" class="m-0">
                                         @csrf
-                                        <button type="submit" class="dropdown-item py-2">Cerrar sesión</button>
+                                        <button type="submit" class="inicio-dropdown-item w-100 text-start border-0 bg-transparent">Cerrar sesión</button>
                                     </form>
                                 </li>
                             @else
-                                <li><a class="dropdown-item py-2" href="{{ route('login') }}">Iniciar sesión</a></li>
-                                <li><a class="dropdown-item py-2" href="{{ route('registro') }}">Registrarse</a></li>
+                                <li><a class="inicio-dropdown-item" href="{{ route('login') }}">Iniciar sesión</a></li>
+                                <li><a class="inicio-dropdown-item" href="{{ route('registro') }}">Registrarse</a></li>
                             @endif
                         </ul>
                     </div>
@@ -67,11 +55,64 @@
                     <a href="{{ route('favoritos') }}" class="text-dark icon-wrapper position-relative">
                         <i class="bi bi-heart fs-5"></i>
                     </a>
-
                 </div>
+
+                <!-- Hamburguesa -->
+                <button class="navbar-toggler border-0 shadow-none" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#navbarMenu"
+                        aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Menú colapsable -->
+                <div class="collapse navbar-collapse" id="navbarMenu">
+
+                    <!-- Categorías centradas -->
+                    <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-lg-center flex-grow-1 gap-2 gap-lg-4 py-3 py-lg-0">
+                        <a href="{{ url('/hombre') }}" class="nav-link-custom">HOMBRE</a>
+                        <a href="{{ url('/mujer') }}" class="nav-link-custom">MUJER</a>
+                        <a href="{{ url('/moda') }}" class="nav-link-custom">LO MEJOR DE LA MODA</a>
+                    </div>
+
+                    <!-- Iconos solo desktop -->
+                    <div class="d-none d-lg-flex align-items-center gap-3">
+
+                        <!-- Dropdown usuario desktop -->
+                        <div class="icon-wrapper position-relative" id="dropdownUsuario">
+                            <a href="#" class="text-dark" id="userDropdownToggle" aria-expanded="false">
+                                <i class="bi bi-person fs-5"></i>
+                            </a>
+                            <ul class="inicio-dropdown-menu" id="userDropdownMenu">
+                                @if(Session::has('token'))
+                                    <li><a class="inicio-dropdown-item" href="{{ url('cuenta') }}">Perfil</a></li>
+                                    <li>
+                                        <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                            @csrf
+                                            <button type="submit" class="inicio-dropdown-item w-100 text-start border-0 bg-transparent">Cerrar sesión</button>
+                                        </form>
+                                    </li>
+                                @else
+                                    <li><a class="inicio-dropdown-item" href="{{ route('login') }}">Iniciar sesión</a></li>
+                                    <li><a class="inicio-dropdown-item" href="{{ route('registro') }}">Registrarse</a></li>
+                                @endif
+                            </ul>
+                        </div>
+
+                        <!-- Carrito -->
+                        <a href="{{ url('/carrito') }}" class="text-dark icon-wrapper position-relative">
+                            <i class="bi bi-bag fs-5"></i>
+                        </a>
+
+                        <!-- Favoritos -->
+                        <a href="{{ route('favoritos') }}" class="text-dark icon-wrapper position-relative">
+                            <i class="bi bi-heart fs-5"></i>
+                        </a>
+
+                    </div>
+                </div>
+
             </div>
-        </div>
-    </nav>
+        </nav>
 
     <!-- MAIN -->
     <main>

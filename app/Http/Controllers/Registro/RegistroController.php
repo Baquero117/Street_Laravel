@@ -26,6 +26,8 @@ class RegistroController extends Controller
         $request->validate([
             'nombre'             => 'required|string|max:255',
             'apellido'           => 'required|string|max:255',
+            'departamento'       => 'required|string|max:100',
+            'municipio'          => 'required|string|max:100',
             'direccion'          => 'required|string|max:255',
             'telefono'           => 'required|string|max:20',
             'correo_electronico' => 'required|email|max:255',
@@ -35,6 +37,8 @@ class RegistroController extends Controller
         $resultado = $this->registroService->registrarUsuario(
             $request->nombre,
             $request->apellido,
+            $request->departamento,
+            $request->municipio,
             $request->direccion,
             $request->telefono,
             $request->correo_electronico,
@@ -46,7 +50,6 @@ class RegistroController extends Controller
             return redirect()->route('registro');
         }
 
-        // 👇 Redirigir a verificación con el correo en la sesión
         Session::put('correo_verificacion', $request->correo_electronico);
         Session::flash('mensaje', 'Cuenta creada. Revisa tu correo e ingresa el código de verificación.');
         return redirect()->route('verificacion.mostrar');

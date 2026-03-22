@@ -60,39 +60,41 @@ class PerfilController extends Controller
 }
 
 
-       public function actualizar(Request $request)
-{
-    if (!Session::has('token')) {
-        return redirect()->route('login');
+    public function actualizar(Request $request)
+    {
+        if (!Session::has('token')) {
+            return redirect()->route('login');
+        }
+
+        $request->validate([
+            'nombre'             => 'required|string|max:255',
+            'apellido'           => 'required|string|max:255',
+            'departamento'       => 'required|string|max:100',
+            'municipio'          => 'required|string|max:100',
+            'direccion'          => 'required|string|max:255',
+            'telefono'           => 'required|string|max:20',
+            'correo_electronico' => 'required|email|max:255',
+            'contrasena'         => 'nullable|min:6|same:contrasena_confirmacion',
+        ]);
+
+        $resultado = $this->perfilService->actualizarPerfil(
+            $request->nombre,
+            $request->apellido,
+            $request->departamento,
+            $request->municipio,
+            $request->contrasena,
+            $request->direccion,
+            $request->telefono,
+            $request->correo_electronico
+        );
+
+        if ($resultado['success']) {
+            Session::put('usuario_nombre', $request->nombre);
+            return redirect()->back()->with('success', 'Datos actualizados correctamente.');
+        }
+
+        return redirect()->back()->with('error', 'No se pudieron actualizar los datos');
     }
-
-    $request->validate([
-    'nombre' => 'required|string|max:255',
-    'apellido' => 'required|string|max:255',
-    'direccion' => 'required|string|max:255',
-    'telefono' => 'required|string|max:20',
-    'correo_electronico' => 'required|email|max:255',
-
-    'contrasena' => 'nullable|min:6|same:contrasena_confirmacion',
-    ]);
-
-
-    $resultado = $this->perfilService->actualizarPerfil(
-        $request->nombre,
-        $request->apellido,
-        $request->contrasena,
-        $request->direccion,
-        $request->telefono,
-        $request->correo_electronico
-    );
-
-    if ($resultado['success']) {
-        Session::put('usuario_nombre', $request->nombre);
-        return redirect()->back()->with('success', 'Datos actualizados correctamente.');
-    }
-
-    return redirect()->back()->with('error', 'No se pudieron actualizar los datos');
-}
 
 
 }

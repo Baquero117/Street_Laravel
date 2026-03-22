@@ -48,6 +48,27 @@
                 </div>
             </div>
 
+
+            <div class="mb-3">
+                <label class="form-label" for="selectDepartamento">Departamento</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-map"></i></span>
+                    <select id="selectDepartamento" name="departamento" class="form-select" required>
+                        <option value="">-- Selecciona un departamento --</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="selectMunicipio">Municipio / Ciudad</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                    <select id="selectMunicipio" name="municipio" class="form-select" required>
+                        <option value="">-- Selecciona un municipio --</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="mb-3">
                 <label class="form-label" for="direccion">Dirección</label>
                 <div class="input-group">
@@ -60,7 +81,15 @@
                 <label class="form-label" for="telefono">Teléfono</label>
                 <div class="input-group">
                     <span class="input-group-text"><i class="bi bi-telephone"></i></span>
-                    <input type="number" id="telefono" name="telefono" class="form-control" placeholder="Número de teléfono" required>
+                    <input type="tel" id="telefono" name="telefono" class="form-control"
+                placeholder="Número de teléfono (10 dígitos)"
+                pattern="[0-9]{10}"
+                minlength="10"
+                maxlength="10"
+                required>
+            <div class="invalid-feedback">
+                El número de teléfono debe tener exactamente 10 dígitos.
+            </div>
                 </div>
             </div>
 
@@ -103,6 +132,8 @@
     </div>
 
     <script src="{{ asset('js/Registrarse/Registro.js') }}"></script>
+    <script src="{{ asset('js/Registrarse/Ubicacion.js') }}"></script>
+    <script>initSelectUbicacion();</script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

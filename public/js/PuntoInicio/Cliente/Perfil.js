@@ -56,8 +56,28 @@ document.addEventListener('DOMContentLoaded', function () {
     const contrasenaConfirmacion = document.getElementById('contrasena_confirmacion');
     const telefono               = document.getElementById('telefono');
     const correoElectronico      = document.getElementById('correo_electronico');
+    const patronTelefono         = /^[0-9]{10}$/;
 
-    // Validación al enviar el formulario
+    // ========== TELÉFONO — validación en tiempo real ==========
+    if (telefono) {
+        telefono.addEventListener('input', function () {
+            if (patronTelefono.test(this.value)) {
+                this.classList.remove('is-invalid');
+            } else if (this.value.length > 0) {
+                this.classList.add('is-invalid');
+            } else {
+                this.classList.remove('is-invalid');
+            }
+        });
+
+        telefono.addEventListener('blur', function () {
+            if (this.value.length > 0 && !patronTelefono.test(this.value)) {
+                this.classList.add('is-invalid');
+            }
+        });
+    }
+
+    // ========== VALIDACIÓN AL ENVIAR ==========
     if (formCuenta) {
         formCuenta.addEventListener('submit', function (e) {
             let isValid = true;
@@ -65,6 +85,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Limpiar errores previos
             document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+
+            const departamento = document.getElementById('selectDepartamento');
+            const municipio    = document.getElementById('selectMunicipio');
+
+            if (!departamento.value) {
+                isValid = false;
+                mensajesError.push('Por favor selecciona un departamento');
+                departamento.classList.add('is-invalid');
+            }
+
+            if (!municipio.value) {
+                isValid = false;
+                mensajesError.push('Por favor selecciona un municipio');
+                municipio.classList.add('is-invalid');
+            }
 
             // Validar contraseñas si se están cambiando
             if (contrasena.value !== '' || contrasenaConfirmacion.value !== '') {
@@ -80,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
 
-            // Validar formato de correo electrónico
+            // Validar correo electrónico
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(correoElectronico.value)) {
                 isValid = false;
@@ -88,11 +123,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 correoElectronico.classList.add('is-invalid');
             }
 
-            // Validar formato de teléfono
-            const telefonoRegex = /^[0-9\s\-+()]+$/;
-            if (!telefonoRegex.test(telefono.value) || telefono.value.length < 7) {
+            // Validar teléfono — exactamente 10 dígitos
+            if (!patronTelefono.test(telefono.value)) {
                 isValid = false;
-                mensajesError.push('El teléfono debe contener al menos 7 dígitos');
+                mensajesError.push('El número de teléfono debe tener exactamente 10 dígitos');
                 telefono.classList.add('is-invalid');
             }
 
@@ -106,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Remover clase de error al escribir
-    document.querySelectorAll('.form-control').forEach(input => {
+    document.querySelectorAll('.form-control, .form-select').forEach(input => {
         input.addEventListener('input', function () {
             this.classList.remove('is-invalid');
         });

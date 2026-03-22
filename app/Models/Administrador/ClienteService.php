@@ -59,57 +59,47 @@ class ClienteService
 }
 
 
-    public function agregarCliente($nombre, $apellido, $contrasena, $direccion, $telefono, $correo_electronico)
-    {
-        $response = Http::withHeaders($this->headers())
-            ->post($this->baseUrl, [
-                "nombre" => $nombre,
-                "apellido" => $apellido,
-                "contrasena" => $contrasena,
-                "direccion" => $direccion,
-                "telefono" => $telefono,
-                "correo_electronico" => $correo_electronico
-            ]);
+        public function agregarCliente($nombre, $apellido, $contrasena, $departamento, $municipio, $direccion, $telefono, $correo_electronico)
+        {
+            $response = Http::withHeaders($this->headers())
+                ->post($this->baseUrl, [
+                    "nombre"             => $nombre,
+                    "apellido"           => $apellido,
+                    "contrasena"         => $contrasena,
+                    "departamento"       => $departamento,
+                    "municipio"          => $municipio,
+                    "direccion"          => $direccion,
+                    "telefono"           => $telefono,
+                    "correo_electronico" => $correo_electronico
+                ]);
 
-        if ($response->successful()) {
-            return [
-                "success" => true, 
-                "data" => $response->json()
-            ];
+            if ($response->successful()) {
+                return ["success" => true, "data" => $response->json()];
+            }
+
+            return ["success" => false, "error" => "HTTP " . $response->status()];
         }
 
-        return [
-            "success" => false,
-            "error" => "HTTP " . $response->status()
-        ];
-    }
+        public function actualizarCliente($id, $nombre, $apellido, $contrasena, $departamento, $municipio, $direccion, $telefono, $correo_electronico)
+        {
+            $response = Http::withHeaders($this->headers())
+                ->put($this->baseUrl . "/" . $id, [
+                    "nombre"             => $nombre,
+                    "apellido"           => $apellido,
+                    "contrasena"         => $contrasena,
+                    "departamento"       => $departamento,
+                    "municipio"          => $municipio,
+                    "direccion"          => $direccion,
+                    "telefono"           => $telefono,
+                    "correo_electronico" => $correo_electronico
+                ]);
 
-    public function actualizarCliente($id, $nombre, $apellido, $contrasena, $direccion, $telefono, $correo_electronico)
-    {
-        $data = [
-            "nombre" => $nombre,
-            "apellido" => $apellido,
-            "contrasena" => $contrasena, // Siempre viene con valor (actual o nueva)
-            "direccion" => $direccion,
-            "telefono" => $telefono,
-            "correo_electronico" => $correo_electronico
-        ];
+            if ($response->successful()) {
+                return ["success" => true, "data" => $response->json()];
+            }
 
-        $response = Http::withHeaders($this->headers())
-            ->put($this->baseUrl . "/" . $id, $data);
-
-        if ($response->successful()) {
-            return [
-                "success" => true, 
-                "data" => $response->json()
-            ];
+            return ["success" => false, "error" => "HTTP " . $response->status() . " - " . $response->body()];
         }
-
-        return [
-            "success" => false,
-            "error" => "HTTP " . $response->status() . " - " . $response->body()
-        ];
-    }
 
     public function eliminarCliente($id)
     {

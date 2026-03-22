@@ -113,15 +113,15 @@
             <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img src="{{ asset('img/OtrasVistas/Ofertas.jpg') }}"
+                        <img src="{{ asset('img/OtrasVistas/Moda/Ofertas.jpg') }}"
                              class="d-block w-100 rounded-3 hero-image" alt="Ofertas especiales">
                     </div>
                     <div class="carousel-item">
-                        <img src="{{ asset('img/OtrasVistas/gracias.jpg') }}"
+                        <img src="{{ asset('img/OtrasVistas/Moda/gracias.jpg') }}"
                              class="d-block w-100 rounded-3 hero-image" alt="Gracias por tu compra">
                     </div>
                     <div class="carousel-item">
-                        <img src="{{ asset('img/OtrasVistas/descuento.jpg') }}"
+                        <img src="{{ asset('img/OtrasVistas/Moda/descuento.jpg') }}"
                              class="d-block w-100 rounded-3 hero-image" alt="Descuentos">
                     </div>
                 </div>

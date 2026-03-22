@@ -40,27 +40,30 @@
 
         <table class="table table-striped mb-0">
             <thead class="table-dark">
-                <tr>
-                    <th>ID Cliente</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Correo</th>
-                    <th>Teléfono</th>
-                    <th>Dirección</th>
-                </tr>
-            </thead>
+              <tr>
+                  <th>ID Cliente</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>Correo</th>
+                  <th>Teléfono</th>
+                  <th>Departamento</th>
+                  <th>Municipio</th>
+                  <th>Dirección</th>
+              </tr>
+          </thead>
             <tbody>
                 @if (!empty($clientes))
                     @foreach ($clientes as $cliente)
                         <tr>
-                            <td>{{ $cliente['id_cliente'] }}</td>
-                            <td>{{ $cliente['nombre'] }}</td>
-                            <td>{{ $cliente['apellido'] }}</td>
-                            <td>{{ $cliente['correo_electronico'] }}</td>
-                            <td>{{ $cliente['telefono'] }}</td>
-                            <td>{{ $cliente['direccion'] }}</td>
-                           
-                        </tr>
+                          <td>{{ $cliente['id_cliente'] }}</td>
+                          <td>{{ $cliente['nombre'] }}</td>
+                          <td>{{ $cliente['apellido'] }}</td>
+                          <td>{{ $cliente['correo_electronico'] }}</td>
+                          <td>{{ $cliente['telefono'] }}</td>
+                          <td>{{ $cliente['departamento'] ?? '-' }}</td>
+                          <td>{{ $cliente['municipio'] ?? '-' }}</td>
+                          <td>{{ $cliente['direccion'] }}</td>
+                      </tr>
                     @endforeach
                 @else
                     <tr>
@@ -98,6 +101,20 @@
           </div>
 
           <div class="mb-2">
+              <label class="form-label">Departamento</label>
+              <select class="form-select" name="departamento" id="agregar_selectDepartamento" required>
+                  <option value="">-- Selecciona un departamento --</option>
+              </select>
+          </div>
+
+          <div class="mb-2">
+              <label class="form-label">Municipio</label>
+              <select class="form-select" name="municipio" id="agregar_selectMunicipio" required>
+                  <option value="">-- Selecciona un municipio --</option>
+              </select>
+          </div>
+
+          <div class="mb-2">
             <label class="form-label">Contraseña</label>
             <input class="form-control" type="password" name="contrasena" required>
           </div>
@@ -109,7 +126,15 @@
 
           <div class="mb-2">
             <label class="form-label">Teléfono</label>
-            <input class="form-control" type="text" name="telefono" required>
+            <input class="form-control" type="tel" name="telefono"
+            pattern="[0-9]{10}"
+            minlength="10"
+            maxlength="10"
+            placeholder="10 dígitos"
+            required>
+        <div class="invalid-feedback">
+            El número de teléfono debe tener exactamente 10 dígitos.
+        </div>
           </div>
 
           <div class="mb-2">
@@ -160,6 +185,20 @@
             <input class="form-control" type="text" name="apellido" id="update_apellido" required>
           </div>
 
+          <div class="mb-2">
+              <label class="form-label">Departamento</label>
+              <select class="form-select" name="departamento" id="update_selectDepartamento" required>
+                  <option value="">-- Selecciona un departamento --</option>
+              </select>
+          </div>
+
+          <div class="mb-2">
+              <label class="form-label">Municipio</label>
+              <select class="form-select" name="municipio" id="update_selectMunicipio" required>
+                  <option value="">-- Selecciona un municipio --</option>
+              </select>
+          </div>
+
           <!-- Campo oculto con valor placeholder para la contraseña -->
           <input type="hidden" name="contrasena" value="SIN_CAMBIOS_PASSWORD_2024">
 
@@ -170,7 +209,15 @@
 
           <div class="mb-2">
             <label class="form-label">Teléfono</label>
-            <input class="form-control" type="text" name="telefono" id="update_telefono" required>
+            <input class="form-control" type="tel" name="telefono"
+                pattern="[0-9]{10}"
+                minlength="10"
+                maxlength="10"
+                placeholder="10 dígitos"
+                required>
+            <div class="invalid-feedback">
+                El número de teléfono debe tener exactamente 10 dígitos.
+            </div>
           </div>
 
           <div class="mb-2">
@@ -269,12 +316,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-
-
-
-
-
-
 <script>
 let timeoutCliente = null;
 
@@ -356,6 +397,7 @@ document.getElementById('buscadorCliente').addEventListener('input', function() 
     }
 });
 </script>
+
 <script>
 function buscarManualCliente(){
     let valor = document.getElementById('buscadorCliente').value;
@@ -384,6 +426,7 @@ function filtrarTablaCliente(valor) {
     });
 }
 </script>
+
 
 
 @endsection

@@ -37,6 +37,8 @@ class PerfilService
     public function actualizarPerfil(
         string $nombre,
         string $apellido,
+        string $departamento,
+        string $municipio,
         ?string $contrasena,
         string $direccion,
         string $telefono,
@@ -45,17 +47,16 @@ class PerfilService
         $token = Session::get('token');
 
         if (!$token) {
-            return [
-                "success" => false,
-                "error" => "Token no encontrado"
-            ];
+            return ["success" => false, "error" => "Token no encontrado"];
         }
 
         $data = [
-            "nombre" => $nombre,
-            "apellido" => $apellido,
-            "direccion" => $direccion,
-            "telefono" => $telefono,
+            "nombre"             => $nombre,
+            "apellido"           => $apellido,
+            "departamento"       => $departamento,
+            "municipio"          => $municipio,
+            "direccion"          => $direccion,
+            "telefono"           => $telefono,
             "correo_electronico" => $correo_electronico
         ];
 
@@ -65,19 +66,16 @@ class PerfilService
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $token,
-            'Accept' => 'application/json'
+            'Accept'        => 'application/json'
         ])->put($this->apiUrl . "/perfil", $data);
 
         if ($response->successful()) {
-            return [
-                "success" => true,
-                "data" => $response->json()
-            ];
+            return ["success" => true, "data" => $response->json()];
         }
 
         return [
-            "success" => false,
-            "error" => "HTTP " . $response->status(),
+            "success"  => false,
+            "error"    => "HTTP " . $response->status(),
             "response" => $response->body()
         ];
     }

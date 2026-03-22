@@ -303,12 +303,19 @@ function verDetalleFavorito(idProducto) {
                     const cajaTalla       = document.createElement('div');
                     cajaTalla.className   = 'talla-item';
                     cajaTalla.textContent = detalle.talla;
-                    cajaTalla.onclick = function () {
-                        document.querySelectorAll('.talla-item').forEach(t => t.classList.remove('selected'));
-                        this.classList.add('selected');
-                        tallaSeleccionada     = detalle.talla;
-                        idDetalleSeleccionado = detalle.id_detalle_producto;
-                    };
+
+                    if (parseInt(detalle.cantidad) <= 0) {
+                        cajaTalla.classList.add('sin-stock');
+                        cajaTalla.title = 'Sin stock disponible';
+                    } else {
+                        cajaTalla.onclick = function () {
+                            document.querySelectorAll('.talla-item').forEach(t => t.classList.remove('selected'));
+                            this.classList.add('selected');
+                            tallaSeleccionada     = detalle.talla;
+                            idDetalleSeleccionado = detalle.id_detalle_producto;
+                        };
+                    }
+
                     tallasContainer.appendChild(cajaTalla);
                 });
             } else {
