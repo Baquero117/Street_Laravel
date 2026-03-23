@@ -133,6 +133,8 @@ $estados = ['Pendiente', 'Procesando', 'Enviado', 'Completado', 'Cancelado'];
                                 <h6 class="text-muted">Cliente</h6>
                                 @if(isset($pedido['cliente']))
                                     <p><b>Nombre:</b> {{ $pedido['cliente']['nombre'] }} {{ $pedido['cliente']['apellido'] }}</p>
+                                    <p><b>Departamento:</b> {{ $pedido['cliente']['departamento']}}</p>
+                                    <p><b>Municipio:</b> {{ $pedido['cliente']['municipio']}}</p>
                                     <p><b>Dirección:</b> {{ $pedido['cliente']['direccion'] }}</p>
                                     <p><b>Teléfono:</b> {{ $pedido['cliente']['telefono'] }}</p>
                                     <p><b>Email:</b> {{ $pedido['cliente']['correo_electronico'] }}</p>

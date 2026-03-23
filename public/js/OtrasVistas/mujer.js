@@ -85,15 +85,162 @@ function initDropdownUsuario() {
     setupDropdown('userDropdownToggleMobile', 'userDropdownMenuMobile');
 }
 
-// ============================================================
-//  Filtros — placeholder
-// ============================================================
 function initFiltros() {
     const btnMobile  = document.getElementById('btnFiltrosMobile');
     const btnDesktop = document.getElementById('btnFiltrosDesktop');
-    function abrirFiltros() { mostrarNotificacion('Filtros próximamente disponibles', 'info'); }
-    if (btnMobile)  btnMobile.addEventListener('click', abrirFiltros);
-    if (btnDesktop) btnDesktop.addEventListener('click', abrirFiltros);
+    const drawer     = document.getElementById('filtrosDrawer');
+    const overlay    = document.getElementById('filtrosOverlay');
+    const closeBtn   = document.getElementById('filtrosClose');
+    const btnAplicar = document.getElementById('filtrosBtnAplicar');
+    const btnLimpiar = document.getElementById('filtrosBtnLimpiar');
+    const inputBusqueda = document.getElementById('filtroBusqueda');
+    const inputPrecio   = document.getElementById('filtroPrecio');
+    const labelPrecio   = document.getElementById('filtroPrecioValor');
+
+    if (!drawer) return;
+
+    function abrirDrawer() {
+        poblarFiltros();
+        drawer.classList.add('show');
+        overlay.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function cerrarDrawer() {
+        drawer.classList.remove('show');
+        overlay.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+
+    if (btnMobile)  btnMobile.addEventListener('click', abrirDrawer);
+    if (btnDesktop) btnDesktop.addEventListener('click', abrirDrawer);
+    closeBtn.addEventListener('click', cerrarDrawer);
+    overlay.addEventListener('click', cerrarDrawer);
+
+    inputPrecio.addEventListener('input', function () {
+        labelPrecio.textContent = '$' + new Intl.NumberFormat('es-CO').format(this.value);
+    });
+
+    function poblarFiltros() {
+        const cards      = document.querySelectorAll('.product-card');
+        const coloresSet = new Set();
+        const tallasSet  = new Set();
+        let precioMax    = 0;
+
+        cards.forEach(card => {
+            const color  = card.dataset.color;
+            const talla  = card.dataset.talla;
+            const precio = parseFloat(card.dataset.precio) || 0;
+            if (color) coloresSet.add(color.trim());
+            if (talla) tallasSet.add(talla.trim());
+            if (precio > precioMax) precioMax = precio;
+        });
+
+        const contColores = document.getElementById('filtroColores');
+        contColores.innerHTML = '';
+        if (coloresSet.size === 0) {
+            contColores.innerHTML = '<span class="text-muted" style="font-size:0.82rem;">Sin datos</span>';
+        } else {
+            coloresSet.forEach(color => {
+                const chip = document.createElement('span');
+                chip.className     = 'filtro-chip';
+                chip.textContent   = color;
+                chip.dataset.valor = color;
+                chip.addEventListener('click', () => chip.classList.toggle('activo'));
+                contColores.appendChild(chip);
+            });
+        }
+
+        const contTallas = document.getElementById('filtroTallas');
+        contTallas.innerHTML = '';
+        if (tallasSet.size === 0) {
+            contTallas.innerHTML = '<span class="text-muted" style="font-size:0.82rem;">Sin datos</span>';
+        } else {
+            tallasSet.forEach(talla => {
+                const chip = document.createElement('span');
+                chip.className     = 'filtro-chip';
+                chip.textContent   = talla;
+                chip.dataset.valor = talla;
+                chip.addEventListener('click', () => chip.classList.toggle('activo'));
+                contTallas.appendChild(chip);
+            });
+        }
+
+        if (precioMax > 0) {
+            inputPrecio.max   = precioMax;
+            inputPrecio.value = precioMax;
+            labelPrecio.textContent = '$' + new Intl.NumberFormat('es-CO').format(precioMax);
+        }
+    }
+
+    btnAplicar.addEventListener('click', () => {
+        const busqueda       = inputBusqueda.value.toLowerCase().trim();
+        const precioMax      = parseFloat(inputPrecio.value);
+        const coloresActivos = [...document.querySelectorAll('#filtroColores .filtro-chip.activo')]
+                                .map(c => c.dataset.valor.toLowerCase());
+        const tallasActivas  = [...document.querySelectorAll('#filtroTallas .filtro-chip.activo')]
+                                .map(c => c.dataset.valor.toLowerCase());
+
+        let visibles = 0;
+
+        document.querySelectorAll('.product-card').forEach(card => {
+            const nombre = (card.dataset.nombre || '').toLowerCase();
+            const color  = (card.dataset.color  || '').toLowerCase();
+            const talla  = (card.dataset.talla  || '').toLowerCase();
+            const precio = parseFloat(card.dataset.precio) || 0;
+
+            const pasaBusqueda = !busqueda || nombre.includes(busqueda);
+            const pasaPrecio   = precio <= precioMax;
+            const pasaColor    = coloresActivos.length === 0 || coloresActivos.includes(color);
+            const pasaTalla    = tallasActivas.length  === 0 || tallasActivas.includes(talla);
+
+            const col = card.closest('.col-6, .col-md-4, .col-lg-3');
+            if (pasaBusqueda && pasaPrecio && pasaColor && pasaTalla) {
+                if (col) col.style.display = '';
+                visibles++;
+            } else {
+                if (col) col.style.display = 'none';
+            }
+        });
+
+        actualizarBadgeFiltros(busqueda || coloresActivos.length || tallasActivas.length || parseFloat(inputPrecio.value) < parseFloat(inputPrecio.max));
+        cerrarDrawer();
+        mostrarNotificacion(`${visibles} producto${visibles !== 1 ? 's' : ''} encontrado${visibles !== 1 ? 's' : ''}`, 'info');
+    });
+
+    btnLimpiar.addEventListener('click', () => {
+        inputBusqueda.value = '';
+        document.querySelectorAll('.filtro-chip.activo').forEach(c => c.classList.remove('activo'));
+        const max = inputPrecio.max;
+        inputPrecio.value = max;
+        labelPrecio.textContent = '$' + new Intl.NumberFormat('es-CO').format(max);
+
+        document.querySelectorAll('.product-card').forEach(card => {
+            const col = card.closest('.col-6, .col-md-4, .col-lg-3');
+            if (col) col.style.display = '';
+        });
+
+        actualizarBadgeFiltros(false);
+        mostrarNotificacion('Filtros eliminados', 'info');
+        cerrarDrawer();
+    });
+
+    function actualizarBadgeFiltros(hayFiltros) {
+        [btnMobile, btnDesktop].forEach(btn => {
+            if (!btn) return;
+            let badge = btn.querySelector('.filtros-activos-badge');
+            if (hayFiltros) {
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.className    = 'filtros-activos-badge';
+                    btn.style.position = 'relative';
+                    btn.appendChild(badge);
+                }
+            } else if (badge) {
+                badge.remove();
+            }
+        });
+    }
 }
 
 // ============================================================

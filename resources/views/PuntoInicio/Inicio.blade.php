@@ -155,7 +155,10 @@
             <div class="row g-4">
                 @forelse($productos as $producto)
                 <div class="col-6 col-md-4 col-lg-3">
-                    <div class="card h-100 product-card border-0">
+                    <div class="card h-100 product-card border-0"
+                        data-nombre="{{ strtolower($producto['nombre']) }}"
+                        data-color="{{ strtolower($producto['color'] ?? '') }}"
+                        data-precio="{{ $producto['precio'] }}">
                         <div class="image-wrapper position-relative">
                             <img src="{{ asset('storage/' . $producto['imagen']) }}"
                                 class="card-img-top product-image"
@@ -179,7 +182,7 @@
                                 {{ $producto['nombre'] }}
                             </h6>
                             <p class="text-dark mb-0 fw-bold" style="font-size: 0.95rem;">
-                                {{ number_format($producto['precio'], 3, '.', ',') }} COP
+                                {{ number_format($producto['precio'], 0, '.', ',') }} COP
                             </p>
 
                             @if(isset($producto['color']))
@@ -284,6 +287,57 @@
             </div>
         </div>
     </footer>
+
+    <!--Filtro -->
+    <div id="filtrosOverlay" class="filtros-overlay"></div>
+
+        <div id="filtrosDrawer" class="filtros-drawer">
+
+            <div class="filtros-header">
+                <h5 class="filtros-titulo">Filtros</h5>
+                <button class="filtros-close" id="filtrosClose">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <div class="filtros-body">
+
+                <!-- Búsqueda por nombre -->
+                <div class="filtro-seccion">
+                    <label class="filtro-label">Buscar por nombre</label>
+                    <input type="text" id="filtroBusqueda" class="filtro-input" placeholder="Ej: chaqueta, camisa...">
+                </div>
+
+                <!-- Colores -->
+                <div class="filtro-seccion">
+                    <label class="filtro-label">Color</label>
+                    <div id="filtroColores" class="filtro-opciones"></div>
+                </div>
+
+                <!-- Tallas -->
+                <div class="filtro-seccion">
+                    <label class="filtro-label">Talla</label>
+                    <div id="filtroTallas" class="filtro-opciones"></div>
+                </div>
+
+                <!-- Precio -->
+                <div class="filtro-seccion">
+                    <label class="filtro-label">Precio máximo: <span id="filtroPrecioValor">$0</span></label>
+                    <input type="range" id="filtroPrecio" class="filtro-range" min="0" max="1000000" step="10000" value="1000000">
+                </div>
+
+            </div>
+
+            <div class="filtros-footer">
+                <button class="filtros-btn-limpiar" id="filtrosBtnLimpiar">
+                    <i class="bi bi-x-circle me-1"></i> Limpiar
+                </button>
+                <button class="filtros-btn-aplicar" id="filtrosBtnAplicar">
+                    <i class="bi bi-check2 me-1"></i> Aplicar
+                </button>
+            </div>
+
+        </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/PuntoInicio/Inicio.js') }}"></script>
