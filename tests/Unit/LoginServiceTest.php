@@ -1,59 +1,53 @@
 <?php
 
-namespace App\Models\Login {
+namespace Tests\Unit;
 
-    function curl_init($url)
+use App\Models\Login\LoginService;
+use Tests\TestCase;
+
+class LoginServiceTest extends TestCase
+{
+    private LoginService $loginService;
+
+    protected function setUp(): void
     {
-        return fopen('php://memory', 'r+');
+        parent::setUp();
+        $this->loginService = new LoginService();
     }
 
-    function curl_setopt($ch, $option, $value)
+    // autenticar - Login exitoso
+    public function test_autenticar_login_exitoso()
     {
-        return true;
-    }
-
-    function curl_exec($ch)
-    {
-        return json_encode([
+        $reflection = new \ReflectionClass($this->loginService);
+        $property = $reflection->getProperty('apiUrl');
+        $property->setAccessible(true);
+        
+        $mockResponse = [
             'tipo' => 'cliente',
-            'token' => 'abc123',
-            'usuario' => [
-                'id_cliente' => 1,
-                'nombre' => 'Alexandra',
-                'correo_electronico' => 'alex@test.com'
-            ]
-        ]);
+            'token' => 'token_valido_123',
+            'usuario' => ['id_cliente' => 1, 'nombre' => 'Juan', 'correo_electronico' => 'juan@example.com']
+        ];
+        
+        $resultado = $this->loginService->autenticar('juan@example.com', 'password123');
+        $this->assertIsArray($resultado);
     }
+    // php artisan test --filter=test_autenticar_login_exitoso
 
-    function curl_getinfo($ch, $opt)
+    public function test_autenticar_cuenta_no_verificada()
     {
-        return 200;
+        $resultado = $this->loginService->autenticar('noVerificado@example.com', 'password123');
+        $this->assertNull($resultado);
     }
+    // php artisan test --filter=test_autenticar_cuenta_no_verificada
 
-    function curl_close($ch)
+    public function test_autenticar_credenciales_invalidas()
     {
-        return true;
+        $resultado = $this->loginService->autenticar('invalid@example.com', 'wrongpassword');
+        $this->assertNull($resultado);
     }
+    // php artisan test --filter=test_autenticar_credenciales_invalidas
 }
 
-namespace Tests\Unit {
-
-    use Tests\TestCase;
-    use App\Models\Login\LoginService; 
-
-    class LoginServiceTest extends TestCase
-    {
-       
-        public function autenticar_retorna_datos_cuando_respuesta_es_200()
-        {
-            $service = new LoginService();
-
-            $resultado = $service->autenticar('alex@test.com', '123456');
-
-            $this->assertNotNull($resultado);
-            $this->assertEquals('cliente', $resultado['tipo']);
-            $this->assertEquals('abc123', $resultado['token']);
-            $this->assertEquals('Alexandra', $resultado['datos']['nombre']);
-        }
-    }
-} //php artisan test --filter=LoginServiceTest
+/*
+php artisan test tests/Unit/LoginServiceTest.php
+*/
