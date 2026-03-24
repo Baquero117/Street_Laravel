@@ -22,24 +22,49 @@ $estados = ['Pendiente', 'Procesando', 'Enviado', 'Completado', 'Cancelado'];
 
     <div class="card-body p-0">
         <div class="p-3 position-relative">
-    <div class="input-group">
-       <input type="text"
-       id="buscadorPedido"
-       class="form-control"
-       placeholder="Buscar por ID cliente o estado...">
 
-        <button class="btn btn-primary" onclick="buscarManualPedido()">
-            <i class="fas fa-search"></i> Buscar
-        </button>
-    </div>
+            {{-- BARRA DE BÚSQUEDA --}}
+            <div class="input-group">
+                <input type="text"
+                       id="buscadorPedido"
+                       class="form-control"
+                       placeholder="Buscar por ID cliente o estado...">
+                <button class="btn btn-primary" onclick="buscarManualPedido()">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+            </div>
 
-    <div id="sugerenciasPedido"
-         class="list-group shadow"
-         style="position:absolute; top:70px; left:15px; right:15px; z-index:1000;">
-    </div>
-</div>
+            <div id="sugerenciasPedido"
+                 class="list-group shadow"
+                 style="position:absolute; top:70px; left:15px; right:15px; z-index:1000;">
+            </div>
+
+            {{-- FILTRO POR ESTADO --}}
+            <div class="mt-3">
+                <small class="text-muted fw-semibold d-block mb-2">Buscar por estado:</small>
+                <div class="d-flex flex-wrap gap-2">
+                    <button class="btn btn-secondary btn-sm filtro-estado" onclick="filtrarPorEstado('Pendiente', this)">
+                        Pendiente
+                    </button>
+                    <button class="btn btn-warning btn-sm text-dark filtro-estado" onclick="filtrarPorEstado('Procesando', this)">
+                        Procesando
+                    </button>
+                    <button class="btn btn-primary btn-sm filtro-estado" onclick="filtrarPorEstado('Enviado', this)">
+                        Enviado
+                    </button>
+                    <button class="btn btn-success btn-sm filtro-estado" onclick="filtrarPorEstado('Completado', this)">
+                        Completado
+                    </button>
+                    <button class="btn btn-danger btn-sm filtro-estado" onclick="filtrarPorEstado('Cancelado', this)">
+                        Cancelado
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
         <table class="table table-striped mb-0">
-            
+
             <thead class="table-dark">
                 <tr>
                     <th>ID</th>
@@ -117,7 +142,7 @@ $estados = ['Pendiente', 'Procesando', 'Enviado', 'Completado', 'Cancelado'];
                                 <p><b>Fecha:</b> {{ $pedido['fecha_pedido'] }}</p>
                                 <p><b>Total:</b> ${{ number_format($pedido['total'], 2) }}</p>
                                 <p><b>Estado:</b>
-                                    <span class="badge 
+                                    <span class="badge
                                         @if($pedido['estado'] === 'Completado') bg-success
                                         @elseif($pedido['estado'] === 'Cancelado') bg-danger
                                         @elseif($pedido['estado'] === 'Enviado') bg-primary
@@ -167,58 +192,80 @@ $estados = ['Pendiente', 'Procesando', 'Enviado', 'Completado', 'Cancelado'];
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-
-
 <script>
-function filtrarTablaPedido(valor) {
-    let filas = document.querySelectorAll("table tbody tr");
+let estadoActivoFiltro = null;
 
-    filas.forEach(fila => {
-        let idPedido = (fila.cells[0]?.textContent || '').trim();
-        let nombreCliente = (fila.cells[1]?.textContent || '').toLowerCase();
-        let idCliente = fila.getAttribute('data-id-cliente') || '';
-        let estado = fila.getAttribute('data-estado') || '';
-        let buscar = valor.toLowerCase().trim();
-
-        if (
-            idPedido === valor.trim() ||
-            idCliente === valor.trim() ||
-            nombreCliente.includes(buscar) ||
-            estado.toLowerCase().includes(buscar)
-        ) {
-            fila.style.display = "";
-        } else {
-            fila.style.display = "none";
-        }
-    });
-
-
-
-}
-
-document.getElementById('buscadorPedido').addEventListener('keyup', function() {
-    let query = this.value.trim();
-    let sugerencias = document.getElementById('sugerenciasPedido');
-    sugerencias.innerHTML = "";
-
-    if (query.length < 1) {
-        let filas = document.querySelectorAll("table tbody tr");
-        filas.forEach(fila => fila.style.display = "");
+function filtrarPorEstado(estado, btn) {
+    // Si se hace clic en el mismo botón activo, se deselecciona y muestra todos
+    if (estadoActivoFiltro === estado) {
+        estadoActivoFiltro = null;
+        document.querySelectorAll('.filtro-estado').forEach(b => b.classList.remove('activo-estado'));
+        aplicarFiltros(document.getElementById('buscadorPedido').value, null);
         return;
     }
 
-    filtrarTablaPedido(query);
+    estadoActivoFiltro = estado;
+    document.querySelectorAll('.filtro-estado').forEach(b => b.classList.remove('activo-estado'));
+    btn.classList.add('activo-estado');
+
+    document.getElementById('buscadorPedido').value = '';
+    aplicarFiltros('', estado);
+}
+
+function aplicarFiltros(textoBusqueda, estadoFiltro) {
+    let filas = document.querySelectorAll("table tbody tr[data-estado]");
+
+    filas.forEach(fila => {
+        let idPedido      = (fila.cells[0]?.textContent || '').trim();
+        let nombreCliente = (fila.cells[1]?.textContent || '').toLowerCase();
+        let idCliente     = fila.getAttribute('data-id-cliente') || '';
+        let estado        = fila.getAttribute('data-estado') || '';
+        let buscar        = textoBusqueda.toLowerCase().trim();
+
+        let pasaTexto = !buscar || (
+            idPedido === textoBusqueda.trim() ||
+            idCliente === textoBusqueda.trim() ||
+            nombreCliente.includes(buscar) ||
+            estado.toLowerCase().includes(buscar)
+        );
+
+        let pasaEstado = !estadoFiltro || estado.toLowerCase() === estadoFiltro.toLowerCase();
+
+        fila.style.display = (pasaTexto && pasaEstado) ? '' : 'none';
+    });
+}
+
+document.getElementById('buscadorPedido').addEventListener('keyup', function () {
+    let query = this.value.trim();
+
+    if (query.length < 1) {
+        aplicarFiltros('', estadoActivoFiltro);
+        return;
+    }
+
+    aplicarFiltros(query, estadoActivoFiltro);
 });
 
 function buscarManualPedido() {
     let valor = document.getElementById('buscadorPedido').value;
-    filtrarTablaPedido(valor);
+    aplicarFiltros(valor, estadoActivoFiltro);
 }
 
-// ALERTA AUTOMÁTICA (6 segundos)
-setTimeout(function() {
+// ── Estilo del botón activo ──
+const style = document.createElement('style');
+style.textContent = `
+    .filtro-estado.activo-estado {
+        outline: 3px solid #000;
+        outline-offset: 2px;
+        font-weight: 600;
+    }
+`;
+document.head.appendChild(style);
+
+// ── Auto-cerrar alerta ──
+setTimeout(function () {
     let alerta = document.getElementById('alertaMensaje');
-    if(alerta){
+    if (alerta) {
         alerta.classList.remove('show');
         alerta.classList.add('fade');
         setTimeout(() => alerta.remove(), 500);
